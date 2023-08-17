@@ -91,6 +91,8 @@ var
 
 implementation
 
+uses unt_cad_despesas;
+
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
   untGraficoDespesa, unt_cad_receitas, untListDespRec, untCadTipoDespesa,
@@ -125,8 +127,8 @@ end;
 
 procedure Tfrm_menu.CadDespesas1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_cad_despesas, frm_cad_despesas);
-//frm_cad_despesas.show;
+  Application.CreateForm(Tfrm_cad_despesas, frm_cad_despesas);
+  frm_cad_despesas.show;
 end;
 
 procedure Tfrm_menu.RelGeral1Click(Sender: TObject);
