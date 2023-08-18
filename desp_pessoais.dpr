@@ -17,7 +17,7 @@ uses
 //  unt_cad_receitas in 'unt_cad_receitas.pas' {frm_cad_receitas},
 //  untRelRecDesp in 'untRelRecDesp.pas' {frmRelRecDesp},
 //  untListDespRec in 'untListDespRec.pas' {frmListDespRec},
-//  untCadTipoDespesa in 'untCadTipoDespesa.pas' {frmCadTipoDespesa},
+  untCadTipoDespesa in 'untCadTipoDespesa.pas' {frmCadTipoDespesa},
   untRelContasPagar in 'untRelContasPagar.pas' {frmRelContasPagar},
 //  untCadTipoReceita in 'untCadTipoReceita.pas' {frmCadTipoReceita},
 //  untTransferenciaFinanceira in 'untTransferenciaFinanceira.pas' {frmTransferenciaFinanceira},
