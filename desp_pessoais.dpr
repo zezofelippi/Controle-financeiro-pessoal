@@ -31,7 +31,7 @@ uses
 //  untEmprestimosPagar in 'untEmprestimosPagar.pas' {frmEmprestimosPagar},
 //  untPagarEmprestimo in 'untPagarEmprestimo.pas' {frmPagarEmprestimo},
 //  untJuntarPessoalSitio in 'untJuntarPessoalSitio.pas' {frmJuntarPessoalSitio},
-//  untRelTipoDespesa in 'untRelTipoDespesa.pas' {frmRelTipoDespesa},
+  untRelTipoDespesa in 'untRelTipoDespesa.pas' {frmRelTipoDespesa},
   untContasPagarParcelas in 'untContasPagarParcelas.pas' {frmContasPagarParcelas},
   untBaixaParcialParcela2 in 'untBaixaParcialParcela2.pas' {frmBaixaParcialParcela2},
   untConfirmarBaixaContasPagar2 in 'untConfirmarBaixaContasPagar2.pas' {frmConfirmarBaixaContasPagar2},
@@ -64,7 +64,7 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(Tfrm_menu, frm_menu);
-//  Application.CreateForm(Tdm, dm);
+  Application.CreateForm(Tdm, dm);
 //  Application.CreateForm(TfrmConfirmarBaixaContasPagar, frmConfirmarBaixaContasPagar);
 //  Application.CreateForm(TfrmRelMediaDesp, frmRelMediaDesp);
 //  Application.CreateForm(TfrmRelMediaDesp2, frmRelMediaDesp2);
@@ -86,7 +86,7 @@ begin
 //  Application.CreateForm(TfrmEmprestimosPagar, frmEmprestimosPagar);
 //  Application.CreateForm(TfrmPagarEmprestimo, frmPagarEmprestimo);
 //  Application.CreateForm(TfrmJuntarPessoalSitio, frmJuntarPessoalSitio);
-//  Application.CreateForm(TfrmRelTipoDespesa, frmRelTipoDespesa);
+  Application.CreateForm(TfrmRelTipoDespesa, frmRelTipoDespesa);
 //  Application.CreateForm(TfrmContasPagarParcelas, frmContasPagarParcelas);
 //  Application.CreateForm(TfrmBaixaParcialParcela2, frmBaixaParcialParcela2);
 //  Application.CreateForm(TfrmConfirmarBaixaContasPagar2, frmConfirmarBaixaContasPagar2);
