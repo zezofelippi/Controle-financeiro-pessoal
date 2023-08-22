@@ -91,7 +91,7 @@ var
 
 implementation
 
-uses unt_cad_despesas;
+uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -114,15 +114,15 @@ end;
 
 procedure Tfrm_menu.Lembrete1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_contas_pagar, frm_contas_pagar);
-//frm_contas_pagar.show;
+  Application.CreateForm(Tfrm_contas_pagar, frm_contas_pagar);
+  frm_contas_pagar.show;
 
 end;
 
 procedure Tfrm_menu.ipoDespesa1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmCadTipoDespesa, frmCadTipoDespesa);
-//frmCadTipoDespesa.show;
+  Application.CreateForm(TfrmCadTipoDespesa, frmCadTipoDespesa);
+  frmCadTipoDespesa.show;
 end;
 
 procedure Tfrm_menu.CadDespesas1Click(Sender: TObject);
