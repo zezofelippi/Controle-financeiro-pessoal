@@ -73,7 +73,7 @@ begin
 //  Application.CreateForm(TfrmRelRecDesp, frmRelRecDesp);
 //  Application.CreateForm(TfrmListDespRec, frmListDespRec);
 //  Application.CreateForm(TfrmCadTipoDespesa, frmCadTipoDespesa);
-//  Application.CreateForm(TfrmRelContasPagar, frmRelContasPagar);
+  Application.CreateForm(TfrmRelContasPagar, frmRelContasPagar);
 //  Application.CreateForm(TfrmCadTipoReceita, frmCadTipoReceita);
 //  Application.CreateForm(TfrmTransferenciaFinanceira, frmTransferenciaFinanceira);
 //  Application.CreateForm(TfrmResumofinal, frmResumofinal);
