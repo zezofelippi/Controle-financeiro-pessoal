@@ -24,7 +24,7 @@ uses
 //  untResumoFinal in 'untResumoFinal.pas' {frmResumofinal},
 //  untRelTransfFinanc in 'untRelTransfFinanc.pas' {frmRelTransfFinanc},
 //  untRelCadReceita in 'untRelCadReceita.pas' {frmRelCadReceita},
-//  untRelCadDespesa in 'untRelCadDespesa.pas' {frmRelCadDespesa},
+  untRelCadDespesa in 'untRelCadDespesa.pas' {frmRelCadDespesa},
   untBaixaParcialParcela in 'untBaixaParcialParcela.pas' {frmBaixaParcialParcela},
 //  untContasReceber in 'untContasReceber.pas' {frmContasReceber},
 //  untReceberEmprestimo in 'untReceberEmprestimo.pas' {frmReceberEmprestimo},
@@ -79,7 +79,7 @@ begin
 //  Application.CreateForm(TfrmResumofinal, frmResumofinal);
 //  Application.CreateForm(TfrmRelTransfFinanc, frmRelTransfFinanc);
 //  Application.CreateForm(TfrmRelCadReceita, frmRelCadReceita);
-//  Application.CreateForm(TfrmRelCadDespesa, frmRelCadDespesa);
+  Application.CreateForm(TfrmRelCadDespesa, frmRelCadDespesa);
 //  Application.CreateForm(TfrmBaixaParcialParcela, frmBaixaParcialParcela);
 //  Application.CreateForm(TfrmContasReceber, frmContasReceber);
 //  Application.CreateForm(TfrmReceberEmprestimo, frmReceberEmprestimo);
