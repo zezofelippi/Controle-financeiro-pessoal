@@ -91,7 +91,8 @@ var
 
 implementation
 
-uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar;
+uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
+  unt_rel_data_tipo;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -133,8 +134,8 @@ end;
 
 procedure Tfrm_menu.RelGeral1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_rel_data_tipo, frm_rel_data_tipo);
-//frm_rel_data_tipo.show;
+  Application.CreateForm(Tfrm_rel_data_tipo, frm_rel_data_tipo);
+  frm_rel_data_tipo.show;
 end;
 
 procedure Tfrm_menu.Rel1Click(Sender: TObject);
@@ -199,8 +200,8 @@ end;
 
 procedure Tfrm_menu.JuntarDesppessoalcdespsitio1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmJuntarPessoalSitio, frmJuntarPessoalSitio);
-//frmJuntarPessoalSitio.show;
+  Application.CreateForm(TfrmJuntarPessoalSitio, frmJuntarPessoalSitio);
+  frmJuntarPessoalSitio.show;
 end;
 
 procedure Tfrm_menu.AgendaTelefone1Click(Sender: TObject);
