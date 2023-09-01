@@ -30,7 +30,7 @@ uses
 //  untReceberEmprestimo in 'untReceberEmprestimo.pas' {frmReceberEmprestimo},
 //  untEmprestimosPagar in 'untEmprestimosPagar.pas' {frmEmprestimosPagar},
 //  untPagarEmprestimo in 'untPagarEmprestimo.pas' {frmPagarEmprestimo},
-//  untJuntarPessoalSitio in 'untJuntarPessoalSitio.pas' {frmJuntarPessoalSitio},
+  untJuntarPessoalSitio in 'untJuntarPessoalSitio.pas' {frmJuntarPessoalSitio},
   untRelTipoDespesa in 'untRelTipoDespesa.pas' {frmRelTipoDespesa},
   untContasPagarParcelas in 'untContasPagarParcelas.pas' {frmContasPagarParcelas},
   untBaixaParcialParcela2 in 'untBaixaParcialParcela2.pas' {frmBaixaParcialParcela2},
