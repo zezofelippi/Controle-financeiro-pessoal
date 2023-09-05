@@ -92,7 +92,7 @@ var
 implementation
 
 uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
-  unt_rel_data_tipo;
+  unt_rel_data_tipo, untJuntarPessoalSitio;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -224,8 +224,8 @@ end;
 
 procedure Tfrm_menu.Grupo1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_cad_grupo, frm_cad_grupo);
-//frm_cad_grupo.show;
+  Application.CreateForm(Tfrm_cad_grupo, frm_cad_grupo);
+  frm_cad_grupo.show;
 end;
 
 procedure Tfrm_menu.Produto1Click(Sender: TObject);
@@ -248,8 +248,8 @@ end;
 
 procedure Tfrm_menu.Configurao1Click(Sender: TObject);
 begin
-//  Application.CreateForm(TfrmConfiguracaoCotacao, frmConfiguracaoCotacao);
-// frmConfiguracaoCotacao.show;
+  Application.CreateForm(TfrmConfiguracaoCotacao, frmConfiguracaoCotacao);
+  frmConfiguracaoCotacao.show;
 end;
 
 procedure Tfrm_menu.CONVERTER1Click(Sender: TObject);
