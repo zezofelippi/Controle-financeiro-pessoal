@@ -39,7 +39,7 @@ uses
 //  untCotacaoCompra in 'untCotacaoCompra.pas' {frm_cotacao_compra},
 //  untProduto in 'untProduto.pas' {frmProduto},
 //  untInserirFornecedorCotacao in 'untInserirFornecedorCotacao.pas' {frmInserirFornecedorCotacao},
-//  untCadUnidade in 'untCadUnidade.pas' {frmCadUnidade},
+  untCadUnidade in 'untCadUnidade.pas' {frmCadUnidade},
   unt_cad_grupo in 'unt_cad_grupo.pas' {frm_cad_grupo},
 //  untInserirValorProduto in 'untInserirValorProduto.pas' {frmInserirValorProduto},
 //  untRelCotacaoFornecedores in 'untRelCotacaoFornecedores.pas' {frmRelCotacaoFornecedores},
