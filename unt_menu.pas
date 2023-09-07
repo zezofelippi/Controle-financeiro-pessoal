@@ -218,8 +218,8 @@ end;
 
 procedure Tfrm_menu.Unidade1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmCadUnidade, frmCadUnidade);
-//frmCadUnidade.show;
+  Application.CreateForm(TfrmCadUnidade, frmCadUnidade);
+  frmCadUnidade.show;
 end;
 
 procedure Tfrm_menu.Grupo1Click(Sender: TObject);
