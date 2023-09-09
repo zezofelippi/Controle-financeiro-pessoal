@@ -230,8 +230,8 @@ end;
 
 procedure Tfrm_menu.Produto1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmProduto, frmProduto);
-//frmProduto.show;
+  Application.CreateForm(TfrmProduto, frmProduto);
+  frmProduto.show;
 end;
 
 procedure Tfrm_menu.FormadePagamento1Click(Sender: TObject);
