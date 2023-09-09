@@ -37,7 +37,7 @@ uses
   untConfirmarBaixaContasPagar2 in 'untConfirmarBaixaContasPagar2.pas' {frmConfirmarBaixaContasPagar2},
 //  untAgendaTelefone in 'untAgendaTelefone.pas' {frmAgendaTelefone},
 //  untCotacaoCompra in 'untCotacaoCompra.pas' {frm_cotacao_compra},
-//  untProduto in 'untProduto.pas' {frmProduto},
+  untProduto in 'untProduto.pas' {frmProduto},
 //  untInserirFornecedorCotacao in 'untInserirFornecedorCotacao.pas' {frmInserirFornecedorCotacao},
   untCadUnidade in 'untCadUnidade.pas' {frmCadUnidade},
   unt_cad_grupo in 'unt_cad_grupo.pas' {frm_cad_grupo},
