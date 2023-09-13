@@ -92,7 +92,9 @@ var
 implementation
 
 uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
-  unt_rel_data_tipo, untJuntarPessoalSitio;
+  unt_rel_data_tipo, untJuntarPessoalSitio, untCadUnidade, unt_cad_grupo,
+  untProduto, untProdutosComprados, untConfiguracaoCotacao,
+  untRelUnidosContasPagarContasPagas;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
