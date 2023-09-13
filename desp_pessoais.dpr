@@ -52,7 +52,7 @@ uses
   untItensCotacaoCompra in 'untItensCotacaoCompra.pas' {frmItensCotacaoCompra},
   untItensCotacaoContasPagar in 'untItensCotacaoContasPagar.pas' {frmItensCotacaoContasPagar},
 //  untRelCotacaoGrupoProd in 'untRelCotacaoGrupoProd.pas' {frmRelCotacaoGrupoProd},
-//  untProdutosComprados in 'untProdutosComprados.pas' {frmProdutosComprados},
+  untProdutosComprados in 'untProdutosComprados.pas' {frmProdutosComprados},
   untConfiguracaoCotacao in 'untConfiguracaoCotacao.pas' {frmConfiguracaoCotacao},
 //  untRelCotacaoFornecedorGrupoProd in 'untRelCotacaoFornecedorGrupoProd.pas' {frmRelCotacaoFornecedorGrupoProd},
 //  UNTcONVERSAO in 'UNTcONVERSAO.pas' {frmconversor},
