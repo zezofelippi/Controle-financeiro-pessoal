@@ -120,7 +120,7 @@ var
 
 implementation
 
-uses unt_modulo, untrel_data_tipo, untRelCadDespesa, untItensCotacaoCompra;
+uses unt_modulo, untRelCadDespesa, untItensCotacaoCompra;
 
 {$R *.dfm}
 
