@@ -242,8 +242,8 @@ end;
 
 procedure Tfrm_menu.ItensComprados1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmProdutosComprados, frmProdutosComprados);
-//frmProdutosComprados.show;
+  Application.CreateForm(TfrmProdutosComprados, frmProdutosComprados);
+  frmProdutosComprados.show;
 end;
 
 procedure Tfrm_menu.Configurao1Click(Sender: TObject);
