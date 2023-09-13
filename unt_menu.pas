@@ -261,8 +261,8 @@ end;
 
 procedure Tfrm_menu.RelatorioUnidoC1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmRelUnidosContasPagarContasPagas, frmRelUnidosContasPagarContasPagas);
-//frmRelUnidosContasPagarContasPagas.show;
+  Application.CreateForm(TfrmRelUnidosContasPagarContasPagas, frmRelUnidosContasPagarContasPagas);
+  frmRelUnidosContasPagarContasPagas.show;
 end;
 
 end.
