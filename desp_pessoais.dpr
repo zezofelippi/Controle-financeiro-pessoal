@@ -36,7 +36,7 @@ uses
   untBaixaParcialParcela2 in 'untBaixaParcialParcela2.pas' {frmBaixaParcialParcela2},
   untConfirmarBaixaContasPagar2 in 'untConfirmarBaixaContasPagar2.pas' {frmConfirmarBaixaContasPagar2},
 //  untAgendaTelefone in 'untAgendaTelefone.pas' {frmAgendaTelefone},
-//  untCotacaoCompra in 'untCotacaoCompra.pas' {frm_cotacao_compra},
+  untCotacaoCompra in 'untCotacaoCompra.pas' {frm_cotacao_compra},
   untProduto in 'untProduto.pas' {frmProduto},
 //  untInserirFornecedorCotacao in 'untInserirFornecedorCotacao.pas' {frmInserirFornecedorCotacao},
   untCadUnidade in 'untCadUnidade.pas' {frmCadUnidade},
