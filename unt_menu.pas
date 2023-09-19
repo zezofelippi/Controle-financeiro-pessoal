@@ -214,8 +214,8 @@ end;
 
 procedure Tfrm_menu.CotacaodeCompras1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_cotacao_compra, frm_cotacao_compra);
-//frm_cotacao_compra.show;
+  Application.CreateForm(Tfrm_cotacao_compra, frm_cotacao_compra);
+  frm_cotacao_compra.show;
 end;
 
 procedure Tfrm_menu.Unidade1Click(Sender: TObject);
