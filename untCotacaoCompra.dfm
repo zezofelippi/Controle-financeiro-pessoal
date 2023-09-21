@@ -1,6 +1,6 @@
 object frm_cotacao_compra: Tfrm_cotacao_compra
-  Left = 117
-  Top = 145
+  Left = 155
+  Top = 73
   Align = alClient
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -28,7 +28,7 @@ object frm_cotacao_compra: Tfrm_cotacao_compra
     Top = 0
     Width = 1231
     Height = 644
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alLeft
     TabOrder = 0
     object TabSheet1: TTabSheet

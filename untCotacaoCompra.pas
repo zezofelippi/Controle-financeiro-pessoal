@@ -2751,271 +2751,62 @@ begin
   qryPesqAux.FetchAll;
   qryPesqAux.First;
 
-    i_total:=0;
-    while not qryPesqAux.Eof do
-    begin
-      SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
-      vetor_fornecedor[i_total]:= qryPesqAux.fieldbyname('for_codigo').AsString;
-      i_total:=i_total+1;
-      qryPesqAux.Next;
-    end;
+  i_total:=0;
+  while not qryPesqAux.Eof do
+  begin
+    SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
+    vetor_fornecedor[i_total]:= qryPesqAux.fieldbyname('for_codigo').AsString;
+    i_total:=i_total+1;
+    qryPesqAux.Next;
+  end;
 
-    //FIM SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
+  //FIM SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
 
-
-       //PEGAR O MAXIMO VALOR COM MAXIMA DATA
+  //PEGAR O MAXIMO VALOR COM MAXIMA DATA
     i:=0;
-    while i < i_total do
-    begin
-       {qryPesqAux.Close;
-       qryPesqAux.SQL.Clear;
-       qryPesqAux.SQL.Add('SELECT MAX(COT_VENCIMENTO) AS DATA_MAX, ICCF.cot_valor, AG.AT_codigo,   '+
-          ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC  '+
-          ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON  '+
-          ' COTA.cot_codigo = ICCF.cot_codigo                                        '+
-          ' LEFT JOIN agenda_telefone AG ON                                           '+
-          ' ICCF.for_codigo = AG.at_codigo                                              '+
-          ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO        '+
-          ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                        '+
-          ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
-          ' AND COTA.COT_CODIGO <>:COT_CODIGO                                        '+
-          ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome                ');  }
-
-
-       qryPesqAux.Close;
-       qryPesqAux.SQL.Clear;
-       qryPesqAux.SQL.Add('SELECT COT_VENCIMENTO, ICCF.cot_valor, AG.AT_codigo,    '+
-           ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC                         '+
-           ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON  '+
-           ' COTA.cot_codigo = ICCF.cot_codigo                                     '+
-           ' LEFT JOIN agenda_telefone AG ON                                       '+
-           ' ICCF.for_codigo = AG.at_codigo                                        '+
-           ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO     '+
-           ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                     '+
-           ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )             '+
-           ' AND COTA.COT_CODIGO <>:COT_CODIGO                                     '+
-           ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome, COT_VENCIMENTO     '+
-           ' order by COT_VENCIMENTO    ');
-          
-       qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-       qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-       if txt_cod_produto.Text = '' then
-         qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-       else
-         qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-       qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-       qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i];
-       qryPesqAux.Open;
-       qryPesqAux.FetchAll;
-       qryPesqAux.last;
-
-       i:=i+1;
-
-      if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
-      begin
-
-        if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-        begin
-           valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
-           fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-           cod_fornecedor_global := qryPesqAux.FieldByName('AT_codigo').asstring;
-           data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-          // data_compra_global := qryPesqAux.FieldByName('DATA_MAX').asstring;
-          // obs:=  qryPesqAux.FieldByName('cot_obs').asstring;
-          { if qryFornecedor.FieldByName('COT_VALOR').AsFloat = valor then
-           begin
-              empate := 'S';
-              i:= i+1;
-           end;
-           }
-        end;
-
-      end;  
-
-    end;
-
-
-    //FIMPEGAR O MAXIMO VALOR COM MAXIMA DATA
-
-
-
-
-  {
+  while i < i_total do
+  begin
     qryPesqAux.Close;
     qryPesqAux.SQL.Clear;
-    qryPesqAux.SQL.Add('SELECT AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC, ICF.FOR_CODIGO, '+
-                        'ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs    '+
-                        'FROM COTACAO_COMPRA COTA                                            '+
-                        'INNER JOIN itens_cotacao_compra_fornec ICF ON                       '+
-                        'COTA.cot_codigo = ICF.cot_codigo                                    '+
-                        'LEFT JOIN agenda_telefone AG ON                                     '+
-                        'ICF.for_codigo = AG.at_codigo                                       '+
-                        'WHERE ICF.PRO_CODIGO=:PRO_CODIGO                                    '+
-                        'AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                   '+
-                        'AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL )             '+
-                        'AND COTA.COT_CODIGO <>:COT_CODIGO                                   '+
-                       // 'GROUP BY AT_codigo, AT_nome,                                        '+
-                      //  'ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs    '+
-                        'ORDER BY COT_VENCIMENTO                                             ');
+    qryPesqAux.SQL.Add('SELECT COT_VENCIMENTO, ICCF.cot_valor, AG.AT_codigo,                      '+
+                       ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC                            '+
+                       ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON  '+
+                       ' COTA.cot_codigo = ICCF.cot_codigo                                        '+
+                       ' LEFT JOIN agenda_telefone AG ON                                          '+
+                       ' ICCF.for_codigo = AG.at_codigo                                           '+
+                       ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO        '+
+                       ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                        '+
+                       ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
+                       ' AND COTA.COT_CODIGO <>:COT_CODIGO                                        '+
+                       ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome, COT_VENCIMENTO        '+
+                       ' order by COT_VENCIMENTO                                                  ');
     qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
     qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
     if txt_cod_produto.Text = '' then
       qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-    else 
+    else
       qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
     qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+    qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i];
     qryPesqAux.Open;
     qryPesqAux.FetchAll;
-    qryPesqAux.First;
+    qryPesqAux.last;
 
+    i:=i+1;
 
-    while not qryPesqAux.Eof do
+    if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
     begin
-
-      if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
+      if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
       begin
-
-        if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-        begin
-           valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
-           fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-           cod_fornecedor_global := qryPesqAux.FieldByName('FOR_CODIGO').asstring;
-           data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-           obs:=  qryPesqAux.FieldByName('cot_obs').asstring;   }
-          { if qryFornecedor.FieldByName('COT_VALOR').AsFloat = valor then
-           begin
-              empate := 'S';
-              i:= i+1;
-           end;
-           }
-       { end;
-
+         valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
+         fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
+         cod_fornecedor_global := qryPesqAux.FieldByName('AT_codigo').asstring;
+         data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
       end;
-      qryPesqAux.Next;
-
     end;
 
-    if cod_fornecedor_global = '' then
-      Exit;
-
-    sair_laco_menor_produto := 'N';
-
-    i_total := 0;
-    while sair_laco_menor_produto = 'N' do
-    begin
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT MAX(COT_VENCIMENTO) AS DATA_MAX, ICCF.for_codigo                  '+
-                         ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON '+
-                         ' COTA.cot_codigo = ICCF.cot_codigo                                       '+
-                         ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO       '+
-                         ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                       '+
-                         ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
-                         ' AND COTA.COT_CODIGO <>:COT_CODIGO                                       '+
-                         ' GROUP BY ICCF.for_codigo                                                ');
-      qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-      qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-      qryPesqAux.First;
-
-      SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
-      vetor_fornecedor[i_total] := qryPesqAux.fieldbyname('for_codigo').asstring;
-      data_max := qryPesqAux.fieldbyname('DATA_MAX').AsDateTime;
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT MAX(ICCF.cot_valor) AS COT_VALOR                                  '+
-                         ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON '+
-                         ' COTA.cot_codigo = ICCF.cot_codigo                                       '+
-                         ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO       '+
-                         ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                       '+
-                         ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
-                         ' AND COTA.COT_CODIGO <>:COT_CODIGO                                       ');
-      qryPesqAux.ParamByName('DATAI').AsDate := data_max;
-      qryPesqAux.ParamByName('DATAF').AsDate := data_max;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i_total];
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-      qryPesqAux.First;
-
-      valor_global := qryPesqAux.fieldbyname('COT_VALOR').AsFloat;
-      data_compra_global := DateToStr(data_max);
-
-      sql_fornecedor:= '';
-      for i:=0 to i_total do
-      begin
-        if vetor_fornecedor[i] <> '' then
-         sql_fornecedor := sql_fornecedor + ' AND ICF.for_codigo <>' + vetor_fornecedor[i];
-      end;
-      i_total:=i_total +1;
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC, ICF.FOR_CODIGO, ');
-      qryPesqAux.SQL.Add('ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs      ');
-      qryPesqAux.SQL.Add('FROM COTACAO_COMPRA COTA                                              ');
-      qryPesqAux.SQL.Add('INNER JOIN itens_cotacao_compra_fornec ICF ON                         ');
-      qryPesqAux.SQL.Add('COTA.cot_codigo = ICF.cot_codigo                                      ');
-      qryPesqAux.SQL.Add('LEFT JOIN agenda_telefone AG ON                                       ');
-      qryPesqAux.SQL.Add('ICF.for_codigo = AG.at_codigo                                         ');
-      qryPesqAux.SQL.Add('WHERE ICF.PRO_CODIGO=:PRO_CODIGO                                      ');
-      qryPesqAux.SQL.Add('AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                     ');
-      qryPesqAux.SQL.Add('AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL )               ');
-      qryPesqAux.SQL.Add('AND COTA.COT_CODIGO <>:COT_CODIGO ' + sql_fornecedor                   );
-     // qryPesqAux.SQL.Add('GROUP BY AT_codigo, AT_nome,                                          ');
-     // qryPesqAux.SQL.Add('ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs      ');
-      qryPesqAux.SQL.Add('ORDER BY COT_VENCIMENTO                                               ');
-
-      qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-      qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-
-       sair_laco_menor_produto :='S';
-       while not qryPesqAux.Eof do
-       begin
-
-         if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-         begin
-            valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
-            fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-            cod_fornecedor_global := qryPesqAux.FieldByName('FOR_CODIGO').asstring;
-            data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-            obs:=  qryPesqAux.FieldByName('cot_obs').asstring;
-            sair_laco_menor_produto:= 'N';
-         end;
-
-         qryPesqAux.Next;
-
-       end;
-    end;    }
-
-
-   // frmInserirFornecedorCotacao.txtFornecedorBarato.Text := fornec;
-  //  frmInserirFornecedorCotacao.txtValorBarato.Text := formatfloat('###,##0.00', valor);
-  //  frmInserirFornecedorCotacao.txtDataBarato.Text := data_compra;
-   // frmInserirFornecedorCotacao.txt_obs_barato.Text := obs;
-
-    //FIM COLOCAR O FORNECEDOR MAIS BARATO
-
+  end;
+ //FIM PEGAR O MAXIMO VALOR COM MAXIMA DATA
 
 end;
 
@@ -3040,9 +2831,9 @@ procedure Tfrm_cotacao_compra.cheInserirPrecoClick(Sender: TObject);
 begin
   if cheInserirPreco.Checked = True then
   begin
-     cboFornecedor.KeyValue := -1;
-     txt_Valor.Visible := false;
-     lbl_valor.Visible := false;
+    cboFornecedor.KeyValue := -1;
+    txt_Valor.Visible := false;
+    lbl_valor.Visible := false;
   end;
 end;
 
@@ -3069,7 +2860,7 @@ var
 begin
   campo := column.fieldname; // CAMPO RECEBE O NOME DA COLUNA CLICADA,
   application.processmessages; // para considerar algo que aconteça no dbgrid durante a entrada nesta procedure
- 
+
    if (campo = 'PRO_CODIGO') or (campo = 'pro_descricao') then
       campo := 'P.' + campo
    else if (campo = 'cot_unidade') or (campo = 'cot_qtd') or (campo = 'cot_valor') then
@@ -3077,25 +2868,7 @@ begin
    else if (campo = 'cot_obs') then
     campo := '10'
    else
-    campo := '' + campo ;
-
-
-   {qryProdutoLancados.Close;
-   qryProdutoLancados.SQL.Clear;
-   qryProdutoLancados.SQL.Add(' SELECT P.PRO_CODIGO, P.pro_descricao, I.cot_unidade, I.cot_qtd, II.COT_OBS, '+
-
-       '(CASE WHEN II.cot_valor = 0 THEN   '+
-        ' 0  '+
-       'ELSE       '+
-       ' II.cot_valor END) AS COT_VALOR '+
-
-       ' FROM AGENDA_TELEFONE f, itens_cotacao_compra I,  itens_cotacao_compra_fornec II, PRODUTO P  '+
-       ' WHERE II.for_codigo = F.AT_codigo AND P.pro_codigo = II.pro_codigo             '+
-       ' AND II.pro_codigo = I.pro_codigo and II.cot_codigo = I.cot_codigo               '+
-       ' AND I.COT_CODIGO =:COT_CODIGO AND II.for_codigo =:FOR_CODIGO order by ' + campo);
-   qryProdutoLancados.ParamByName('FOR_CODIGO').AsString := qryFornecedorLancados.fieldbyname('AT_CODIGO').AsString;
-   qryProdutoLancados.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-   qryProdutoLancados.Open; }
+    campo := '' + campo ;  
 
    qryProdutoLancados.Close;
    qryProdutoLancados.SQL.Clear;
@@ -3120,29 +2893,27 @@ begin
    qryProdutoLancados.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
    qryProdutoLancados.Open;
 
-
 end;
 
 procedure Tfrm_cotacao_compra.Button1Click(Sender: TObject);
 begin
-
   frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.Close;
   frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.SQL.Clear;
-  frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.SQL.Add('SELECT GRP_DESCRICAO, PRO_DESCRICAO, ITE.COT_VALOR AS VALOR, '+
-                                        '   SUBSTRING(AT_NOME from 1 for 4) AS NOME_RESUMIDO, AT_CODIGO, AT_NOME,     '+
-                                        '   ITE.COT_QTD, ITE.COT_UNIDADE                                              '+
-                                        '   FROM COTACAO_COMPRA COTA                                                  '+
-                                        '   INNER JOIN ITENS_COTACAO_COMPRA ITE ON                                    '+
-                                        '   COTA.cot_codigo = ITE.cot_codigo                                          '+
-                                        '   LEFT JOIN AGENDA_TELEFONE FORN ON                                         '+
-                                        '   ITE.for_codigo_atual = FORN.at_codigo                                     '+
-                                        '   INNER JOIN PRODUTO PROD ON                                                '+
-                                        '   ITE.pro_codigo = PROD.pro_codigo                                          '+  
-                                        '   INNER JOIN GRUPO GRU ON                                                   '+
-                                        '   PROD.grp_codigo = GRU.grp_codigo                                          '+
-                                        '   WHERE COTA.cot_codigo =:CODIGO_COTACAO                                    '+
-                                        '   GROUP BY AT_CODIGO, AT_NOME, GRP_DESCRICAO, PRO_DESCRICAO, ITE.COT_VALOR,   '+
-                                        '   ITE.COT_QTD, ITE.COT_UNIDADE ORDER BY AT_NOME, GRP_DESCRICAO, PRO_DESCRICAO  ');
+  frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.SQL.Add('SELECT GRP_DESCRICAO, PRO_DESCRICAO, ITE.COT_VALOR AS VALOR,                 '+
+                                                        ' SUBSTRING(AT_NOME from 1 for 4) AS NOME_RESUMIDO, AT_CODIGO, AT_NOME,       '+
+                                                        ' ITE.COT_QTD, ITE.COT_UNIDADE                                                '+
+                                                        ' FROM COTACAO_COMPRA COTA                                                    '+
+                                                        ' INNER JOIN ITENS_COTACAO_COMPRA ITE ON                                      '+
+                                                        ' COTA.cot_codigo = ITE.cot_codigo                                            '+
+                                                        ' LEFT JOIN AGENDA_TELEFONE FORN ON                                           '+
+                                                        ' ITE.for_codigo_atual = FORN.at_codigo                                       '+
+                                                        ' INNER JOIN PRODUTO PROD ON                                                  '+
+                                                        ' ITE.pro_codigo = PROD.pro_codigo                                            '+
+                                                        ' INNER JOIN GRUPO GRU ON                                                     '+
+                                                        ' PROD.grp_codigo = GRU.grp_codigo                                            '+
+                                                        ' WHERE COTA.cot_codigo =:CODIGO_COTACAO                                      '+
+                                                        ' GROUP BY AT_CODIGO, AT_NOME, GRP_DESCRICAO, PRO_DESCRICAO, ITE.COT_VALOR,   '+
+                                                        ' ITE.COT_QTD, ITE.COT_UNIDADE ORDER BY AT_NOME, GRP_DESCRICAO, PRO_DESCRICAO ');
   frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.ParamByName('CODIGO_COTACAO').AsString := lbl_cod_cotacao.Caption;
   frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.Open;
   frmRelCotacaoFornecedorGrupoProd.qry_pesquisa.FetchAll;
@@ -3163,51 +2934,51 @@ procedure Tfrm_cotacao_compra.btnPesquisarFornecedorClick(Sender: TObject);
 var
   cod_cotacao: string;
 begin
-       cod_cotacao := ' I.COT_CODIGO = ' + lbl_cod_cotacao.Caption;
+  cod_cotacao := ' I.COT_CODIGO = ' + lbl_cod_cotacao.Caption;
 
-       if fornecedor_global = '' then
-       begin
-         btnPesquisarFornecedor.Tag := 1;
-         btnPesquisarFornecedor.Caption := 'Desfazer';
-         fornecedor_global:= ' and I.FOR_CODIGO_ATUAL = ' + IntToStr(cboFornecedor.KeyValue);
-       end
-       else
-       begin
-          btnPesquisarFornecedor.Tag := 0;
-          btnPesquisarFornecedor.Caption := 'Pesquisar';
-          fornecedor_global:= '';
-       end;
+  if fornecedor_global = '' then
+  begin
+    btnPesquisarFornecedor.Tag := 1;
+    btnPesquisarFornecedor.Caption := 'Desfazer';
+    fornecedor_global:= ' and I.FOR_CODIGO_ATUAL = ' + IntToStr(cboFornecedor.KeyValue);
+  end
+  else
+  begin
+    btnPesquisarFornecedor.Tag := 0;
+    btnPesquisarFornecedor.Caption := 'Pesquisar';
+    fornecedor_global:= '';
+  end;
 
-       qryProduto.Close;
-       qryProduto.SQL.Clear;
-       qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
-                          'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
-                          'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,         '+
-                          'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO       '+
-                          'FROM itens_cotacao_compra I INNER JOIN                                       '+
-                          '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                   '+
-                          'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                '+
-                          'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo            '+
-                          '  AND ICCF.for_codigo = I.for_codigo_atual                                   '+
-                          'LEFT JOIN agenda_telefone FORN ON                                            '+
-                          'I.for_codigo_atual = FORN.at_codigo                                          '+
-                          'WHERE ' + cod_cotacao + fornecedor_global                                     +
-                          'GROUP BY I.ITENS_COT_CODIGO,                                                 '+
-                          'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,       '+
-                          'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME, '+
-                          'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs '+
-                          ' order by i.ite_ordem_insercao' );
-       qryProduto.Open;
+  qryProduto.Close;
+  qryProduto.SQL.Clear;
+  qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,   '+
+                     'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,   '+
+                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,                     '+
+                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO                   '+
+                     'FROM itens_cotacao_compra I INNER JOIN                                                   '+
+                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                               '+
+                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                            '+
+                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo                        '+
+                     '  AND ICCF.for_codigo = I.for_codigo_atual                                               '+
+                     'LEFT JOIN agenda_telefone FORN ON                                                        '+
+                     'I.for_codigo_atual = FORN.at_codigo                                                      '+
+                     'WHERE ' + cod_cotacao + fornecedor_global                                                 +
+                     'GROUP BY I.ITENS_COT_CODIGO,                                                             '+
+                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,                   '+
+                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME,       '+
+                     'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs  '+
+                     ' order by i.ite_ordem_insercao' );
+  qryProduto.Open;
 
-       cdsProduto.Close;
-       cdsProduto.FetchParams;
-       cdsProduto.Open;
+  cdsProduto.Close;
+  cdsProduto.FetchParams;
+  cdsProduto.Open;
 end;
 
 procedure Tfrm_cotacao_compra.cboFornecedorKeyPress(Sender: TObject;
   var Key: Char);
 begin
- if key =#13 then
+  if key =#13 then
     btnInserir.Click
 end;
 
@@ -3215,8 +2986,8 @@ procedure Tfrm_cotacao_compra.ExcluirItemda2Aba1Click(Sender: TObject);
 begin
   qryPesquisa.Close;
   qryPesquisa.SQL.Clear;
-  qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM ITENS_COTACAO_COMPRA '+
-     ' WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL');
+  qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM ITENS_COTACAO_COMPRA                                                     '+
+                      ' WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
   qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
   qryPesquisa.ParamByName('PRO_CODIGO').AsString := qryProdutoLancados.fieldbyname('PRO_CODIGO').AsString;
   qryPesquisa.ParamByName('FOR_CODIGO_ATUAL').AsString := qryProdutoLancados.fieldbyname('AT_CODIGO').AsString;
@@ -3225,68 +2996,63 @@ begin
   if not qryPesquisa.IsEmpty then
   begin
     mensagem:= 'Este produtoprecisa ser excluido na 1º aba (produto)!';
-    Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING + MB_TOPMOST); 
+    Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING + MB_TOPMOST);
     exit;
   end;
-
 
   case MessageBox (Application.Handle, Pchar ('Tem certeza que deseja excluir ' + qryProdutoLancados.fieldbyname('PRO_DESCRICAO').AsString +
     ' ?'),'Alerta', MB_YESNO+MB_ICONQUESTION+MB_DEFBUTTON2) of
   IDNO:
   begin
-     exit;
+    exit;
   end;
   end;
 
   if (not IBTransLocal.InTransaction) then
-     IBTransLocal.StartTransaction;
+    IBTransLocal.StartTransaction;
 
-     qryTransLocal.Close;
-     qryTransLocal.SQL.Clear;
-     qryTransLocal.SQL.Add('delete FROM itens_cotacao_compra_fornec   ');
-     qryTransLocal.SQL.Add(' WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO=:FOR_CODIGO_ATUAL ');
-     qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-     qryTransLocal.ParamByName('PRO_CODIGO').AsString := qryProdutoLancados.fieldbyname('PRO_CODIGO').AsString;
-     qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString := qryProdutoLancados.fieldbyname('AT_CODIGO').AsString;
-     qryTransLocal.ExecSQL;
+  qryTransLocal.Close;
+  qryTransLocal.SQL.Clear;
+  qryTransLocal.SQL.Add('delete FROM itens_cotacao_compra_fornec   ');
+  qryTransLocal.SQL.Add(' WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO=:FOR_CODIGO_ATUAL ');
+  qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+  qryTransLocal.ParamByName('PRO_CODIGO').AsString := qryProdutoLancados.fieldbyname('PRO_CODIGO').AsString;
+  qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString := qryProdutoLancados.fieldbyname('AT_CODIGO').AsString;
+  qryTransLocal.ExecSQL;
 
-   IBTransLocal.Commit;
+  IBTransLocal.Commit;
 
-   qryProdutoLancados.Close;
-   qryProdutoLancados.SQL.Clear;
-   qryProdutoLancados.SQL.Add(' SELECT P.PRO_CODIGO, P.pro_descricao, I.cot_unidade, I.cot_qtd, II.COT_OBS, f.at_codigo, ');
-   qryProdutoLancados.SQL.Add('(CASE WHEN II.cot_valor = 0 THEN   ');
-   qryProdutoLancados.SQL.Add(' 0         ');
-   qryProdutoLancados.SQL.Add('ELSE       ');
-   qryProdutoLancados.SQL.Add(' II.cot_valor END) AS COT_VALOR         ');
-   qryProdutoLancados.SQL.Add('  FROM AGENDA_TELEFONE f INNER JOIN     ');
-   qryProdutoLancados.SQL.Add('   itens_cotacao_compra_fornec II ON    ');
-   qryProdutoLancados.SQL.Add('   II.for_codigo = F.at_codigo          ');
-   qryProdutoLancados.SQL.Add('   INNER JOIN PRODUTO P ON              ');
-   qryProdutoLancados.SQL.Add('   P.pro_codigo = II.pro_codigo         ');
-   qryProdutoLancados.SQL.Add('   LEFT JOIN itens_cotacao_compra I ON  ');
-   qryProdutoLancados.SQL.Add('   II.pro_codigo = I.pro_codigo AND     ');
-   qryProdutoLancados.SQL.Add('   II.cot_codigo = I.cot_codigo         ');
-   qryProdutoLancados.SQL.Add('   AND I.for_codigo_atual = II.for_codigo   ');
-   qryProdutoLancados.SQL.Add('   WHERE II.COT_CODIGO =:COT_CODIGO AND II.for_codigo =:FOR_CODIGO '); 
-   qryProdutoLancados.ParamByName('FOR_CODIGO').AsString := qryFornecedorLancados.fieldbyname('AT_CODIGO').AsString;
-   qryProdutoLancados.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-   qryProdutoLancados.Open;
+  qryProdutoLancados.Close;
+  qryProdutoLancados.SQL.Clear;
+  qryProdutoLancados.SQL.Add(' SELECT P.PRO_CODIGO, P.pro_descricao, I.cot_unidade, I.cot_qtd, II.COT_OBS, f.at_codigo, ');
+  qryProdutoLancados.SQL.Add('(CASE WHEN II.cot_valor = 0 THEN   ');
+  qryProdutoLancados.SQL.Add(' 0         ');
+  qryProdutoLancados.SQL.Add('ELSE       ');
+  qryProdutoLancados.SQL.Add(' II.cot_valor END) AS COT_VALOR         ');
+  qryProdutoLancados.SQL.Add('  FROM AGENDA_TELEFONE f INNER JOIN     ');
+  qryProdutoLancados.SQL.Add('   itens_cotacao_compra_fornec II ON    ');
+  qryProdutoLancados.SQL.Add('   II.for_codigo = F.at_codigo          ');
+  qryProdutoLancados.SQL.Add('   INNER JOIN PRODUTO P ON              ');
+  qryProdutoLancados.SQL.Add('   P.pro_codigo = II.pro_codigo         ');
+  qryProdutoLancados.SQL.Add('   LEFT JOIN itens_cotacao_compra I ON  ');
+  qryProdutoLancados.SQL.Add('   II.pro_codigo = I.pro_codigo AND     ');
+  qryProdutoLancados.SQL.Add('   II.cot_codigo = I.cot_codigo         ');
+  qryProdutoLancados.SQL.Add('   AND I.for_codigo_atual = II.for_codigo   ');
+  qryProdutoLancados.SQL.Add('   WHERE II.COT_CODIGO =:COT_CODIGO AND II.for_codigo =:FOR_CODIGO ');
+  qryProdutoLancados.ParamByName('FOR_CODIGO').AsString := qryFornecedorLancados.fieldbyname('AT_CODIGO').AsString;
+  qryProdutoLancados.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+  qryProdutoLancados.Open;
 
+  qryFornecedorLancados.Close;
+  qryFornecedorLancados.Open;
+  qryFornecedorLancados.FetchAll;
 
-   qryFornecedorLancados.Close;
-   qryFornecedorLancados.Open;
-   qryFornecedorLancados.FetchAll;
+  cdsFornecedor.Close;
+  cdsFornecedor.Open;
 
-   cdsFornecedor.Close;
-   cdsFornecedor.Open;
-
-   qryFornecedorVencedor.Close;
-   qryFornecedorVencedor.Open;
-   qryFornecedorVencedor.FetchAll;
-
-   
-   
+  qryFornecedorVencedor.Close;
+  qryFornecedorVencedor.Open;
+  qryFornecedorVencedor.FetchAll;
 
 end;
 
@@ -3301,7 +3067,7 @@ var
   Contador, I, iContador : Integer;
   Linha: String;
   teste : string;
- 
+
   // Lê Linha e Monta os valores
   function MontaValor: String;
   var
@@ -3314,63 +3080,49 @@ var
     iContador := 0;
     iColunaExcel := 1;
 
-     if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
+    if (not IBTransLocal.InTransaction) then
+      IBTransLocal.StartTransaction;
 
-           qryTransLocal.Close;
-           qryTransLocal.SQL.Clear;
-           qryTransLocal.SQL.Add('INSERT INTO CARREGAR_EXCEL_COTACAO      '+
-             '(PRODUTO_DESCRICAO, VALOR_UNIT, QTDE, VALOR_TOTAL, COD_PRODUTO_EXCEL, DESCONTO )  '+
-             'VALUES                                                     '+
-             '(:PRODUTO_DESCRICAO, :VALOR_UNIT, :QTDE, :VALOR_TOTAL, :COD_PRODUTO_EXCEL, :DESCONTO )');
-
-
-
+    qryTransLocal.Close;
+    qryTransLocal.SQL.Clear;
+    qryTransLocal.SQL.Add('INSERT INTO CARREGAR_EXCEL_COTACAO                                                     '+
+                          '(PRODUTO_DESCRICAO, VALOR_UNIT, QTDE, VALOR_TOTAL, COD_PRODUTO_EXCEL, DESCONTO )       '+
+                          'VALUES                                                                                 '+
+                          '(:PRODUTO_DESCRICAO, :VALOR_UNIT, :QTDE, :VALOR_TOTAL, :COD_PRODUTO_EXCEL, :DESCONTO ) ');
     While Linha[I] >= ' ' do
     begin
       If Linha[I] = ',' then
       begin
         if  AnsiContainsStr(ValorMontado, '"') then
         begin
-
           iContador := 0;
           for ii := 1 to Length(ValorMontado) do
           begin
             strAux := ValorMontado[ii];
             if strAux = '"' then
-             Inc(iContador);
+              Inc(iContador);
           end;
-
           if (iContador > 1) or (iContador = 0) then
           begin
+            ValorMontado :=  StringReplace(ValorMontado, '"', '', [rfReplaceAll]);
+            ValorMontado :=  StringReplace(ValorMontado, ',', '.', [rfReplaceAll]);
 
-             ValorMontado :=  StringReplace(ValorMontado, '"', '', [rfReplaceAll]);
-
-             ValorMontado :=  StringReplace(ValorMontado, ',', '.', [rfReplaceAll]);
-
-           //  stringReplace(Valor, ',', '', []);
-
-          // for iColunaExcel := 1 to 5 do
-          // begin
-             if iColunaExcel = 1 then
-                qryTransLocal.ParamByName('PRODUTO_DESCRICAO').AsString := ValorMontado
-             else if iColunaExcel = 4 then
-                qryTransLocal.ParamByName('COD_PRODUTO_EXCEL').AsString := ValorMontado
-             else if iColunaExcel = 2 then
-                qryTransLocal.ParamByName('QTDE').AsString := ValorMontado
-             else if iColunaExcel = 5 then
-                qryTransLocal.ParamByName('VALOR_UNIT').AsString := ValorMontado
-             else if iColunaExcel = 6 then
-             begin
-
-                if ValorMontado = 'Não Informado' then
-                  ValorMontado := '0';
-
-                qryTransLocal.ParamByName('DESCONTO').AsString := ValorMontado;
-             end
-             else if iColunaExcel = 3 then
-                qryTransLocal.ParamByName('VALOR_TOTAL').AsString := ValorMontado;
-         // end;
+            if iColunaExcel = 1 then
+              qryTransLocal.ParamByName('PRODUTO_DESCRICAO').AsString := ValorMontado
+            else if iColunaExcel = 4 then
+              qryTransLocal.ParamByName('COD_PRODUTO_EXCEL').AsString := ValorMontado
+            else if iColunaExcel = 2 then
+              qryTransLocal.ParamByName('QTDE').AsString := ValorMontado
+            else if iColunaExcel = 5 then
+              qryTransLocal.ParamByName('VALOR_UNIT').AsString := ValorMontado
+            else if iColunaExcel = 6 then
+            begin
+              if ValorMontado = 'Não Informado' then
+                ValorMontado := '0';
+              qryTransLocal.ParamByName('DESCONTO').AsString := ValorMontado;
+            end
+            else if iColunaExcel = 3 then
+              qryTransLocal.ParamByName('VALOR_TOTAL').AsString := ValorMontado;
 
             Inc(iColunaExcel);
 
@@ -3417,27 +3169,21 @@ var
     end;
     result := ValorMontado;
 
-     ValorMontado :=  StringReplace(ValorMontado, '"', '', [rfReplaceAll]);
+    ValorMontado :=  StringReplace(ValorMontado, '"', '', [rfReplaceAll]);
 
-     ValorMontado :=  StringReplace(ValorMontado, ',', '.', [rfReplaceAll]);
+    ValorMontado :=  StringReplace(ValorMontado, ',', '.', [rfReplaceAll]);
 
-     if iColunaExcel = 6 then
-     begin
-
+    if iColunaExcel = 6 then
+    begin
       if ValorMontado = 'NÃ£o Informado' then
          ValorMontado := '0';
 
       qryTransLocal.ParamByName('DESCONTO').AsString := ValorMontado;
-     end;
+    end;
 
     qryTransLocal.ExecSQL;
-    IBTransLocal.Commit;    
-
+    IBTransLocal.Commit;
   end;
-
-
-
-
 begin
   if cboFornecedorExcel.Text = '' then
   begin
@@ -3446,19 +3192,12 @@ begin
     exit;
   end;
 
-
   OpenDialog1.DefaultExt := '.csv*';
   OpenDialog1.FileName := '*.csv*';
   If OpenDialog1.Execute then
     edtCaminhoExcel.text := OpenDialog1.FileName;
 
- { objExcel := CreateOleObject('Excel.Application');
-  objExcel.Visible := False;
-  objExcel.WorkBooks.Add(edtCaminhoExcel.text); }
-
-
-   // Carregando o arquivo ...
- // AssignFile(ArquivoCSV, 'c:\Nome_do_Arquivo');
+  // Carregando o arquivo ...
   AssignFile(ArquivoCSV, edtCaminhoExcel.text);
 
   try
@@ -3468,85 +3207,16 @@ begin
 
     while not Eoln(ArquivoCSV) do
     begin
-    //  if Contador = 2 then // Primeira Linha do arquivo (Pedido);
-    //  begin
-      //  I := 0;
-      //  teste := MontaValor;
-        {cdsPedido.Append;
-        cdsPedidoCodigoCliente.AsString := MontaValor;
-        cdsPedidoNomeDoCliente.AsString := MontaValor;
-        cdsPedido.Post;}
-     // end
-    //  else
-     // begin
-        // Demais Linhas (Itens do Pedido )
-       // I := 0;
-        if Contador >= 2 then
-          teste := MontaValor;
-
-        {cdsItensDoPedido.Append;
-        cdsItensDoPedidoCodigoProduto.AsString := MontaValor;
-        cdsItensDoPedidoNomeDoProduto.AsString := AnsiUpperCase(MontaValor);
-        cdsItensDoPedidoQuantidade.AsFloat := StrToFloat(MontaValor);
-        cdsItensDoPedidoPreco.AsCurrency := StrToCurr(MontaValor);
-        cdsItensDoPedido.Post;   }
-    //  end;
-
+      if Contador >= 2 then
+        teste := MontaValor;
       Readln(ArquivoCSV, Linha);
       Contador := Contador + 1;
     end;
-
     teste := MontaValor;
 
   finally
     CloseFile(ArquivoCSV);
   end;
-
-
-
-
-
-
- { for iLinhaExcel := 2 to 1000 do
-  begin
-    if objExcel.Cells.Item[iLinhaExcel,1].Value <> '' then
-    begin
-      if (not IBTransLocal.InTransaction) then
-           IBTransLocal.StartTransaction;
-
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('INSERT INTO CARREGAR_EXCEL_COTACAO      '+
-         '(PRODUTO_DESCRICAO, VALOR_UNIT, QTDE, VALOR_TOTAL, COD_PRODUTO_EXCEL )  '+
-         'VALUES                                                     '+
-         '(:PRODUTO_DESCRICAO, :VALOR_UNIT, :QTDE, :VALOR_TOTAL, :COD_PRODUTO_EXCEL )');
-
-      for iColunaExcel := 1 to 5 do
-      begin
-        if iColunaExcel = 1 then
-         qryTransLocal.ParamByName('PRODUTO_DESCRICAO').AsString := objExcel.Cells.Item[iLinhaExcel,iColunaExcel].Value
-        else if iColunaExcel = 4 then
-         qryTransLocal.ParamByName('COD_PRODUTO_EXCEL').AsString := objExcel.Cells.Item[iLinhaExcel,iColunaExcel].Value
-        else if iColunaExcel = 2 then
-         qryTransLocal.ParamByName('QTDE').AsFloat := objExcel.Cells.Item[iLinhaExcel,iColunaExcel].Value
-        else if iColunaExcel = 5 then
-         qryTransLocal.ParamByName('VALOR_UNIT').AsFloat := objExcel.Cells.Item[iLinhaExcel,iColunaExcel].Value
-        else if iColunaExcel = 3 then
-         qryTransLocal.ParamByName('VALOR_TOTAL').AsFloat := objExcel.Cells.Item[iLinhaExcel,iColunaExcel].Value;
-      end;
-
-      qryTransLocal.ExecSQL;
-    end
-    else
-    begin
-      break;
-    end;
-  end;
-
-  IBTransLocal.Commit;
-  
-  objExcel.Quit;
-  objExcel := Unassigned; }
 
   qryCarregarExcel.close;
   qryCarregarExcel.SQL.Clear;
@@ -3560,60 +3230,49 @@ begin
   qryPesquisa.Open;
   edtTotalExcel.Value := qryPesquisa.fieldbyname('TOTAL').AsFloat;
 
-
   ///VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
-   if (not IBTransLocal.InTransaction) then
-       IBTransLocal.StartTransaction;
+  if (not IBTransLocal.InTransaction) then
+    IBTransLocal.StartTransaction;
 
   while not qryCarregarExcel.eof do
   begin
-
     qryPesquisa.Close;
     qryPesquisa.SQL.Clear;
-    qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR '+
-      ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO');
+    qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR                    '+
+                        ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO ');
     qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
     qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
     qryPesquisa.Open;
 
     if not qryPesquisa.IsEmpty then
     begin
+      qryTransLocal.Close;
+      qryTransLocal.SQL.Clear;
+      qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                            ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL                                                  ');
+      qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+      qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
+      qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
+      qryTransLocal.ExecSQL;
 
-       qryTransLocal.Close;
-       qryTransLocal.SQL.Clear;
-       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-          ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
-
-       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-       qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
-
-       qryTransLocal.ExecSQL;
-
-       qryTransLocal.Close;
-       qryTransLocal.SQL.Clear;
-       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-          ' AND FOR_CODIGO=:FOR_CODIGO ');
-
-       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-       qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-       qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
-
-       qryTransLocal.ExecSQL;
+      qryTransLocal.Close;
+      qryTransLocal.SQL.Clear;
+      qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                            ' AND FOR_CODIGO=:FOR_CODIGO                                                                     ');
+      qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+      qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
+      qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
+      qryTransLocal.ExecSQL;
 
      end;
 
      qryCarregarExcel.Next;
 
-   end;
+  end;
 
-    IBTransLocal.Commit;
-
-
-
+  IBTransLocal.Commit;
 
   //Verifica os descontos de cada item
-
   qryCarregarExcel.close;
   qryCarregarExcel.SQL.Clear;
   qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
@@ -3625,26 +3284,20 @@ begin
 
   while not qryCarregarExcel.eof do
   begin
-
     if qryCarregarExcel.fieldbyname('DESCONTO').AsFloat <> 0 then
     begin
+      desconto := formatfloat('##0.00', qryCarregarExcel.fieldbyname('VALOR_TOTAL').AsFloat / qryCarregarExcel.fieldbyname('QTDE').AsFloat);
+      desconto :=  StringReplace(desconto, ',', '.', [rfReplaceAll]);
 
-       desconto := formatfloat('##0.00', qryCarregarExcel.fieldbyname('VALOR_TOTAL').AsFloat / qryCarregarExcel.fieldbyname('QTDE').AsFloat);
+      qryTransLocal.Close;
+      qryTransLocal.SQL.Clear;
+      qryTransLocal.SQL.Add('UPDATE CARREGAR_EXCEL_COTACAO SET VALOR_UNIT=:VALOR_UNIT WHERE ID=:ID ');
+      qryTransLocal.ParamByName('VALOR_UNIT').asstring := desconto;
+      qryTransLocal.ParamByName('ID').asstring := qryCarregarExcel.fieldbyname('ID').AsString;
+      qryTransLocal.ExecSQL;
+    end;
 
-       desconto :=  StringReplace(desconto, ',', '.', [rfReplaceAll]);
-
-
-       qryTransLocal.Close;
-       qryTransLocal.SQL.Clear;
-       qryTransLocal.SQL.Add('UPDATE CARREGAR_EXCEL_COTACAO SET VALOR_UNIT=:VALOR_UNIT WHERE ID=:ID ');
-       qryTransLocal.ParamByName('VALOR_UNIT').asstring := desconto;
-       qryTransLocal.ParamByName('ID').asstring := qryCarregarExcel.fieldbyname('ID').AsString;
-
-       qryTransLocal.ExecSQL;
-
-   end;
-
-   qryCarregarExcel.Next;
+    qryCarregarExcel.Next;
   end;
 
   IBTransLocal.Commit;
@@ -3654,7 +3307,6 @@ begin
   qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
   qryCarregarExcel.Open;
   qryCarregarExcel.First;
- 
 
 end;
 
@@ -3662,23 +3314,21 @@ procedure Tfrm_cotacao_compra.DBGrid5DrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
 begin
-
   if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
-      DBGrid5.Canvas.Brush.Color := $005EAEFF;
-
+    DBGrid5.Canvas.Brush.Color := $005EAEFF;
 
   if (gdSelected in state) then
-  with (Sender as TDBGrid).Canvas do
+    with (Sender as TDBGrid).Canvas do
     begin
-    Brush.Color := clMenuHighlight;
-    Font.Style  := [fsbold];
-    Font.Color  := clWhite
+      Brush.Color := clMenuHighlight;
+      Font.Style  := [fsbold];
+      Font.Color  := clWhite
     end
-   else
-   DBGrid5.Canvas.Font.Color:= clBlack;
+    else
+      DBGrid5.Canvas.Font.Color:= clBlack;
 
-   DBGrid5.Canvas.FillRect(Rect);
-   DBGrid5.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+  DBGrid5.Canvas.FillRect(Rect);
+  DBGrid5.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure Tfrm_cotacao_compra.Button3Click(Sender: TObject);
@@ -3692,192 +3342,172 @@ begin
     cboFornecedorExcel.setfocus;
     exit;
   end;
-
   qryCarregarExcel.First;
 
   while not qryCarregarExcel.eof do
   begin
+    id_carregar_excel_cotacao:= qryCarregarExcel.fieldbyname('ID').asstring;
 
-       id_carregar_excel_cotacao:= qryCarregarExcel.fieldbyname('ID').asstring;
-
-       //verifica se produto ja foi lancado alguma vez
-       qryPesquisa.Close;
-       qryPesquisa.SQL.Clear;
-       qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR '+
-         ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO');
-       qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
-       qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
-       qryPesquisa.Open;
-       //FIM verifica se produto ja foi lancado alguma vez
-
-
-       if not qryPesquisa.IsEmpty then
-       begin
-         cod_produto_local:= qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-
-         //verifica se produto ja foi lancado na cotacao
-         qryPesquisa.Close;
-         qryPesquisa.SQL.Clear;
-         qryPesquisa.SQL.Add('SELECT COT_QTD FROM ITENS_COTACAO_COMPRA '+
-           ' WHERE PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL AND COT_CODIGO=:COT_CODIGO');
-         qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-         qryPesquisa.ParamByName('FOR_CODIGO_ATUAL').AsString  := cboFornecedorExcel.KeyValue;
-         qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-         qryPesquisa.Open;
-
-         if not qryPesquisa.IsEmpty then
-         begin
-           if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-             qryTransLocal.Close;
-             qryTransLocal.SQL.Clear;
-             qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET   '+
-                   ' COT_QTD=:COT_QTD WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL');
-             qryTransLocal.ParamByName('COT_CODIGO').AsString:= lbl_cod_cotacao.Caption;
-             qryTransLocal.ParamByName('PRO_CODIGO').AsString:= cod_produto_local;
-             qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString:= cboFornecedorExcel.KeyValue;
-             qryTransLocal.ParamByName('COT_QTD').asfloat:= qryPesquisa.fieldbyname('COT_QTD').asfloat + qryCarregarExcel.fieldbyname('QTDE').asfloat;
-             qryTransLocal.ExecSQL;
-
-             IBTransLocal.Commit;
+    //verifica se produto ja foi lancado alguma vez
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR                      '+
+                        ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO   ');
+    qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
+    qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
+    qryPesquisa.Open;
+    //FIM verifica se produto ja foi lancado alguma vez
 
 
-         end
-         else
-         begin
-            //1º INSERIR PRODUTO DO ITENS_COMPRA_COMPRA
+    if not qryPesquisa.IsEmpty then
+    begin
+      cod_produto_local:= qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
 
-             qryPesquisa.Close;
-             qryPesquisa.SQL.Clear;
-             qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
-               'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO ');
-             qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-             qryPesquisa.Open;
-             qryPesquisa.Last;
+      //verifica se produto ja foi lancado na cotacao
+      qryPesquisa.Close;
+      qryPesquisa.SQL.Clear;
+      qryPesquisa.SQL.Add('SELECT COT_QTD FROM ITENS_COTACAO_COMPRA                                                        '+
+                          ' WHERE PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL AND COT_CODIGO=:COT_CODIGO ');
+      qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+      qryPesquisa.ParamByName('FOR_CODIGO_ATUAL').AsString  := cboFornecedorExcel.KeyValue;
+      qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+      qryPesquisa.Open;
 
-             ite_ordem_insercao:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').asinteger;
+      if not qryPesquisa.IsEmpty then
+      begin
+        if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
 
-             qryPesquisa.Close;
-             qryPesquisa.SQL.Clear;
-             qryPesquisa.SQL.Add('SELECT U.UN_DESCRICAO '+
-               'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO '+
-               'WHERE PRO_CODIGO=:PRO_CODIGO ORDER BY P.PRO_DESCRICAO');
-             qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-             qryPesquisa.Open;
+        qryTransLocal.Close;
+        qryTransLocal.SQL.Clear;
+        qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET                                                                                  '+
+                              ' COT_QTD=:COT_QTD WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
+        qryTransLocal.ParamByName('COT_CODIGO').AsString:= lbl_cod_cotacao.Caption;
+        qryTransLocal.ParamByName('PRO_CODIGO').AsString:= cod_produto_local;
+        qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString:= cboFornecedorExcel.KeyValue;
+        qryTransLocal.ParamByName('COT_QTD').asfloat:= qryPesquisa.fieldbyname('COT_QTD').asfloat + qryCarregarExcel.fieldbyname('QTDE').asfloat;
+        qryTransLocal.ExecSQL;
 
-            if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
+        IBTransLocal.Commit;
+      end
+      else
+      begin
+        //1º INSERIR PRODUTO DO ITENS_COMPRA_COMPRA
+        qryPesquisa.Close;
+        qryPesquisa.SQL.Clear;
+        qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
+                            'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO    ');
+        qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+        qryPesquisa.Open;
+        qryPesquisa.Last;
 
-            qryTransLocalCompra.Close;
-            qryTransLocalCompra.SQL.Clear;
-            qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA '+
-              '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )  '+
-              'VALUES                                              '+
-              '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO )');
-            qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-            qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-            qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
-            qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
-            qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
-            qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
-            qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
-            qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
-           // qryTransLocalCompra.ParamByName('VALOR_TOTAL').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat *
-           //     qryCarregarExcel.fieldbyname('QTDE').asfloat;
+        ite_ordem_insercao:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').asinteger;
 
-            qryTransLocalCompra.ExecSQL;
+        qryPesquisa.Close;
+        qryPesquisa.SQL.Clear;
+        qryPesquisa.SQL.Add('SELECT U.UN_DESCRICAO                                             '+
+                            'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO '+
+                            'WHERE PRO_CODIGO=:PRO_CODIGO ORDER BY P.PRO_DESCRICAO             ');
+        qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+        qryPesquisa.Open;
 
-            IBTransLocal.Commit;
+        if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
 
-            //2º VERIFICAR SE PRODUTO COM O FORNECEDOR E COTACAO JA FORAM LANCADOS ITENS_COTACAO_COMPRA_FORNEC
+        qryTransLocalCompra.Close;
+        qryTransLocalCompra.SQL.Clear;
+        qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                       '+
+                                    '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )         '+
+                                    'VALUES                                                                                                                 '+
+                                    '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO ) ');
+        qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+        qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+        qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+        qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
+        qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
+        qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
+        qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
+        qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+        qryTransLocalCompra.ExecSQL;
+        IBTransLocal.Commit;
 
-            qryPesquisa.Close;
-            qryPesquisa.SQL.Clear;
-            qryPesquisa.SQL.Add('SELECT COT_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC  '+
-              'WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO');
-            qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-            qryPesquisa.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-            qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-            qryPesquisa.Open;
+        //2º VERIFICAR SE PRODUTO COM O FORNECEDOR E COTACAO JA FORAM LANCADOS ITENS_COTACAO_COMPRA_FORNEC
+        qryPesquisa.Close;
+        qryPesquisa.SQL.Clear;
+        qryPesquisa.SQL.Add('SELECT COT_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC                                 '+
+                            'WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO ');
+        qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+        qryPesquisa.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+        qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+        qryPesquisa.Open;
 
-            if qryPesquisa.IsEmpty then
-            begin
+        if qryPesquisa.IsEmpty then
+        begin
+          if (not IBTransLocal.InTransaction) then
+            IBTransLocal.StartTransaction;
 
-              if (not IBTransLocal.InTransaction) then
-                IBTransLocal.StartTransaction;
+          qryTransLocalCompraFornec.Close;
+          qryTransLocalCompraFornec.SQL.Clear;
+          qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
+                                            ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                            ' VALUES                                              '+
+                                            ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+          qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+          qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+          qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
+          qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+          qryTransLocalCompraFornec.ExecSQL;
 
-              qryTransLocalCompraFornec.Close;
-              qryTransLocalCompraFornec.SQL.Clear;
-              qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC   '+
-                ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR) '+
-                ' VALUES                                              '+
-                ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
-              qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-              qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-              qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
-              qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+          IBTransLocal.Commit;
+        end;
 
-              qryTransLocalCompraFornec.ExecSQL;
+        //3º VERIFICAR SE FORNECEDOR JA FOI LANCADO NO ITENS_COTACAO_FORNEC_VENC
+        qryPesqAux.Close;
+        qryPesqAux.SQL.Clear;
+        qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC          '+
+                           ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO  ');
+        qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+        qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+        qryPesqAux.Open;
 
-              IBTransLocal.Commit;
+        if qryPesqAux.IsEmpty then
+        begin
+          if (not IBTransLocal.InTransaction) then
+            IBTransLocal.StartTransaction;
 
-            end;
+          qryTransLocal.Close;
+          qryTransLocal.SQL.Clear;
+          qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC                    '+
+                                ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA)          '+
+                                ' VALUES                                                  '+
+                                ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA)       ');
+          qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+          qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+          qryTransLocal.ExecSQL;
 
-            //3º VERIFICAR SE FORNECEDOR JA FOI LANCADO NO ITENS_COTACAO_FORNEC_VENC
+          IBTransLocal.Commit;
+        end;
+      end;
 
-            qryPesqAux.Close;
-            qryPesqAux.SQL.Clear;
-            qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-              ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-            qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-            qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-            qryPesqAux.Open;
+      //FIM verifica se produto ja foi lancado na cotacao
 
-            if qryPesqAux.IsEmpty then
-            begin
-              if (not IBTransLocal.InTransaction) then
-                IBTransLocal.StartTransaction;
+      //DELETAR PRODUTO DO CARREGAR_EXCEL_COTACAO
+      if (not IBTransLocal.InTransaction) then
+        IBTransLocal.StartTransaction;
 
-              qryTransLocal.Close;
-              qryTransLocal.SQL.Clear;
-              qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC          '+
-                 ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA                  ) '+
-                 ' VALUES                                                           '+
-                 ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA               ) ');
-              qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-              qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+      qryTransLocal.Close;
+      qryTransLocal.SQL.Clear;
+      qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
+      qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao;
+      qryTransLocal.ExecSQL;
+      IBTransLocal.Commit;
 
-              qryTransLocal.ExecSQL;
-
-              IBTransLocal.Commit;
-            end;
-
-         end;
-
-         //FIM verifica se produto ja foi lancado na cotacao
-
-         //DELETAR PRODUTO DO CARREGAR_EXCEL_COTACAO
-
-           if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-             qryTransLocal.Close;
-             qryTransLocal.SQL.Clear;
-             qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
-             qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao;
-             qryTransLocal.ExecSQL;
-
-           IBTransLocal.Commit;
-
-
-       end;
-       qryCarregarExcel.Next;
+    end;
+    qryCarregarExcel.Next;
   end;
 
   cod_cotacao_local := ' I.COT_CODIGO = ' + lbl_cod_cotacao.Caption;
   fornecedor_local:= ' and I.FOR_CODIGO_ATUAL = ' + IntToStr(cboFornecedorExcel.KeyValue);
-
 
   qryCarregarExcel.close;
   qryCarregarExcel.SQL.Clear;
@@ -3892,23 +3522,22 @@ begin
 
   qryProduto.Close;
   qryProduto.SQL.Clear;
-  qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
-                     'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
-                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,         '+
-                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO       '+
-                     'FROM itens_cotacao_compra I INNER JOIN                                       '+
-                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                   '+
-                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                '+
-                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo            '+
-                     '  AND ICCF.for_codigo = I.for_codigo_atual                                   '+
-                     'LEFT JOIN agenda_telefone FORN ON                                            '+
-                     'I.for_codigo_atual = FORN.at_codigo                                          '+
-                     'WHERE ' + cod_cotacao_local + fornecedor_local                                     +
-                     'GROUP BY I.ITENS_COT_CODIGO,                                                 '+
-                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,       '+
-                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME, '+
-                     'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs ');
-
+  qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,   '+
+                     'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,   '+
+                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,                     '+
+                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO                   '+
+                     'FROM itens_cotacao_compra I INNER JOIN                                                   '+
+                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                               '+
+                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                            '+
+                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo                        '+
+                     '  AND ICCF.for_codigo = I.for_codigo_atual                                               '+
+                     'LEFT JOIN agenda_telefone FORN ON                                                        '+
+                     'I.for_codigo_atual = FORN.at_codigo                                                      '+
+                     'WHERE ' + cod_cotacao_local + fornecedor_local                                            +
+                     'GROUP BY I.ITENS_COT_CODIGO,                                                             '+
+                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,                   '+
+                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME,       '+
+                     'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs  ');
   qryProduto.Open;
 
   cdsProduto.Close;
@@ -3924,19 +3553,19 @@ end;
 procedure Tfrm_cotacao_compra.Button4Click(Sender: TObject);
 begin
   if (not IBTransLocal.InTransaction) then
-           IBTransLocal.StartTransaction;
+    IBTransLocal.StartTransaction;
 
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('delete from carregar_excel_cotacao');
-      qryTransLocal.ExecSQL;
+  qryTransLocal.Close;
+  qryTransLocal.SQL.Clear;
+  qryTransLocal.SQL.Add('delete from carregar_excel_cotacao');
+  qryTransLocal.ExecSQL;
 
-   IBTransLocal.Commit;
+  IBTransLocal.Commit;
 
-   qryCarregarExcel.close;
-   qryCarregarExcel.SQL.Clear;
-   qryCarregarExcel.SQL.Add('SELECT * FROM CARREGAR_EXCEL_COTACAO ORDER BY PRODUTO_DESCRICAO');
-   qryCarregarExcel.Open;
+  qryCarregarExcel.close;
+  qryCarregarExcel.SQL.Clear;
+  qryCarregarExcel.SQL.Add('SELECT * FROM CARREGAR_EXCEL_COTACAO ORDER BY PRODUTO_DESCRICAO');
+  qryCarregarExcel.Open;
 
 end;
 
@@ -3947,61 +3576,53 @@ begin
   campo_local := column.fieldname; // CAMPO RECEBE O NOME DA COLUNA CLICADA,
   application.processmessages;
 
-   qryCarregarExcel.close;
-   qryCarregarExcel.SQL.Clear;
-   qryCarregarExcel.SQL.Add('SELECT * FROM CARREGAR_EXCEL_COTACAO ORDER BY ' + campo_local);
-   qryCarregarExcel.Open;
-  
+  qryCarregarExcel.close;
+  qryCarregarExcel.SQL.Clear;
+  qryCarregarExcel.SQL.Add('SELECT * FROM CARREGAR_EXCEL_COTACAO ORDER BY ' + campo_local);
+  qryCarregarExcel.Open;
 end;
 
 procedure Tfrm_cotacao_compra.txt_descricao_pesqChange(Sender: TObject);
 var
   descricao: string;
 begin
-{if txt_cod_produto_pesq.Text <> '' then
-   codigo  := ' AND PRO_CODIGO = ' + txt_cod_produto_pesq.Text
-else
-   codigo  := '';
- }
+  if (txt_descricao_pesq.Text <> '') and (rdb_inicio.Checked = TRUE) then
+    descricao  := ' AND UPPER(P.PRO_DESCRICAO) LIKE UPPER('+ #39 + txt_descricao_pesq.Text + '%' + #39 + ')'
+  else if (txt_descricao_pesq.Text <> '') and (rdb_posicao.Checked = TRUE) then
+    descricao  := ' AND UPPER(P.PRO_DESCRICAO) LIKE UPPER('+ #39 + '%' + txt_descricao_pesq.Text + '%' + #39 + ')'
+  else
+    descricao  := '';
 
-
-if (txt_descricao_pesq.Text <> '') and (rdb_inicio.Checked = TRUE) then
-   descricao  := ' AND UPPER(P.PRO_DESCRICAO) LIKE UPPER('+ #39 + txt_descricao_pesq.Text + '%' + #39 + ')'
-else if (txt_descricao_pesq.Text <> '') and (rdb_posicao.Checked = TRUE) then
-   descricao  := ' AND UPPER(P.PRO_DESCRICAO) LIKE UPPER('+ #39 + '%' + txt_descricao_pesq.Text + '%' + #39 + ')'
-else
-   descricao  := '';
-
-qryProdutoExcel.Close;
-qryProdutoExcel.SQL.Clear;
-qryProdutoExcel.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, U.UN_DESCRICAO '+
-  'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO  '+
-  'WHERE 1=1 ' + descricao + ' ORDER BY P.PRO_DESCRICAO');
-qryProdutoExcel.Open;
+  qryProdutoExcel.Close;
+  qryProdutoExcel.SQL.Clear;
+  qryProdutoExcel.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, U.UN_DESCRICAO               '+
+                          'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO  '+
+                          'WHERE 1=1 ' + descricao + ' ORDER BY P.PRO_DESCRICAO               ');
+  qryProdutoExcel.Open;
 end;
 
 procedure Tfrm_cotacao_compra.txt_descricao_pesqKeyPress(Sender: TObject;
   var Key: Char);
 begin
-if key =#13 then
-   dbgProdutoExcel.SetFocus;
+  if key =#13 then
+    dbgProdutoExcel.SetFocus;
 end;
 
 procedure Tfrm_cotacao_compra.txt_cod_produto_pesqChange(Sender: TObject);
 var
   codigo: string;
 begin
-if txt_cod_produto_pesq.Text <> '' then
-   codigo  := ' AND PRO_CODIGO = ' + txt_cod_produto_pesq.Text
-else
-   codigo  := '';
+  if txt_cod_produto_pesq.Text <> '' then
+    codigo  := ' AND PRO_CODIGO = ' + txt_cod_produto_pesq.Text
+  else
+    codigo  := '';
 
-qryProdutoExcel.Close;
-qryProdutoExcel.SQL.Clear;
-qryProdutoExcel.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, u.UN_DESCRICAO '+
-  'FROM PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO   '+
-  'WHERE 1=1 ' + codigo + ' ORDER BY P.PRO_DESCRICAO');
-qryProdutoExcel.Open;
+  qryProdutoExcel.Close;
+  qryProdutoExcel.SQL.Clear;
+  qryProdutoExcel.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, u.UN_DESCRICAO               '+
+                          'FROM PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO   '+
+                          'WHERE 1=1 ' + codigo + ' ORDER BY P.PRO_DESCRICAO                  ');
+  qryProdutoExcel.Open;
 end;
 
 
@@ -4017,17 +3638,17 @@ procedure Tfrm_cotacao_compra.dbgProdutoExcelDrawColumnCell(
   State: TGridDrawState);
 begin
  if (gdSelected in state) then
-  with (Sender as TDBGrid).Canvas do
-    begin
-    Brush.Color := clMenuHighlight;
-    Font.Style  := [fsbold];
-    Font.Color  := clWhite
-    end
+   with (Sender as TDBGrid).Canvas do
+   begin
+     Brush.Color := clMenuHighlight;
+     Font.Style  := [fsbold];
+     Font.Color  := clWhite
+   end
    else
-   dbgProdutoExcel.Canvas.Font.Color:= clBlack;
+     dbgProdutoExcel.Canvas.Font.Color:= clBlack;
 
-   dbgProdutoExcel.Canvas.FillRect(Rect);
-   dbgProdutoExcel.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+  dbgProdutoExcel.Canvas.FillRect(Rect);
+  dbgProdutoExcel.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure Tfrm_cotacao_compra.rdb_posicaoClick(Sender: TObject);
@@ -4074,7 +3695,6 @@ begin
     valor_total_fornec:= qryCarregarExcel.fieldbyname('VALOR_TOTAL').ASFloat;
     pro_codigo_fornecedor:= qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').AsString;
     qtde_fornec:= qryCarregarExcel.fieldbyname('QTDE').ASFloat;
-    
   end;
 end;
 
@@ -4096,159 +3716,139 @@ begin
   end;
 
   ///Verificar se produto já foi lançado para o respectivo fornecedor
-   qryPesquisa.Close;
-   qryPesquisa.SQL.Clear;
-   qryPesquisa.SQL.Add('SELECT ID FROM COD_PRODUTO_MEU_FORNECEDOR '+
-     ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO');
-   qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := pro_codigo_fornecedor;
-  // qryPesquisa.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
-   qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
-   qryPesquisa.Open;
+  qryPesquisa.Close;
+  qryPesquisa.SQL.Clear;
+  qryPesquisa.SQL.Add('SELECT ID FROM COD_PRODUTO_MEU_FORNECEDOR                            '+
+                      ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO ');
+  qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := pro_codigo_fornecedor;
+  qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
+  qryPesquisa.Open;
 
-   if not qryPesquisa.IsEmpty then
-   begin
-     mensagem:= 'Este produto com o respectivo fornecedor já está ligado!';
-     Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING + MB_TOPMOST);
-     exit;
-   end;
-   ///FIM Verificar se produto já foi lançado para o respectivo fornecedor
+  if not qryPesquisa.IsEmpty then
+  begin
+    mensagem:= 'Este produto com o respectivo fornecedor já está ligado!';
+    Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING + MB_TOPMOST);
+    exit;
+  end;
+  ///FIM Verificar se produto já foi lançado para o respectivo fornecedor
 
 
-   ///VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR    
-  
-       if (not IBTransLocal.InTransaction) then
-        IBTransLocal.StartTransaction;
+  ///VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
+  if (not IBTransLocal.InTransaction) then
+   IBTransLocal.StartTransaction;
 
+  qryTransLocal.Close;
+  qryTransLocal.SQL.Clear;
+  qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                        ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL                                                  ');
+  qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+  qryTransLocal.ParamByName('PRO_CODIGO').asstring := pro_codigo_meu;
+  qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
+  qryTransLocal.ExecSQL;
+
+  qryTransLocal.Close;
+  qryTransLocal.SQL.Clear;
+  qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                        ' AND FOR_CODIGO=:FOR_CODIGO                                                                     ');
+  qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+  qryTransLocal.ParamByName('PRO_CODIGO').asstring := pro_codigo_meu;
+  qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
+  qryTransLocal.ExecSQL;
+
+  IBTransLocal.Commit;
+  ///fim VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
+
+  qryPesquisa.Close;
+  qryPesquisa.SQL.Clear;
+  qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
+                      'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO    ');
+  qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+  qryPesquisa.Open;
+  qryPesquisa.Last;
+
+  if (not IBTransLocal.InTransaction) then
+    IBTransLocal.StartTransaction;
+
+  try
+    qryTransLocalFornecMeu.Close;
+    qryTransLocalFornecMeu.SQL.Clear;
+    qryTransLocalFornecMeu.SQL.Add('INSERT INTO COD_PRODUTO_MEU_FORNECEDOR               '+
+                                   ' (PRO_CODIGO, PRO_CODIGO_FORNEC, AT_CODIGO)          '+
+                                   ' VALUES                                              '+
+                                   ' (:PRO_CODIGO, :PRO_CODIGO_FORNEC, :AT_CODIGO)       ');
+    qryTransLocalFornecMeu.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
+    qryTransLocalFornecMeu.ParamByName('PRO_CODIGO_FORNEC').AsString := pro_codigo_fornecedor;
+    qryTransLocalFornecMeu.ParamByName('AT_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
+    qryTransLocalFornecMeu.ExecSQL;
+
+    qryTransLocalCompra.Close;
+    qryTransLocalCompra.SQL.Clear;
+    qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                      '+
+                                '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )        '+
+                                'VALUES                                                                                                                '+
+                                '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO )');
+    qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+    qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
+    qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := pro_unidade_meu;
+    qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qtde_fornec;
+    qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger :=
+      qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').AsInteger +1;
+    qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
+    qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
+    qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
+    qryTransLocalCompra.ExecSQL;
+
+    qryTransLocalCompraFornec.Close;
+    qryTransLocalCompraFornec.SQL.Clear;
+    qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
+                                      ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                      ' VALUES                                              '+
+                                      ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+    qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+    qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
+    qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
+    qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
+    qryTransLocalCompraFornec.ExecSQL;
+
+    qryPesqAux.Close;
+    qryPesqAux.SQL.Clear;
+    qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC         '+
+                       ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
+    qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+    qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+    qryPesqAux.Open;
+
+    if qryPesqAux.IsEmpty then
+    begin
        qryTransLocal.Close;
        qryTransLocal.SQL.Clear;
-       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-          ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
-
-       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-       qryTransLocal.ParamByName('PRO_CODIGO').asstring := pro_codigo_meu;
-       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
-
-       qryTransLocal.ExecSQL;
-
-       qryTransLocal.Close;
-       qryTransLocal.SQL.Clear;
-       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-          ' AND FOR_CODIGO=:FOR_CODIGO ');
-
-       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-       qryTransLocal.ParamByName('PRO_CODIGO').asstring := pro_codigo_meu;
-       qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
+       qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC                             '+
+                             ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA)                   '+
+                             ' VALUES                                                           '+
+                             ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA)                ');
+       qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+       qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
 
        qryTransLocal.ExecSQL;
+    end;
 
-       IBTransLocal.Commit;
+  except
+    IBTransLocal.Rollback;
+    exit;
+  end;
 
-    
-   ///fim VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
+  IBTransLocal.Commit;
 
+  if (not IBTransLocal.InTransaction) then
+    IBTransLocal.StartTransaction;
 
-   qryPesquisa.Close;
-   qryPesquisa.SQL.Clear;
-   qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
-              'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO ');
-   qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-   qryPesquisa.Open;
-   qryPesquisa.Last;
+  qryTransLocal.Close;
+  qryTransLocal.SQL.Clear;
+  qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
+  qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao_global;
+  qryTransLocal.ExecSQL;
 
-   if (not IBTransLocal.InTransaction) then
-      IBTransLocal.StartTransaction;
-
-   try
-
-      qryTransLocalFornecMeu.Close;
-      qryTransLocalFornecMeu.SQL.Clear;
-      qryTransLocalFornecMeu.SQL.Add('INSERT INTO COD_PRODUTO_MEU_FORNECEDOR   '+
-         ' (PRO_CODIGO, PRO_CODIGO_FORNEC, AT_CODIGO)          '+
-         ' VALUES                                              '+
-         ' (:PRO_CODIGO, :PRO_CODIGO_FORNEC, :AT_CODIGO) ');
-      qryTransLocalFornecMeu.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
-      qryTransLocalFornecMeu.ParamByName('PRO_CODIGO_FORNEC').AsString := pro_codigo_fornecedor;
-      qryTransLocalFornecMeu.ParamByName('AT_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
-
-      qryTransLocalFornecMeu.ExecSQL;
-
-
-      qryTransLocalCompra.Close;
-      qryTransLocalCompra.SQL.Clear;
-      qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA '+
-         '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )  '+
-         'VALUES                                              '+
-         '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO )');
-      qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-      qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
-      qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := pro_unidade_meu;
-      qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qtde_fornec;
-      qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger :=
-        qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').AsInteger +1;
-      qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
-      qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
-      qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
-     // qryTransLocalCompra.ParamByName('VALOR_TOTAL').AsFloat := valor_unit_fornec * qtde_fornec;
-
-      qryTransLocalCompra.ExecSQL;
-
-      qryTransLocalCompraFornec.Close;
-      qryTransLocalCompraFornec.SQL.Clear;
-      qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC   '+
-         ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR) '+
-         ' VALUES                                              '+
-         ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
-      qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-      qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
-      qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
-      qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
-
-      qryTransLocalCompraFornec.ExecSQL;
-
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-      qryPesqAux.Open;
-
-      if qryPesqAux.IsEmpty then
-      begin
-         qryTransLocal.Close;
-         qryTransLocal.SQL.Clear;
-         qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC          '+
-            ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA                  ) '+
-            ' VALUES                                                           '+
-            ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA               ) ');
-         qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-         qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-
-         qryTransLocal.ExecSQL;
-      end;
-
-
-   except
-
-     IBTransLocal.Rollback;
-     exit;
-
-   end;
-
-   IBTransLocal.Commit;
-
-   if (not IBTransLocal.InTransaction) then
-      IBTransLocal.StartTransaction;
-
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
-      qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao_global;
-      qryTransLocal.ExecSQL;
-
-
-     IBTransLocal.Commit;
+  IBTransLocal.Commit;
 
   cod_cotacao_local := ' I.COT_CODIGO = ' + frm_cotacao_compra.lbl_cod_cotacao.Caption;
   fornecedor_local:= ' and I.FOR_CODIGO_ATUAL = ' + IntToStr(cboFornecedorExcel.KeyValue);
@@ -4268,19 +3868,19 @@ begin
   qryProduto.SQL.Clear;
   qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
                      'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
-                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,         '+
-                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO       '+
-                     'FROM itens_cotacao_compra I INNER JOIN                                       '+
-                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                   '+
-                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                '+
-                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo            '+
-                     '  AND ICCF.for_codigo = I.for_codigo_atual                                   '+
-                     'LEFT JOIN agenda_telefone FORN ON                                            '+
-                     'I.for_codigo_atual = FORN.at_codigo                                          '+
-                     'WHERE ' + cod_cotacao_local + fornecedor_local                                +
-                     'GROUP BY I.ITENS_COT_CODIGO,                                                 '+
-                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,       '+
-                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME, '+
+                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,                    '+
+                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO                  '+
+                     'FROM itens_cotacao_compra I INNER JOIN                                                  '+
+                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                              '+
+                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                           '+
+                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo                       '+
+                     '  AND ICCF.for_codigo = I.for_codigo_atual                                              '+
+                     'LEFT JOIN agenda_telefone FORN ON                                                       '+
+                     'I.for_codigo_atual = FORN.at_codigo                                                     '+
+                     'WHERE ' + cod_cotacao_local + fornecedor_local                                           +
+                     'GROUP BY I.ITENS_COT_CODIGO,                                                            '+
+                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,                  '+
+                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME,      '+
                      'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs ');
 
   qryProduto.Open;
@@ -4289,9 +3889,7 @@ begin
   cdsProduto.FetchParams;
   cdsProduto.Open;
 
-
   btn_Finalizar.Enabled := true;
-
 
 end;
 
@@ -4310,184 +3908,168 @@ begin
 
   id_carregar_excel_cotacao:= qryCarregarExcel.fieldbyname('ID').asstring;
 
-       //verifica se produto ja foi lancado alguma vez
-       qryPesquisa.Close;
-       qryPesquisa.SQL.Clear;
-       qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR '+
-         ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO');
-       qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
-       qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
-       qryPesquisa.Open;
-       //FIM verifica se produto ja foi lancado alguma vez
+  //verifica se produto ja foi lancado alguma vez
+  qryPesquisa.Close;
+  qryPesquisa.SQL.Clear;
+  qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR                    '+
+                      ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO ');
+  qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
+  qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
+  qryPesquisa.Open;
+  //FIM verifica se produto ja foi lancado alguma vez
+
+  if not qryPesquisa.IsEmpty then
+  begin
+    cod_produto_local:= qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
+
+    //verifica se produto ja foi lancado na cotacao
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT COT_QTD FROM ITENS_COTACAO_COMPRA                                                        '+
+                        ' WHERE PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL AND COT_CODIGO=:COT_CODIGO ');
+    qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+    qryPesquisa.ParamByName('FOR_CODIGO_ATUAL').AsString  := cboFornecedorExcel.KeyValue;
+    qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+    qryPesquisa.Open;
+
+    if not qryPesquisa.IsEmpty then
+    begin
+      if (not IBTransLocal.InTransaction) then
+        IBTransLocal.StartTransaction;
+
+      qryTransLocal.Close;
+      qryTransLocal.SQL.Clear;
+      qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET                                                                                  '+
+                            ' COT_QTD=:COT_QTD WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
+      qryTransLocal.ParamByName('COT_CODIGO').AsString:= lbl_cod_cotacao.Caption;
+      qryTransLocal.ParamByName('PRO_CODIGO').AsString:= cod_produto_local;
+      qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString:= cboFornecedorExcel.KeyValue;
+      qryTransLocal.ParamByName('COT_QTD').asfloat:= qryPesquisa.fieldbyname('COT_QTD').asfloat + qryCarregarExcel.fieldbyname('QTDE').asfloat;
+      qryTransLocal.ExecSQL;
+
+      IBTransLocal.Commit;
+
+    end
+    else
+    begin
+      //1º INSERIR PRODUTO DO ITENS_COMPRA_COMPRA
+      qryPesquisa.Close;
+      qryPesquisa.SQL.Clear;
+      qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
+                          'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO    ');
+      qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+      qryPesquisa.Open;
+      qryPesquisa.Last;
+
+      ite_ordem_insercao:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').asinteger;
+
+      qryPesquisa.Close;
+      qryPesquisa.SQL.Clear;
+      qryPesquisa.SQL.Add('SELECT U.UN_DESCRICAO                                             '+
+                          'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO '+
+                          'WHERE PRO_CODIGO=:PRO_CODIGO ORDER BY P.PRO_DESCRICAO             ');
+      qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+      qryPesquisa.Open;
+
+      if (not IBTransLocal.InTransaction) then
+        IBTransLocal.StartTransaction;
+
+      qryTransLocalCompra.Close;
+      qryTransLocalCompra.SQL.Clear;
+      qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                       '+
+                                  '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )         '+
+                                  'VALUES                                                                                                                 '+
+                                  '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO)  ');
+      qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+      qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+      qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+      qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
+      qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
+      qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
+      qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
+      qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+      qryTransLocalCompra.ExecSQL;
+
+      IBTransLocal.Commit;
+
+      //2º VERIFICAR SE PRODUTO COM O FORNECEDOR E COTACAO JA FORAM LANCADOS ITENS_COTACAO_COMPRA_FORNEC
+      qryPesquisa.Close;
+      qryPesquisa.SQL.Clear;
+      qryPesquisa.SQL.Add('SELECT COT_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC                                 '+
+                          'WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO ');
+      qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+      qryPesquisa.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+      qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+      qryPesquisa.Open;
+
+      if qryPesquisa.IsEmpty then
+      begin
+        if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
+
+        qryTransLocalCompraFornec.Close;
+        qryTransLocalCompraFornec.SQL.Clear;
+        qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
+                                          ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                          ' VALUES                                              '+
+                                          ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+        qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+        qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+        qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
+        qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+        qryTransLocalCompraFornec.ExecSQL;
+        IBTransLocal.Commit;
+      end;
+
+      //3º VERIFICAR SE FORNECEDOR JA FOI LANCADO NO ITENS_COTACAO_FORNEC_VENC
+      qryPesqAux.Close;
+      qryPesqAux.SQL.Clear;
+      qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC         '+
+                         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
+      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+      qryPesqAux.Open;
+
+      if qryPesqAux.IsEmpty then
+      begin
+        if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
+
+        qryTransLocal.Close;
+        qryTransLocal.SQL.Clear;
+        qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC              '+
+                              ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA)    '+
+                              ' VALUES                                            '+
+                              ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA) ');
+        qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+        qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
+
+        qryTransLocal.ExecSQL;
+
+        IBTransLocal.Commit;
+      end;
+    end;
+
+    //FIM verifica se produto ja foi lancado na cotacao
+
+    //DELETAR PRODUTO DO CARREGAR_EXCEL_COTACAO
+    if (not IBTransLocal.InTransaction) then
+      IBTransLocal.StartTransaction;
+
+    qryTransLocal.Close;
+    qryTransLocal.SQL.Clear;
+    qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
+    qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao;
+    qryTransLocal.ExecSQL;
+
+    IBTransLocal.Commit;
 
 
-       if not qryPesquisa.IsEmpty then
-       begin
-         cod_produto_local:= qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-
-         //verifica se produto ja foi lancado na cotacao
-         qryPesquisa.Close;
-         qryPesquisa.SQL.Clear;
-         qryPesquisa.SQL.Add('SELECT COT_QTD FROM ITENS_COTACAO_COMPRA '+
-           ' WHERE PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL AND COT_CODIGO=:COT_CODIGO');
-         qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-         qryPesquisa.ParamByName('FOR_CODIGO_ATUAL').AsString  := cboFornecedorExcel.KeyValue;
-         qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-         qryPesquisa.Open;
-
-         if not qryPesquisa.IsEmpty then
-         begin
-           if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-             qryTransLocal.Close;
-             qryTransLocal.SQL.Clear;
-             qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET   '+
-                   ' COT_QTD=:COT_QTD WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL');
-             qryTransLocal.ParamByName('COT_CODIGO').AsString:= lbl_cod_cotacao.Caption;
-             qryTransLocal.ParamByName('PRO_CODIGO').AsString:= cod_produto_local;
-             qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString:= cboFornecedorExcel.KeyValue;
-             qryTransLocal.ParamByName('COT_QTD').asfloat:= qryPesquisa.fieldbyname('COT_QTD').asfloat + qryCarregarExcel.fieldbyname('QTDE').asfloat;
-             qryTransLocal.ExecSQL;
-
-             IBTransLocal.Commit;
-
-
-         end
-         else
-         begin
-            //1º INSERIR PRODUTO DO ITENS_COMPRA_COMPRA
-
-             qryPesquisa.Close;
-             qryPesquisa.SQL.Clear;
-             qryPesquisa.SQL.Add('SELECT ITE_ORDEM_INSERCAO FROM ITENS_COTACAO_COMPRA         '+
-               'WHERE COT_CODIGO=:COT_CODIGO ORDER BY ITE_ORDEM_INSERCAO ');
-             qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-             qryPesquisa.Open;
-             qryPesquisa.Last;
-
-             ite_ordem_insercao:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').asinteger;
-
-             qryPesquisa.Close;
-             qryPesquisa.SQL.Clear;
-             qryPesquisa.SQL.Add('SELECT U.UN_DESCRICAO '+
-               'FROM  PRODUTO P INNER JOIN UNIDADE U ON P.UN_CODIGO = U.UN_CODIGO '+
-               'WHERE PRO_CODIGO=:PRO_CODIGO ORDER BY P.PRO_DESCRICAO');
-             qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-             qryPesquisa.Open;
-
-            if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-            qryTransLocalCompra.Close;
-            qryTransLocalCompra.SQL.Clear;
-            qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA '+
-              '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )  '+
-              'VALUES                                              '+
-              '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO )');
-            qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-            qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-            qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
-            qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
-            qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
-            qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
-            qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
-            qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
-           // qryTransLocalCompra.ParamByName('VALOR_TOTAL').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat *
-           //     qryCarregarExcel.fieldbyname('QTDE').asfloat;
-
-            qryTransLocalCompra.ExecSQL;
-
-            IBTransLocal.Commit;
-
-            //2º VERIFICAR SE PRODUTO COM O FORNECEDOR E COTACAO JA FORAM LANCADOS ITENS_COTACAO_COMPRA_FORNEC
-
-            qryPesquisa.Close;
-            qryPesquisa.SQL.Clear;
-            qryPesquisa.SQL.Add('SELECT COT_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC  '+
-              'WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO');
-            qryPesquisa.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-            qryPesquisa.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-            qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-            qryPesquisa.Open;
-
-            if qryPesquisa.IsEmpty then
-            begin
-
-              if (not IBTransLocal.InTransaction) then
-                IBTransLocal.StartTransaction;
-
-              qryTransLocalCompraFornec.Close;
-              qryTransLocalCompraFornec.SQL.Clear;
-              qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC   '+
-                ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR) '+
-                ' VALUES                                              '+
-                ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
-              qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-              qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-              qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
-              qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
-
-              qryTransLocalCompraFornec.ExecSQL;
-
-              IBTransLocal.Commit;
-
-            end;
-
-            //3º VERIFICAR SE FORNECEDOR JA FOI LANCADO NO ITENS_COTACAO_FORNEC_VENC
-
-            qryPesqAux.Close;
-            qryPesqAux.SQL.Clear;
-            qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-              ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-            qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-            qryPesqAux.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-            qryPesqAux.Open;
-
-            if qryPesqAux.IsEmpty then
-            begin
-              if (not IBTransLocal.InTransaction) then
-                IBTransLocal.StartTransaction;
-
-              qryTransLocal.Close;
-              qryTransLocal.SQL.Clear;
-              qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC          '+
-                 ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA                  ) '+
-                 ' VALUES                                                           '+
-                 ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA               ) ');
-              qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-              qryTransLocal.ParamByName('FOR_CODIGO').AsString := cboFornecedorExcel.KeyValue;
-
-              qryTransLocal.ExecSQL;
-
-              IBTransLocal.Commit;
-            end;
-
-         end;
-
-         //FIM verifica se produto ja foi lancado na cotacao
-
-         //DELETAR PRODUTO DO CARREGAR_EXCEL_COTACAO
-
-           if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-             qryTransLocal.Close;
-             qryTransLocal.SQL.Clear;
-             qryTransLocal.SQL.Add('DELETE FROM CARREGAR_EXCEL_COTACAO WHERE ID=:ID');
-             qryTransLocal.ParamByName('ID').AsString:= id_carregar_excel_cotacao;
-             qryTransLocal.ExecSQL;
-
-           IBTransLocal.Commit;
-
-
-       end;
-       qryCarregarExcel.Next;
-  
+  end;
+  qryCarregarExcel.Next;
 
   cod_cotacao_local := ' I.COT_CODIGO = ' + lbl_cod_cotacao.Caption;
   fornecedor_local:= ' and I.FOR_CODIGO_ATUAL = ' + IntToStr(cboFornecedorExcel.KeyValue);
-
 
   qryCarregarExcel.close;
   qryCarregarExcel.SQL.Clear;
@@ -4504,19 +4086,19 @@ begin
   qryProduto.SQL.Clear;
   qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
                      'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
-                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,         '+
-                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO       '+
-                     'FROM itens_cotacao_compra I INNER JOIN                                       '+
-                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                   '+
-                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                '+
-                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo            '+
-                     '  AND ICCF.for_codigo = I.for_codigo_atual                                   '+
-                     'LEFT JOIN agenda_telefone FORN ON                                            '+
-                     'I.for_codigo_atual = FORN.at_codigo                                          '+
-                     'WHERE ' + cod_cotacao_local + fornecedor_local                                +
-                     'GROUP BY I.ITENS_COT_CODIGO,                                                 '+
-                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,       '+
-                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME, '+
+                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,                    '+
+                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO                  '+
+                     'FROM itens_cotacao_compra I INNER JOIN                                                  '+
+                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                              '+
+                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                           '+
+                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo                       '+
+                     '  AND ICCF.for_codigo = I.for_codigo_atual                                              '+
+                     'LEFT JOIN agenda_telefone FORN ON                                                       '+
+                     'I.for_codigo_atual = FORN.at_codigo                                                     '+
+                     'WHERE ' + cod_cotacao_local + fornecedor_local                                           +
+                     'GROUP BY I.ITENS_COT_CODIGO,                                                            '+
+                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,                  '+
+                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME,      '+
                      'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs ');
 
   qryProduto.Open;
@@ -4543,341 +4125,107 @@ var
   data_max, data_cotacao : TDate;
   i, i_total : Integer;
 begin
-
   //COLOCAR O FORNECEDOR MAIS BARATO
+  qryPesqAux.Close;
+  qryPesqAux.SQL.Clear;
+  qryPesqAux.SQL.Add('SELECT DATA_PROD_BARATO FROM CONFIGURACAO_COTACAO ');
+  qryPesqAux.Open;
 
+  data_cotacao := qryPesqAux.fieldbyname('DATA_PROD_BARATO').AsDateTime;
+
+  valor_global := 999999999;
+  fornec_global := '';
+  data_compra_global := '';
+  cod_fornecedor_global := '';
+  obs:= '';
+
+  //SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
+  i:=0;
+  sql_fornecedor_proximo_barato:= '';
+  while i < Length(fornecedor_vetor_global) do
+  begin
+    sql_fornecedor_proximo_barato := sql_fornecedor_proximo_barato + ' AND ICCF.for_codigo <>' + fornecedor_vetor_global[i];
+    i:=i+1;
+  end;
+
+  qryPesqAux.Close;
+  qryPesqAux.SQL.Clear;
+  qryPesqAux.SQL.Add('SELECT  ICCF.for_codigo                                                   '+
+                     'FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON   '+
+                     'COTA.cot_codigo = ICCF.cot_codigo                                         '+
+                     'WHERE ICCF.PRO_CODIGO=:PRO_CODIGO                                         '+
+                     'AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                         '+
+                     'AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                 '+
+                     'AND COTA.COT_CODIGO <>:COT_CODIGO   '+ sql_fornecedor_proximo_barato       +
+                     'GROUP BY ICCF.for_codigo                                                  ');
+  qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
+  qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
+  if txt_cod_produto.Text = '' then
+    qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
+  else
+    qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
+  qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+  qryPesqAux.Open;
+  qryPesqAux.FetchAll;
+  qryPesqAux.First;
+
+  codigo_produto_global:= cdsProduto.fieldbyname('PRO_CODIGO').AsString;
+
+  i_total:=0;
+  while not qryPesqAux.Eof do
+  begin
+    SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
+    vetor_fornecedor[i_total]:= qryPesqAux.fieldbyname('for_codigo').AsString;
+    i_total:=i_total+1;
+    qryPesqAux.Next;
+  end;
+  //FIM SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
+
+
+  //PEGAR O MAXIMO VALOR COM MAXIMA DATA
+  i:=0;
+  while i < i_total do
+  begin
     qryPesqAux.Close;
     qryPesqAux.SQL.Clear;
-    qryPesqAux.SQL.Add('SELECT DATA_PROD_BARATO FROM CONFIGURACAO_COTACAO ');
-    qryPesqAux.Open;
-
-    data_cotacao := qryPesqAux.fieldbyname('DATA_PROD_BARATO').AsDateTime;
-
-
-    valor_global := 999999999;
-    fornec_global := '';
-    data_compra_global := '';
-    cod_fornecedor_global := '';
-    obs:= '';
-
-
-    //SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
-
-
-    i:=0;
-    sql_fornecedor_proximo_barato:= '';
-    while i < Length(fornecedor_vetor_global) do
-    begin
-      sql_fornecedor_proximo_barato := sql_fornecedor_proximo_barato + ' AND ICCF.for_codigo <>' + fornecedor_vetor_global[i];
-      i:=i+1;
-    end;
-
-    qryPesqAux.Close;
-    qryPesqAux.SQL.Clear;
-    qryPesqAux.SQL.Add('SELECT  ICCF.for_codigo                                     '+
-         'FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON   '+
-         'COTA.cot_codigo = ICCF.cot_codigo                                         '+
-         'WHERE ICCF.PRO_CODIGO=:PRO_CODIGO                                         '+
-         'AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                         '+
-         'AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                 '+
-         'AND COTA.COT_CODIGO <>:COT_CODIGO   '+ sql_fornecedor_proximo_barato +
-         'GROUP BY ICCF.for_codigo                                                  ');
+    qryPesqAux.SQL.Add('SELECT COT_VENCIMENTO, ICCF.cot_valor, AG.AT_codigo,                                        '+
+                       ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC                                              '+
+                       ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON                    '+
+                       ' COTA.cot_codigo = ICCF.cot_codigo                                                          '+
+                       ' LEFT JOIN agenda_telefone AG ON                                                            '+
+                       ' ICCF.for_codigo = AG.at_codigo                                                             '+
+                       ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO                          '+
+                       ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                                          '+
+                       ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                                  '+
+                       ' AND COTA.COT_CODIGO <>:COT_CODIGO '+ sql_fornecedor_proximo_barato                          +
+                       ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome, COT_VENCIMENTO order by COT_VENCIMENTO  ');
     qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
     qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
     if txt_cod_produto.Text = '' then
       qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-    else 
+    else
       qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
     qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+    qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i];
     qryPesqAux.Open;
     qryPesqAux.FetchAll;
-    qryPesqAux.First;
+    qryPesqAux.last;
 
-    codigo_produto_global:= cdsProduto.fieldbyname('PRO_CODIGO').AsString;
+    i:=i+1;
 
-    i_total:=0;
-    while not qryPesqAux.Eof do
+    if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
     begin
-      SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
-      vetor_fornecedor[i_total]:= qryPesqAux.fieldbyname('for_codigo').AsString;
-      i_total:=i_total+1;
-      qryPesqAux.Next;
-    end;
-
-    //FIM SELECIONAR TODOS OS FORNECEDORES DO RESPECTIVO PRODUTO
-
-
-       //PEGAR O MAXIMO VALOR COM MAXIMA DATA
-    i:=0;
-    while i < i_total do
-    begin
-      { qryPesqAux.Close;
-       qryPesqAux.SQL.Clear;
-       qryPesqAux.SQL.Add('SELECT MAX(COT_VENCIMENTO) AS DATA_MAX, ICCF.cot_valor, AG.AT_codigo,   '+
-          ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC  '+
-          ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON  '+
-          ' COTA.cot_codigo = ICCF.cot_codigo                                        '+
-          ' LEFT JOIN agenda_telefone AG ON                                           '+
-          ' ICCF.for_codigo = AG.at_codigo                                              '+
-          ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO        '+
-          ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                        '+
-          ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
-          ' AND COTA.COT_CODIGO <>:COT_CODIGO '+ sql_fornecedor_proximo_barato +
-          ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome                ');}
-
-       qryPesqAux.Close;
-       qryPesqAux.SQL.Clear;
-       qryPesqAux.SQL.Add('SELECT COT_VENCIMENTO, ICCF.cot_valor, AG.AT_codigo,   '+
-          ' AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC  '+
-          ' FROM itens_cotacao_compra_fornec ICCF INNER JOIN cotacao_compra COTA ON  '+
-          ' COTA.cot_codigo = ICCF.cot_codigo                                        '+
-          ' LEFT JOIN agenda_telefone AG ON                                           '+
-          ' ICCF.for_codigo = AG.at_codigo                                              '+
-          ' WHERE ICCF.PRO_CODIGO=:PRO_CODIGO AND ICCF.for_codigo=:FOR_CODIGO        '+
-          ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                        '+
-          ' AND (ICCF.cot_obs <> ''OFERTA'' or iccf.cot_obs is NULL )                '+
-          ' AND COTA.COT_CODIGO <>:COT_CODIGO '+ sql_fornecedor_proximo_barato +
-          ' GROUP BY ICCF.cot_valor, AG.AT_codigo, AG.AT_nome, COT_VENCIMENTO order by COT_VENCIMENTO  ');
-          
-       qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-       qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-       if txt_cod_produto.Text = '' then
-         qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-       else
-         qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-       qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-       qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i];
-       qryPesqAux.Open;
-       qryPesqAux.FetchAll;
-       qryPesqAux.last;
-
-       i:=i+1;
-
-      if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
+      if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
       begin
-
-        if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-        begin
-           valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat; 
-           fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-           cod_fornecedor_global := qryPesqAux.FieldByName('AT_codigo').asstring;
-           data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-          // data_compra_global := qryPesqAux.FieldByName('DATA_MAX').asstring;
-          // obs:=  qryPesqAux.FieldByName('cot_obs').asstring;
-          { if qryFornecedor.FieldByName('COT_VALOR').AsFloat = valor then
-           begin
-              empate := 'S';
-              i:= i+1;
-           end;
-           }
-        end;
-
-      end;  
-
-    end;
-
-
-    //FIMPEGAR O MAXIMO VALOR COM MAXIMA DATA
-
-
-   //COLOCAR O FORNECEDOR MAIS BARATO
-
-   { qryPesqAux.Close;
-    qryPesqAux.SQL.Clear;
-    qryPesqAux.SQL.Add('SELECT DATA_PROD_BARATO FROM CONFIGURACAO_COTACAO ');
-    qryPesqAux.Open;
-
-    data_cotacao := qryPesqAux.fieldbyname('DATA_PROD_BARATO').AsDateTime;
-
-
-    valor_global := 999999999;
-    fornec_global := '';
-    data_compra_global := '';
-    cod_fornecedor_global := '';
-    obs:= '';
-   // empate := '';
-   // i:= 0;
-   // cont_fornecedor := 0; 
-
-    qryPesqAux.Close;
-    qryPesqAux.SQL.Clear;
-    qryPesqAux.SQL.Add('SELECT AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC, ICF.FOR_CODIGO, ICF.PRO_CODIGO, ');
-    qryPesqAux.SQL.Add('ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs    ');
-    qryPesqAux.SQL.Add('FROM COTACAO_COMPRA COTA                                            ');
-    qryPesqAux.SQL.Add('INNER JOIN itens_cotacao_compra_fornec ICF ON                       ');
-    qryPesqAux.SQL.Add('COTA.cot_codigo = ICF.cot_codigo                                    ');
-    qryPesqAux.SQL.Add('LEFT JOIN agenda_telefone AG ON                                     ');
-    qryPesqAux.SQL.Add('ICF.for_codigo = AG.at_codigo                                       ');
-    qryPesqAux.SQL.Add('WHERE ICF.PRO_CODIGO=:PRO_CODIGO                                    ');
-    qryPesqAux.SQL.Add('AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                   ');
-    qryPesqAux.SQL.Add('AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL )             ');
-
-    i:=0;
-    sql_fornecedor_proximo_barato:= '';
-    while i < Length(fornecedor_vetor_global) do
-    begin
-      sql_fornecedor_proximo_barato := sql_fornecedor_proximo_barato + ' AND ICF.for_codigo <>' + fornecedor_vetor_global[i];
-      i:=i+1;
-    end;
-
-    qryPesqAux.SQL.Add('AND COTA.COT_CODIGO <>:COT_CODIGO ' + sql_fornecedor_proximo_barato);
-
-    qryPesqAux.SQL.Add('ORDER BY COT_VENCIMENTO                                             ');
-
-
-    qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-    qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-    if txt_cod_produto.Text = '' then
-      qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-    else 
-      qryPesqAux.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
-    qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-    qryPesqAux.Open;
-    qryPesqAux.FetchAll;
-    qryPesqAux.First;
-
-
-    while not qryPesqAux.Eof do
-    begin
-
-      if (qryPesqAux.FieldByName('COT_VALOR').AsString <> '') and (qryPesqAux.FieldByName('COT_VALOR').Asfloat > 0) then
-      begin
-
-        if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-        begin
-           valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
-           codigo_produto_global:= qryPesqAux.FieldByName('PRO_CODIGO').asstring;
-           fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-           cod_fornecedor_global := qryPesqAux.FieldByName('FOR_CODIGO').asstring;
-           data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-           obs:=  qryPesqAux.FieldByName('cot_obs').asstring; }
-          { if qryFornecedor.FieldByName('COT_VALOR').AsFloat = valor then
-           begin
-              empate := 'S';
-              i:= i+1;
-           end;
-           }
-    {    end;
-
+        valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
+        fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
+        cod_fornecedor_global := qryPesqAux.FieldByName('AT_codigo').asstring;
+        data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
       end;
-      qryPesqAux.Next;
-
     end;
+  end;
+  //FIMPEGAR O MAXIMO VALOR COM MAXIMA DATA
 
-    if cod_fornecedor_global = '' then
-      Exit;
-
-    sair_laco_menor_produto := 'N';
-
-    i_total := 0;
-    while sair_laco_menor_produto = 'N' do
-    begin
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT MAX(COT_VENCIMENTO) AS DATA_MAX, ICF.for_codigo                  '+
-                         ' FROM itens_cotacao_compra_fornec ICF INNER JOIN cotacao_compra COTA ON '+
-                         ' COTA.cot_codigo = ICF.cot_codigo                                       '+
-                         ' WHERE ICF.PRO_CODIGO=:PRO_CODIGO AND ICF.for_codigo=:FOR_CODIGO       '+
-                         ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                       '+
-                         ' AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL )   '+ sql_fornecedor_proximo_barato +
-                         ' AND COTA.COT_CODIGO <>:COT_CODIGO '  +
-                         ' GROUP BY ICF.for_codigo                                                ');
-      qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-      qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-      qryPesqAux.First;
-
-      SetLength(vetor_fornecedor, Length(vetor_fornecedor)+1);
-      vetor_fornecedor[i_total] := qryPesqAux.fieldbyname('for_codigo').asstring;
-      data_max := qryPesqAux.fieldbyname('DATA_MAX').AsDateTime;
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT MAX(ICF.cot_valor) AS COT_VALOR                                  '+
-                         ' FROM itens_cotacao_compra_fornec ICF INNER JOIN cotacao_compra COTA ON '+
-                         ' COTA.cot_codigo = ICF.cot_codigo                                       '+
-                         ' WHERE ICF.PRO_CODIGO=:PRO_CODIGO AND ICF.for_codigo=:FOR_CODIGO       '+
-                         ' AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                       '+
-                         ' AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL)  '+ sql_fornecedor_proximo_barato +
-                         ' AND COTA.COT_CODIGO <>:COT_CODIGO ');
-      qryPesqAux.ParamByName('DATAI').AsDate := data_max;
-      qryPesqAux.ParamByName('DATAF').AsDate := data_max;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.ParamByName('FOR_CODIGO').AsString := vetor_fornecedor[i_total];
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-      qryPesqAux.First;
-
-      valor_global := qryPesqAux.fieldbyname('COT_VALOR').AsFloat;
-      data_compra_global := DateToStr(data_max);
-
-      sql_fornecedor:= '';
-      for i:=0 to i_total do
-      begin
-        if vetor_fornecedor[i] <> '' then
-         sql_fornecedor := sql_fornecedor + ' AND ICF.for_codigo <>' + vetor_fornecedor[i];
-      end;
-      i_total:=i_total +1;
-
-      qryPesqAux.Close;
-      qryPesqAux.SQL.Clear;
-      qryPesqAux.SQL.Add('SELECT AG.AT_codigo ||'' - ''|| AG.AT_nome AS FORNEC, ICF.FOR_CODIGO, ');
-      qryPesqAux.SQL.Add('ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs      ');
-      qryPesqAux.SQL.Add('FROM COTACAO_COMPRA COTA                                              ');
-      qryPesqAux.SQL.Add('INNER JOIN itens_cotacao_compra_fornec ICF ON                         ');
-      qryPesqAux.SQL.Add('COTA.cot_codigo = ICF.cot_codigo                                      ');
-      qryPesqAux.SQL.Add('LEFT JOIN agenda_telefone AG ON                                       ');
-      qryPesqAux.SQL.Add('ICF.for_codigo = AG.at_codigo                                         ');
-      qryPesqAux.SQL.Add('WHERE ICF.PRO_CODIGO=:PRO_CODIGO                                      ');
-      qryPesqAux.SQL.Add('AND COTA.COT_VENCIMENTO between :DATAI AND :DATAF                     ');
-      qryPesqAux.SQL.Add('AND (ICF.cot_obs <> ''OFERTA'' or icf.cot_obs is NULL )               ');
-      qryPesqAux.SQL.Add('AND COTA.COT_CODIGO <>:COT_CODIGO ' + sql_fornecedor + sql_fornecedor_proximo_barato );
-     // qryPesqAux.SQL.Add('GROUP BY AT_codigo, AT_nome,                                          ');
-     // qryPesqAux.SQL.Add('ICF.COT_VALOR, COTA.COT_VENCIMENTO, COTA.cot_codigo, ICF.cot_obs      ');
-      qryPesqAux.SQL.Add('ORDER BY COT_VENCIMENTO                                               ');
-
-      qryPesqAux.ParamByName('DATAI').AsDate := data_cotacao;
-      qryPesqAux.ParamByName('DATAF').AsDate := dta_vencimento.Date;
-      if txt_cod_produto.Text = '' then
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := cdsProduto.fieldbyname('PRO_CODIGO').AsString
-      else
-        qryPesqAux.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-      qryPesqAux.Open;
-      qryPesqAux.FetchAll;
-
-       sair_laco_menor_produto :='S';
-       while not qryPesqAux.Eof do
-       begin
-
-         if qryPesqAux.FieldByName('COT_VALOR').AsFloat < valor_global then
-         begin
-            valor_global := qryPesqAux.FieldByName('COT_VALOR').AsFloat;
-            fornec_global := qryPesqAux.FieldByName('FORNEC').asstring;
-            cod_fornecedor_global := qryPesqAux.FieldByName('FOR_CODIGO').asstring;
-            data_compra_global := qryPesqAux.FieldByName('COT_VENCIMENTO').asstring;
-            obs:=  qryPesqAux.FieldByName('cot_obs').asstring;
-            sair_laco_menor_produto:= 'N';
-         end;
-
-         qryPesqAux.Next;
-
-       end;
-    end;  }
-
-    
 end;
 
 procedure Tfrm_cotacao_compra.Prximomaisbarato1Click(Sender: TObject);
@@ -4885,29 +4233,25 @@ var
   cod_cotacao :string;
 begin
 
- linha_global := cdsProduto.RecNo;
- 
- if cod_produto_proximo_barato_global <> cdsProduto.fieldbyname('PRO_CODIGO').asstring then
- begin
-   SetLength(fornecedor_vetor_global,0);
-   i_vetor_din:=0;
+  linha_global := cdsProduto.RecNo;
 
-   cod_produto_proximo_barato_global := cdsProduto.fieldbyname('PRO_CODIGO').asstring;
+  if cod_produto_proximo_barato_global <> cdsProduto.fieldbyname('PRO_CODIGO').asstring then
+  begin
+    SetLength(fornecedor_vetor_global,0);
+    i_vetor_din:=0;
 
- end;
+    cod_produto_proximo_barato_global := cdsProduto.fieldbyname('PRO_CODIGO').asstring;
+  end;
 
+  SetLength(fornecedor_vetor_global, Length(fornecedor_vetor_global) +1);
 
- SetLength(fornecedor_vetor_global, Length(fornecedor_vetor_global) +1);
+  fornecedor_vetor_global[i_vetor_din]:= cdsProduto.fieldbyname('FOR_CODIGO_ATUAL').asstring;
 
- fornecedor_vetor_global[i_vetor_din]:= cdsProduto.fieldbyname('FOR_CODIGO_ATUAL').asstring;
+  i_vetor_din := i_vetor_din +1;
 
- i_vetor_din := i_vetor_din +1;
+  inserirPrecoMaisBaratoProximaOpcao;
 
- inserirPrecoMaisBaratoProximaOpcao;  
-
- 
-
- cod_cotacao := ' I.COT_CODIGO = ' + frm_cotacao_compra.lbl_cod_cotacao.Caption;
+  cod_cotacao := ' I.COT_CODIGO = ' + frm_cotacao_compra.lbl_cod_cotacao.Caption;
 
   if cod_fornecedor_global <> '' then
   begin
@@ -4916,219 +4260,200 @@ begin
       if (not IBTransLocal.InTransaction) then
         IBTransLocal.StartTransaction;
 
-           qryPesqAux.Close;
-           qryPesqAux.SQL.Clear;
-           qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC   '+
-              ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO ');
-           qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-           qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
-           qryPesqAux.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-           qryPesqAux.Open;
+      qryPesqAux.Close;
+      qryPesqAux.SQL.Clear;
+      qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_COMPRA_FORNEC   '+
+                         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO AND PRO_CODIGO=:PRO_CODIGO ');
+      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
+      qryPesqAux.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
+      qryPesqAux.Open;
 
-           if qryPesqAux.IsEmpty then
-           begin
+      if qryPesqAux.IsEmpty then
+      begin
+        qryTransLocal.Close;
+        qryTransLocal.SQL.Clear;
+        qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC                        '+
+                              ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR, COT_OBS)      '+
+                              ' VALUES                                                        '+
+                              ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR, :COT_OBS) ');
+        qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
+        qryTransLocal.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
+        qryTransLocal.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
+        qryTransLocal.ParamByName('COT_VALOR').AsFloat   := valor_global;
 
-              qryTransLocal.Close;
-              qryTransLocal.SQL.Clear;
-              qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC   '+
-                 ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR, COT_OBS) '+
-                 ' VALUES                                              '+
-                 ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR, :COT_OBS) ');
+        qryTransLocal.ExecSQL;
+      End;
 
-              qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
-              qryTransLocal.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-              qryTransLocal.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
-              qryTransLocal.ParamByName('COT_VALOR').AsFloat   := valor_global;
+      qryPesqAux.Close;
+      qryPesqAux.SQL.Clear;
+      qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC         '+
+                         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
+      qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+      qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
+      qryPesqAux.Open;
 
-              qryTransLocal.ExecSQL;
-              
-           end;
+      if qryPesqAux.IsEmpty then
+      begin
+         qryTransLocal.Close;
+         qryTransLocal.SQL.Clear;
+         qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC                                 '+
+                               ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE )     '+
+                               ' VALUES                                                               '+
+                               ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA, :COT_VALOR_FRETE ) ');
+         qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+         qryTransLocal.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
 
-           qryPesqAux.Close;
-           qryPesqAux.SQL.Clear;
-           qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-              ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-           qryPesqAux.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-           qryPesqAux.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
-           qryPesqAux.Open;
+         qryTransLocal.ExecSQL;
+      end;
 
-           if qryPesqAux.IsEmpty then
-           begin
-              qryTransLocal.Close;
-              qryTransLocal.SQL.Clear;
-              qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC          '+
-                 ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE ) '+
-                 ' VALUES                                                           '+
-                 ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA, :COT_VALOR_FRETE ) ');
-              qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-              qryTransLocal.ParamByName('FOR_CODIGO').AsString := cod_fornecedor_global;
+      IBTransLocal.Commit;
 
-              qryTransLocal.ExecSQL;
-           end;
+      if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
 
-           IBTransLocal.Commit;
+       qryTransLocal.Close;
+       qryTransLocal.SQL.Clear;
+       qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET COT_VALOR=:COT_VALOR, COT_DATA_COMPRA_ULT=:COT_DATA_COMPRA_ULT,           '+
+                             ' FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL, COT_EMPATE=:COT_EMPATE, COT_OBS=:COT_OBS, FOR_INSERIDO=:FOR_INSERIDO '+
+                             ' WHERE COT_CODIGO =:COT_CODIGO and pro_codigo=:pro_codigo                                                 ');
+       qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
+       qryTransLocal.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
+       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString := cod_fornecedor_global;
+       qryTransLocal.ParamByName('COT_VALOR').AsFloat   := valor_global;
+       qryTransLocal.ParamByName('FOR_INSERIDO').AsString := 'S';
+       qryTransLocal.ExecSQL;
 
-            if (not IBTransLocal.InTransaction) then
-                IBTransLocal.StartTransaction;
-
-             qryTransLocal.Close;
-             qryTransLocal.SQL.Clear;
-             qryTransLocal.SQL.Add('UPDATE ITENS_COTACAO_COMPRA SET COT_VALOR=:COT_VALOR, COT_DATA_COMPRA_ULT=:COT_DATA_COMPRA_ULT, '+
-                     ' FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL, COT_EMPATE=:COT_EMPATE, COT_OBS=:COT_OBS, FOR_INSERIDO=:FOR_INSERIDO '+
-                     ' WHERE COT_CODIGO =:COT_CODIGO and pro_codigo=:pro_codigo ');
-             qryTransLocal.ParamByName('COT_CODIGO').AsString := lbl_cod_cotacao.Caption;
-             qryTransLocal.ParamByName('PRO_CODIGO').AsString := codigo_produto_global;
-             qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString := cod_fornecedor_global;
-             qryTransLocal.ParamByName('COT_VALOR').AsFloat   := valor_global;
-             qryTransLocal.ParamByName('FOR_INSERIDO').AsString := 'S';
-             qryTransLocal.ExecSQL;
-
-             IBTransLocal.Commit;
-
+      IBTransLocal.Commit;
     end;
   end;
   // FIM INSERI O PRECO MAIS BAIXO
 
-   IF campo = '' then
-       campo := 'i.ite_ordem_insercao';
+  IF campo = '' then
+    campo := 'i.ite_ordem_insercao';
+
+  //ATUALIZA A GRID DOS FORNECEDORES CAMPEOES
+
+  if cboFornecedor.Text <> '' then
+  begin
+    //verificar se produto está duas ou mais vezes na tabela itens_cotacao_compra
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
+                        ' WHERE COT_CODIGO=:COT_CODIGO                      ');
+    qryPesquisa.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+    qryPesquisa.Open;
+    qryPesquisa.First;
 
 
-     //ATUALIZA A GRID DOS FORNECEDORES CAMPEOES
+    if (not IBTransLocal.InTransaction) then
+       IBTransLocal.StartTransaction;
 
-     if cboFornecedor.Text <> '' then
-     begin
+    WHILE not qryPesquisa.Eof do
+    begin
+      qryPesqAux.Close;
+      qryPesqAux.SQL.Clear;
+      qryPesqAux.SQL.Add('SELECT FOR_CODIGO_ATUAL FROM ITENS_COTACAO_COMPRA                    '+
+                         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
+      qryPesqAux.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+      qryPesqAux.ParamByName('FOR_CODIGO_ATUAL').AsString := qryPesquisa.fieldbyname('FOR_CODIGO').AsString;
+      qryPesqAux.Open;
 
-        //verificar se produto está duas ou mais vezes na tabela itens_cotacao_compra
-      
-          qryPesquisa.Close;
-          qryPesquisa.SQL.Clear;
-          qryPesquisa.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-               ' WHERE COT_CODIGO=:COT_CODIGO ');
-          qryPesquisa.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-          qryPesquisa.Open;
-          qryPesquisa.First;
+      IF qryPesqAux.IsEmpty then
+      begin
+        qryTransLocal.Close;
+        qryTransLocal.SQL.Clear;
+        qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_FORNEC_VENC                    '+
+                              ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
+        qryTransLocal.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+        qryTransLocal.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO').AsString;
 
+        qryTransLocal.ExecSQL;
+      end;
 
-          if (not IBTransLocal.InTransaction) then
-             IBTransLocal.StartTransaction;
-
-          WHILE not qryPesquisa.Eof do
-          begin
-
-             qryPesqAux.Close;
-             qryPesqAux.SQL.Clear;
-             qryPesqAux.SQL.Add('SELECT FOR_CODIGO_ATUAL FROM ITENS_COTACAO_COMPRA   '+
-                ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL ');
-             qryPesqAux.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-             qryPesqAux.ParamByName('FOR_CODIGO_ATUAL').AsString := qryPesquisa.fieldbyname('FOR_CODIGO').AsString;
-             qryPesqAux.Open;
-
-             IF qryPesqAux.IsEmpty then
-             begin
-
-                 qryTransLocal.Close;
-                 qryTransLocal.SQL.Clear;
-                 qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_FORNEC_VENC  '+
-                   ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-                 qryTransLocal.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-                 qryTransLocal.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO').AsString;
-
-                 qryTransLocal.ExecSQL;
-
-             end;
-
-             qryPesquisa.Next;
-
-          end;
+      qryPesquisa.Next;
+    end;
 
 
-          IBTransLocal.Commit;
+    IBTransLocal.Commit;
 
-          qryPesquisa.Close;
-          qryPesquisa.SQL.Clear;
-          qryPesquisa.SQL.Add('SELECT FOR_CODIGO_ATUAL, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE '+
-               ' FROM ITENS_COTACAO_COMPRA  '+
-               ' WHERE COT_CODIGO=:COT_CODIGO AND                                 '+
-               ' (FOR_CODIGO_ATUAL IS NOT null or FOR_CODIGO_ATUAL <> '+ #39 + ''+ #39 + ')         ');
-          qryPesquisa.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-          qryPesquisa.Open;
-          qryPesquisa.First;
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT FOR_CODIGO_ATUAL, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE                      '+
+                        ' FROM ITENS_COTACAO_COMPRA                                                          '+
+                        ' WHERE COT_CODIGO=:COT_CODIGO AND                                                   '+
+                        ' (FOR_CODIGO_ATUAL IS NOT null or FOR_CODIGO_ATUAL <> '+ #39 + ''+ #39 + ')         ');
+    qryPesquisa.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+    qryPesquisa.Open;
+    qryPesquisa.First;
 
-          while not qryPesquisa.Eof do
-          begin
+    while not qryPesquisa.Eof do
+    begin
+      qryPesqAux.Close;
+      qryPesqAux.SQL.Clear;
+      qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC         '+
+                         ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
+      qryPesqAux.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+      qryPesqAux.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO_ATUAL').AsString;
+      qryPesqAux.Open;
 
-             qryPesqAux.Close;
-             qryPesqAux.SQL.Clear;
-             qryPesqAux.SQL.Add('SELECT FOR_CODIGO FROM ITENS_COTACAO_FORNEC_VENC   '+
-                ' WHERE COT_CODIGO=:COT_CODIGO AND FOR_CODIGO=:FOR_CODIGO ');
-             qryPesqAux.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-             qryPesqAux.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO_ATUAL').AsString;
-             qryPesqAux.Open;
+      if qryPesqAux.IsEmpty then
+      begin
+        if (not IBTransLocal.InTransaction) then
+          IBTransLocal.StartTransaction;
 
-             if qryPesqAux.IsEmpty then
-             begin
+        qryTransLocal.Close;
+        qryTransLocal.SQL.Clear;
+        qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC                                 '+
+                              ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE )     '+
+                              ' VALUES                                                               '+
+                              ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA, :COT_VALOR_FRETE ) ');
+        qryTransLocal.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
+        qryTransLocal.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO_ATUAL').AsString;
+        qryTransLocal.ParamByName('COT_PREVISAO_ENTREGA').AsString := qryPesquisa.fieldbyname('COT_PREVISAO_ENTREGA').AsString;
+        qryTransLocal.ParamByName('COT_VALOR_FRETE').AsString := qryPesquisa.fieldbyname('COT_VALOR_FRETE').AsString;
+        qryTransLocal.ExecSQL;
 
-               if (not IBTransLocal.InTransaction) then
-                 IBTransLocal.StartTransaction;
+        IBTransLocal.Commit;
 
-                 qryTransLocal.Close;
-                 qryTransLocal.SQL.Clear;
-                 qryTransLocal.SQL.Add('INSERT INTO ITENS_COTACAO_FORNEC_VENC          '+
-                    ' (COT_CODIGO, FOR_CODIGO, COT_PREVISAO_ENTREGA, COT_VALOR_FRETE ) '+
-                    ' VALUES                                                           '+
-                    ' (:COT_CODIGO, :FOR_CODIGO, :COT_PREVISAO_ENTREGA, :COT_VALOR_FRETE ) ');
-                 qryTransLocal.ParamByName('COT_CODIGO').AsString := frm_cotacao_compra.lbl_cod_cotacao.Caption;
-                 qryTransLocal.ParamByName('FOR_CODIGO').AsString := qryPesquisa.fieldbyname('FOR_CODIGO_ATUAL').AsString;
-                 qryTransLocal.ParamByName('COT_PREVISAO_ENTREGA').AsString := qryPesquisa.fieldbyname('COT_PREVISAO_ENTREGA').AsString;
-                 qryTransLocal.ParamByName('COT_VALOR_FRETE').AsString := qryPesquisa.fieldbyname('COT_VALOR_FRETE').AsString;
+      end;
+      qryPesquisa.Next;
+    end;
 
-                 qryTransLocal.ExecSQL;
+  end;
 
-                  IBTransLocal.Commit;
+  //FIM ATUALIZA A GRID DOS FORNECEDORES CAMPEOES
+  qryProduto.Close;
+  qryProduto.SQL.Clear;
+  qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
+                     'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
+                     'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,                    '+
+                     'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO                  '+
+                     'FROM itens_cotacao_compra I INNER JOIN                                                  '+
+                     '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                              '+
+                     'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                           '+
+                     'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo                       '+
+                     '  AND ICCF.for_codigo = I.for_codigo_atual                                              '+
+                     'LEFT JOIN agenda_telefone FORN ON                                                       '+
+                     'I.for_codigo_atual = FORN.at_codigo                                                     '+
+                     'WHERE ' + cod_cotacao + fornecedor_global                                                +
+                     'GROUP BY I.ITENS_COT_CODIGO,                                                            '+
+                     'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,                  '+
+                     'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME,      '+
+                     'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs '+
+                     ' order by ' + campo );
+  qryProduto.Open;
 
-             end;
+  cdsProduto.Close;
+  cdsProduto.FetchParams;
+  cdsProduto.Open;
 
-             qryPesquisa.Next;
+  btn_Finalizar.Enabled := true;
 
-          end;
+  cdsProduto.RecNo := linha_global;
+  DBGrid1.SetFocus;
 
-     end;
-
-     //FIM ATUALIZA A GRID DOS FORNECEDORES CAMPEOES
-
-
-       qryProduto.Close;
-       qryProduto.SQL.Clear;
-       qryProduto.SQL.Add('SELECT I.FOR_INSERIDO, i.ite_ordem_insercao, P.PRO_CODIGO, P.pro_descricao, I.cot_qtd,  '+
-                          'I.cot_unidade, I.cot_valor, SUM(I.COT_QTD * I.COT_VALOR) as VALOR_TOTAL, FORN.at_nome,  '+
-                          'ICCF.cot_obs,  i.cot_empate, I.FOR_CODIGO_ATUAL, I.ITENS_COT_CODIGO,         '+
-                          'I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, P.UN_CODIGO       '+
-                          'FROM itens_cotacao_compra I INNER JOIN                                       '+
-                          '  PRODUTO P ON I.pro_codigo = P.pro_codigo                                   '+
-                          'LEFT JOIN itens_cotacao_compra_fornec ICCF ON                                '+
-                          'I.cot_codigo = ICCF.cot_codigo AND P.pro_codigo = ICCF.pro_codigo            '+
-                          '  AND ICCF.for_codigo = I.for_codigo_atual                                   '+
-                          'LEFT JOIN agenda_telefone FORN ON                                            '+
-                          'I.for_codigo_atual = FORN.at_codigo                                          '+
-                          'WHERE ' + cod_cotacao + fornecedor_global                                     +
-                          'GROUP BY I.ITENS_COT_CODIGO,                                                 '+
-                          'P.PRO_CODIGO, P.pro_descricao, P.UN_CODIGO,  I.cot_unidade, I.cot_qtd,       '+
-                          'I.cot_valor, i.cot_empate, i.ite_ordem_insercao, I.FOR_CODIGO_ATUAL, FORN.AT_NOME, '+
-                          'I.FOR_INSERIDO, I.COT_CONFIRMAR_PRECO, I.FOR_CODIGO_ANT,  I.COT_VALOR_ANT, ICCF.cot_obs '+
-                          ' order by ' + campo );
-       qryProduto.Open;
-
-       cdsProduto.Close;
-       cdsProduto.FetchParams;
-       cdsProduto.Open;
-
-       btn_Finalizar.Enabled := true;
-
-       cdsProduto.RecNo := linha_global;
-       DBGrid1.SetFocus;
-
-       linha_global :=0;  
-
+  linha_global :=0;
 
 end;
 
