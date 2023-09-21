@@ -43,7 +43,7 @@ uses
   unt_cad_grupo in 'unt_cad_grupo.pas' {frm_cad_grupo},
 //  untInserirValorProduto in 'untInserirValorProduto.pas' {frmInserirValorProduto},
   untRelCotacaoFornecedores in 'untRelCotacaoFornecedores.pas' {frmRelCotacaoFornecedores},
-//  untPesqCotacaoCompra in 'untPesqCotacaoCompra.pas' {frmPesqCotacaoCompra},
+  untPesqCotacaoCompra in 'untPesqCotacaoCompra.pas' {frmPesqCotacaoCompra},
   untAjudaContasPagar in 'untAjudaContasPagar.pas' {frmAjudaContasPagar},
   untGerarPedidoCompra_cotacao in 'untGerarPedidoCompra_cotacao.pas' {frmGerarPedidoCompra_cotacao},
 //  untCadFormaPgto in 'untCadFormaPgto.pas' {frmCadFormaPgto},
