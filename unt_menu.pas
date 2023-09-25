@@ -94,7 +94,7 @@ implementation
 uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   unt_rel_data_tipo, untJuntarPessoalSitio, untCadUnidade, unt_cad_grupo,
   untProduto, untProdutosComprados, untConfiguracaoCotacao,
-  untRelUnidosContasPagarContasPagas;
+  untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -208,8 +208,8 @@ end;
 
 procedure Tfrm_menu.AgendaTelefone1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmAgendaTelefone, frmAgendaTelefone);
-//frmAgendaTelefone.show;
+  Application.CreateForm(TfrmAgendaTelefone, frmAgendaTelefone);
+  frmAgendaTelefone.show;
 end;
 
 procedure Tfrm_menu.CotacaodeCompras1Click(Sender: TObject);
