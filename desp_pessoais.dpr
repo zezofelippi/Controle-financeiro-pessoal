@@ -41,7 +41,7 @@ uses
   untInserirFornecedorCotacao in 'untInserirFornecedorCotacao.pas' {frmInserirFornecedorCotacao},
   untCadUnidade in 'untCadUnidade.pas' {frmCadUnidade},
   unt_cad_grupo in 'unt_cad_grupo.pas' {frm_cad_grupo},
-//  untInserirValorProduto in 'untInserirValorProduto.pas' {frmInserirValorProduto},
+  untInserirValorProduto in 'untInserirValorProduto.pas' {frmInserirValorProduto},
   untRelCotacaoFornecedores in 'untRelCotacaoFornecedores.pas' {frmRelCotacaoFornecedores},
   untPesqCotacaoCompra in 'untPesqCotacaoCompra.pas' {frmPesqCotacaoCompra},
   untAjudaContasPagar in 'untAjudaContasPagar.pas' {frmAjudaContasPagar},
