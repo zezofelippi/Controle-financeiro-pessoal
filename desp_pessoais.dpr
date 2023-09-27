@@ -19,7 +19,7 @@ uses
 //  untListDespRec in 'untListDespRec.pas' {frmListDespRec},
   untCadTipoDespesa in 'untCadTipoDespesa.pas' {frmCadTipoDespesa},
   untRelContasPagar in 'untRelContasPagar.pas' {frmRelContasPagar},
-//  untCadTipoReceita in 'untCadTipoReceita.pas' {frmCadTipoReceita},
+  untCadTipoReceita in 'untCadTipoReceita.pas' {frmCadTipoReceita},
 //  untTransferenciaFinanceira in 'untTransferenciaFinanceira.pas' {frmTransferenciaFinanceira},
 //  untResumoFinal in 'untResumoFinal.pas' {frmResumofinal},
 //  untRelTransfFinanc in 'untRelTransfFinanc.pas' {frmRelTransfFinanc},
