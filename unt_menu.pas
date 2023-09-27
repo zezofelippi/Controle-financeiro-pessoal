@@ -172,8 +172,8 @@ end;
 
 procedure Tfrm_menu.CadTipoReceita2Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmCadTipoReceita, frmCadTipoReceita);
-//frmCadTipoReceita.show;
+  Application.CreateForm(TfrmCadTipoReceita, frmCadTipoReceita);
+  frmCadTipoReceita.show;
 end;
 
 procedure Tfrm_menu.ransferenciaFinanceira1Click(Sender: TObject);
