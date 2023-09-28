@@ -94,7 +94,8 @@ implementation
 uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   unt_rel_data_tipo, untJuntarPessoalSitio, untCadUnidade, unt_cad_grupo,
   untProduto, untProdutosComprados, untConfiguracaoCotacao,
-  untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra;
+  untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra,
+  untCadTipoReceita, unt_cad_receitas;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -166,8 +167,8 @@ end;
 
 procedure Tfrm_menu.CadReceita1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_cad_receitas, frm_cad_receitas);
-//frm_cad_receitas.show;
+  Application.CreateForm(Tfrm_cad_receitas, frm_cad_receitas);
+  frm_cad_receitas.show;
 end;
 
 procedure Tfrm_menu.CadTipoReceita2Click(Sender: TObject);
