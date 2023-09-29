@@ -298,6 +298,7 @@ begin
   else
      para := '';
 
+  Application.CreateForm(TfrmRelTransfFinanc, frmRelTransfFinanc);
   frmRelTransfFinanc.qry_pesquisa.Close;
   frmRelTransfFinanc.qry_pesquisa.SQL.Clear;
   frmRelTransfFinanc.qry_pesquisa.SQL.Add('SELECT EXTRACT(month FROM DATA) AS MES, EXTRACT(YEAR FROM DATA) AS ANO,                '+
