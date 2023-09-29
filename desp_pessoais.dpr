@@ -6,7 +6,7 @@ uses
   unt_cad_despesas in 'unt_cad_despesas.pas' {frm_cad_despesas},
   unt_modulo in 'unt_modulo.pas' {dm: TDataModule},
   unt_rel_data_tipo in 'unt_rel_data_tipo.pas' {frm_rel_data_tipo},
-  untrel_data_tipo in 'untrel_data_tipo.pas' {frmrel_data_tipo},
+ // untrel_data_tipo in 'untrel_data_tipo.pas' {frmrel_data_tipo},
 //  unt_data_dias_semana in 'unt_data_dias_semana.pas' {frm_data_dias_semana},
   unt_contas_pagar in 'unt_contas_pagar.pas' {frm_contas_pagar},
 //  unt_obs in 'unt_obs.pas' {frm_obs},
