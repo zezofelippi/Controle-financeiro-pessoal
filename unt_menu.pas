@@ -95,7 +95,7 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   unt_rel_data_tipo, untJuntarPessoalSitio, untCadUnidade, unt_cad_grupo,
   untProduto, untProdutosComprados, untConfiguracaoCotacao,
   untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra,
-  untCadTipoReceita, unt_cad_receitas;
+  untCadTipoReceita, unt_cad_receitas, untTransferenciaFinanceira;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -179,8 +179,8 @@ end;
 
 procedure Tfrm_menu.ransferenciaFinanceira1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmTransferenciaFinanceira, frmTransferenciaFinanceira);
-//frmTransferenciaFinanceira.show;
+  Application.CreateForm(TfrmTransferenciaFinanceira, frmTransferenciaFinanceira);
+  frmTransferenciaFinanceira.show;
 end;
 
 procedure Tfrm_menu.ResumoGeral1Click(Sender: TObject);
