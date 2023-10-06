@@ -96,7 +96,7 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   untProduto, untProdutosComprados, untConfiguracaoCotacao,
   untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra,
   untCadTipoReceita, unt_cad_receitas, untTransferenciaFinanceira,
-  untContasReceber;
+  untContasReceber, untEmprestimosPagar;
 
 {uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
   unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
@@ -198,8 +198,8 @@ end;
 
 procedure Tfrm_menu.EmprestimosaPagar1Click(Sender: TObject);
 begin
-//Application.CreateForm(TfrmEmprestimosPagar, frmEmprestimosPagar);
-//frmEmprestimosPagar.show;
+  Application.CreateForm(TfrmEmprestimosPagar, frmEmprestimosPagar);
+  frmEmprestimosPagar.show;
 end;
 
 procedure Tfrm_menu.JuntarDesppessoalcdespsitio1Click(Sender: TObject);
