@@ -46,7 +46,7 @@ uses
   untPesqCotacaoCompra in 'untPesqCotacaoCompra.pas' {frmPesqCotacaoCompra},
   untAjudaContasPagar in 'untAjudaContasPagar.pas' {frmAjudaContasPagar},
   untGerarPedidoCompra_cotacao in 'untGerarPedidoCompra_cotacao.pas' {frmGerarPedidoCompra_cotacao},
-//  untCadFormaPgto in 'untCadFormaPgto.pas' {frmCadFormaPgto},
+  untCadFormaPgto in 'untCadFormaPgto.pas' {frmCadFormaPgto},
   unt_funcoes in 'unt_funcoes.pas',
   untPesqCotacaoCompraDesp in 'untPesqCotacaoCompraDesp.pas' {frmPesqCotacaoCompraDesp},
   untItensCotacaoCompra in 'untItensCotacaoCompra.pas' {frmItensCotacaoCompra},
