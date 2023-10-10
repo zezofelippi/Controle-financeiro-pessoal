@@ -15,8 +15,8 @@ uses
 //  untRelMediaDesp2 in 'untRelMediaDesp2.pas' {frmRelMediaDesp2},
 //  untGraficoDespesa in 'untGraficoDespesa.pas' {frmGraficoDespesa},
   unt_cad_receitas in 'unt_cad_receitas.pas' {frm_cad_receitas},
-//  untRelRecDesp in 'untRelRecDesp.pas' {frmRelRecDesp},
-//  untListDespRec in 'untListDespRec.pas' {frmListDespRec},
+  untRelRecDesp in 'untRelRecDesp.pas' {frmRelRecDesp},
+  untListDespRec in 'untListDespRec.pas' {frmListDespRec},
   untCadTipoDespesa in 'untCadTipoDespesa.pas' {frmCadTipoDespesa},
   untRelContasPagar in 'untRelContasPagar.pas' {frmRelContasPagar},
   untCadTipoReceita in 'untCadTipoReceita.pas' {frmCadTipoReceita},
@@ -70,7 +70,7 @@ begin
 //  Application.CreateForm(TfrmRelMediaDesp2, frmRelMediaDesp2);
 //  Application.CreateForm(TfrmGraficoDespesa, frmGraficoDespesa);
 //  Application.CreateForm(Tfrm_cad_receitas, frm_cad_receitas);
-//  Application.CreateForm(TfrmRelRecDesp, frmRelRecDesp);
+  Application.CreateForm(TfrmRelRecDesp, frmRelRecDesp);
 //  Application.CreateForm(TfrmListDespRec, frmListDespRec);
 //  Application.CreateForm(TfrmCadTipoDespesa, frmCadTipoDespesa);
   Application.CreateForm(TfrmRelContasPagar, frmRelContasPagar);
