@@ -21,7 +21,7 @@ uses
   untRelContasPagar in 'untRelContasPagar.pas' {frmRelContasPagar},
   untCadTipoReceita in 'untCadTipoReceita.pas' {frmCadTipoReceita},
   untTransferenciaFinanceira in 'untTransferenciaFinanceira.pas' {frmTransferenciaFinanceira},
-//  untResumoFinal in 'untResumoFinal.pas' {frmResumofinal},
+  untResumoFinal in 'untResumoFinal.pas' {frmResumofinal},
   untRelTransfFinanc in 'untRelTransfFinanc.pas' {frmRelTransfFinanc},
   untRelCadReceita in 'untRelCadReceita.pas' {frmRelCadReceita},
   untRelCadDespesa in 'untRelCadDespesa.pas' {frmRelCadDespesa},
