@@ -9,7 +9,7 @@ uses
  // untrel_data_tipo in 'untrel_data_tipo.pas' {frmrel_data_tipo},
 //  unt_data_dias_semana in 'unt_data_dias_semana.pas' {frm_data_dias_semana},
   unt_contas_pagar in 'unt_contas_pagar.pas' {frm_contas_pagar},
-//  unt_obs in 'unt_obs.pas' {frm_obs},
+  unt_obs in 'unt_obs.pas' {frm_obs},
   untConfirmarBaixaContasPagar in 'untConfirmarBaixaContasPagar.pas' {frmConfirmarBaixaContasPagar},
 //  untRelMediaDesp in 'untRelMediaDesp.pas' {frmRelMediaDesp},
 //  untRelMediaDesp2 in 'untRelMediaDesp2.pas' {frmRelMediaDesp2},
