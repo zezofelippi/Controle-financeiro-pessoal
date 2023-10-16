@@ -163,8 +163,8 @@ end;
 
 procedure Tfrm_menu.OBS2Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_obs, frm_obs);
-//frm_obs.show;
+  Application.CreateForm(Tfrm_obs, frm_obs);
+  frm_obs.show;
 end;
 
 procedure Tfrm_menu.CadReceita1Click(Sender: TObject);
