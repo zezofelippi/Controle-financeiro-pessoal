@@ -51,7 +51,6 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     Configurao1: TMenuItem;
-    CONVERTER1: TMenuItem;
     N12: TMenuItem;
     RelatorioUnidoC1: TMenuItem;
     procedure DataemDiassemana1Click(Sender: TObject);
@@ -78,7 +77,6 @@ type
     procedure FormadePagamento1Click(Sender: TObject);
     procedure ItensComprados1Click(Sender: TObject);
     procedure Configurao1Click(Sender: TObject);
-    procedure CONVERTER1Click(Sender: TObject);
     procedure RelatorioUnidoC1Click(Sender: TObject);
   private
     { Private declarations }
@@ -97,25 +95,15 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra,
   untCadTipoReceita, unt_cad_receitas, untTransferenciaFinanceira,
   untContasReceber, untEmprestimosPagar, untCadFormaPgto, untListDespRec,
-  untResumoFinal;
-
-{uses unt_cad_despesas, untrel_data_tipo, unt_rel_data_tipo,
-  unt_data_dias_semana, unt_obs, unt_contas_pagar, untRelMediaDesp,
-  untGraficoDespesa, unt_cad_receitas, untListDespRec, untCadTipoDespesa,
-  untCadTipoReceita, untTransferenciaFinanceira, untResumoFinal,
-  untContasReceber, untPagarEmprestimo, untEmprestimosPagar,
-  untJuntarPessoalSitio, untAgendaTelefone, untCotacaoCompra,
-  untCadUnidade, unt_cad_grupo, untProduto, untCadFormaPgto,
-  untProdutosComprados, untConfiguracaoCotacao, UNTcONVERSAO,
-  untRelUnidosContasPagarContasPagas;  }
+  untResumoFinal, unt_obs, unt_data_dias_semana;
 
 
 {$R *.dfm}
 
 procedure Tfrm_menu.DataemDiassemana1Click(Sender: TObject);
 begin
-//Application.CreateForm(Tfrm_data_dias_semana, frm_data_dias_semana);
-//frm_data_dias_semana.show;
+  Application.CreateForm(Tfrm_data_dias_semana, frm_data_dias_semana);
+  frm_data_dias_semana.show;
 end;
 
 procedure Tfrm_menu.Lembrete1Click(Sender: TObject);
@@ -255,13 +243,6 @@ procedure Tfrm_menu.Configurao1Click(Sender: TObject);
 begin
   Application.CreateForm(TfrmConfiguracaoCotacao, frmConfiguracaoCotacao);
   frmConfiguracaoCotacao.show;
-end;
-
-procedure Tfrm_menu.CONVERTER1Click(Sender: TObject);
-begin
-//  Application.CreateForm(Tfrmconversor, frmconversor);
-//  frmconversor.show;
-
 end;
 
 procedure Tfrm_menu.RelatorioUnidoC1Click(Sender: TObject);
