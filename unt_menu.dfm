@@ -191,10 +191,6 @@ object frm_menu: Tfrm_menu
         Caption = 'Data em Dias semana'
         OnClick = DataemDiassemana1Click
       end
-      object CONVERTER1: TMenuItem
-        Caption = 'CONVERTER'
-        OnClick = CONVERTER1Click
-      end
     end
   end
   object RLPDFFilter1: TRLPDFFilter
