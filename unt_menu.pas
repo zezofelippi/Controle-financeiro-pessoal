@@ -58,8 +58,6 @@ type
     procedure ipoDespesa1Click(Sender: TObject);
     procedure CadDespesas1Click(Sender: TObject);
     procedure RelGeral1Click(Sender: TObject);
-    procedure Rel1Click(Sender: TObject);
-    procedure RelMediaporGraficos1Click(Sender: TObject);
     procedure ReceitasXDespesas1Click(Sender: TObject);
     procedure OBS2Click(Sender: TObject);
     procedure CadReceita1Click(Sender: TObject);
@@ -129,18 +127,6 @@ procedure Tfrm_menu.RelGeral1Click(Sender: TObject);
 begin
   Application.CreateForm(Tfrm_rel_data_tipo, frm_rel_data_tipo);
   frm_rel_data_tipo.show;
-end;
-
-procedure Tfrm_menu.Rel1Click(Sender: TObject);
-begin
-//Application.CreateForm(TfrmRelMediaDesp, frmRelMediaDesp);
-//frmRelMediaDesp.show;
-end;
-
-procedure Tfrm_menu.RelMediaporGraficos1Click(Sender: TObject);
-begin
-//Application.CreateForm(TfrmGraficoDespesa, frmGraficoDespesa);
-//frmGraficoDespesa.show;
 end;
 
 procedure Tfrm_menu.ReceitasXDespesas1Click(Sender: TObject);
