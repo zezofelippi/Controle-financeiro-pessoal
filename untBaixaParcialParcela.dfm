@@ -3,8 +3,8 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
   Top = 352
   BorderStyle = bsSingle
   Caption = 'Baixa parcial da parcela'
-  ClientHeight = 133
-  ClientWidth = 412
+  ClientHeight = 176
+  ClientWidth = 425
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -37,13 +37,6 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
     Height = 13
     Caption = 'Data do pagamento'
   end
-  object Label6: TLabel
-    Left = 8
-    Top = 59
-    Width = 54
-    Height = 13
-    Caption = 'Forma Pgto'
-  end
   object txt_codigo: TEdit
     Left = 8
     Top = 32
@@ -70,7 +63,7 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
     TabOrder = 2
   end
   object btnConfirmar: TButton
-    Left = 328
+    Left = 336
     Top = 27
     Width = 75
     Height = 25
@@ -78,36 +71,74 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
     TabOrder = 3
     OnClick = btnConfirmarClick
   end
-  object cboFormaPgto: TDBLookupComboBox
-    Left = 8
-    Top = 73
-    Width = 305
-    Height = 21
-    KeyField = 'TP_CODIGO'
-    ListField = 'DESCRICAO'
-    ListSource = dsFormaPgto
-    TabOrder = 4
-  end
   object txt_valor_saldo: TCurrencyEdit
-    Left = 320
+    Left = 336
     Top = 73
     Width = 77
     Height = 21
     AutoSize = False
-    TabOrder = 5
+    TabOrder = 4
     Visible = False
   end
   object rdgContaAtrasada: TRadioGroup
-    Left = 8
-    Top = 96
-    Width = 233
+    Left = 11
+    Top = 135
+    Width = 264
     Height = 33
     Caption = 'Conta Atrasada ?'
     Columns = 2
     Items.Strings = (
       'Sim'
       'N'#227'o')
+    TabOrder = 5
+  end
+  object gpbFormaPagamentoMae: TGroupBox
+    Left = 3
+    Top = 55
+    Width = 321
+    Height = 44
+    Caption = 'Pagamento M'#227'e'
     TabOrder = 6
+    object cboFormaPgtoMae: TDBLookupComboBox
+      Left = 7
+      Top = 19
+      Width = 306
+      Height = 21
+      KeyField = 'TP_CODIGO'
+      ListField = 'DESCRICAO'
+      ListSource = dsFormaPgtoMae
+      TabOrder = 0
+    end
+  end
+  object gpbFormaPagamentoFilho: TGroupBox
+    Left = 8
+    Top = 55
+    Width = 320
+    Height = 47
+    Caption = 'Forma Pagamento Filho'
+    TabOrder = 7
+    object cboFormaPgto: TDBLookupComboBox
+      Left = 8
+      Top = 16
+      Width = 305
+      Height = 21
+      KeyField = 'TP_CODIGO'
+      ListField = 'DESCRICAO'
+      ListSource = dsFormaPgto
+      TabOrder = 0
+    end
+  end
+  object rdgMaeFilho: TRadioGroup
+    Left = 10
+    Top = 101
+    Width = 265
+    Height = 33
+    Columns = 2
+    Items.Strings = (
+      'Filho'
+      'M'#227'e')
+    TabOrder = 8
+    OnClick = rdgMaeFilhoClick
   end
   object qry_pesquisa: TIBQuery
     Database = dm.BD
@@ -164,6 +195,44 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
       Size = 1
     end
     object qryFormaPgtoDESCRICAO: TIBStringField
+      FieldName = 'DESCRICAO'
+      Size = 78
+    end
+  end
+  object dsFormaPgtoMae: TDataSource
+    DataSet = qryFormaPgtoMae
+    Left = 152
+    Top = 113
+  end
+  object qryFormaPgtoMae: TIBQuery
+    Database = dm.BD
+    Transaction = dm.IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      
+        'SELECT TP_CODIGO, TP_DESCRICAO, TP_DEFAULT, TP_CODIGO ||'#39' - '#39'|| ' +
+        'TP_DESCRICAO AS DESCRICAO '
+      '                      FROM TIPO_PAGAMENTO_mae ORDER BY TP_CODIGO')
+    Left = 192
+    Top = 113
+    object IntegerField1: TIntegerField
+      FieldName = 'TP_CODIGO'
+      Origin = 'TIPO_PAGAMENTO.TP_CODIGO'
+      Required = True
+    end
+    object IBStringField1: TIBStringField
+      FieldName = 'TP_DESCRICAO'
+      Origin = 'TIPO_PAGAMENTO.TP_DESCRICAO'
+      Size = 64
+    end
+    object IBStringField2: TIBStringField
+      FieldName = 'TP_DEFAULT'
+      Origin = 'TIPO_PAGAMENTO.TP_DEFAULT'
+      FixedChar = True
+      Size = 1
+    end
+    object IBStringField3: TIBStringField
       FieldName = 'DESCRICAO'
       Size = 78
     end

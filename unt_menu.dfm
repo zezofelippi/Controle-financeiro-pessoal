@@ -182,14 +182,79 @@ object frm_menu: Tfrm_menu
         OnClick = OBS2Click
       end
     end
-    object N3: TMenuItem
-      Caption = '|||||'
-    end
     object Conversao1: TMenuItem
-      Caption = 'Conversao'
+      Caption = 'Convers'#227'o'
       object DataemDiassemana1: TMenuItem
         Caption = 'Data em Dias semana'
         OnClick = DataemDiassemana1Click
+      end
+    end
+    object N13: TMenuItem
+      Caption = '|||||||||||||||||||'
+    end
+    object DespesasMe1: TMenuItem
+      Caption = 'Despesas M'#227'e'
+      object CadDespesaMe1: TMenuItem
+        Caption = 'Cad. Despesa M'#227'e'
+        OnClick = CadDespesaMe1Click
+      end
+      object RelGeralMe1: TMenuItem
+        Caption = 'Rel. Geral M'#227'e'
+        OnClick = RelGeralMe1Click
+      end
+      object RelatrioUnidoMe1: TMenuItem
+        Caption = 'Relat'#243'rio Unido M'#227'e'
+        OnClick = RelatrioUnidoMe1Click
+      end
+    end
+    object FinanceiroMe1: TMenuItem
+      Caption = 'Financeiro M'#227'e'
+      object CadReceitaMe1: TMenuItem
+        Caption = 'Cad. Receita M'#227'e'
+        OnClick = CadReceitaMe1Click
+      end
+      object ransfe1: TMenuItem
+        Caption = 'Transfer'#234'ncia Financeira M'#227'e'
+        OnClick = ransfe1Click
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object FormaPagamentoMe1: TMenuItem
+        Caption = 'Forma Pagamento M'#227'e'
+        OnClick = FormaPagamentoMe1Click
+      end
+    end
+    object RelatrioGeralMe1: TMenuItem
+      Caption = 'Relat'#243'rio Geral M'#227'e'
+      object ReceitasXDespesasMe1: TMenuItem
+        Caption = 'Receitas X Despesas M'#227'e'
+        OnClick = ReceitasXDespesasMe1Click
+      end
+      object ResumoGeralMe1: TMenuItem
+        Caption = 'Resumo Geral M'#227'e'
+        OnClick = ResumoGeralMe1Click
+      end
+    end
+    object N14: TMenuItem
+      Caption = '||||||||||'
+    end
+    object FilhoMe1: TMenuItem
+      Caption = 'Filho/M'#227'e'
+      object DespesasPagas1: TMenuItem
+        Caption = 'Despesas Pagas Total'
+      end
+      object RelatrioUnidoTotal1: TMenuItem
+        Caption = 'Relat'#243'rio Unido Total'
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object ReceitasXDespesasGeral1: TMenuItem
+        Caption = 'Receitas X Despesas Geral'
+      end
+      object ResumoFinalGeral1: TMenuItem
+        Caption = 'Resumo Final Geral'
       end
     end
   end

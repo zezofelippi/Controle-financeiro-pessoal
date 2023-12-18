@@ -20,7 +20,6 @@ type
     RelGeral1: TMenuItem;
     ransFinanceira1: TMenuItem;
     RelatorioGeral1: TMenuItem;
-    N3: TMenuItem;
     ReceitasXDespesas1: TMenuItem;
     Obs1: TMenuItem;
     OBS2: TMenuItem;
@@ -53,6 +52,26 @@ type
     Configurao1: TMenuItem;
     N12: TMenuItem;
     RelatorioUnidoC1: TMenuItem;
+    N13: TMenuItem;
+    DespesasMe1: TMenuItem;
+    CadDespesaMe1: TMenuItem;
+    RelGeralMe1: TMenuItem;
+    RelatrioUnidoMe1: TMenuItem;
+    FinanceiroMe1: TMenuItem;
+    CadReceitaMe1: TMenuItem;
+    ransfe1: TMenuItem;
+    N3: TMenuItem;
+    FormaPagamentoMe1: TMenuItem;
+    RelatrioGeralMe1: TMenuItem;
+    ReceitasXDespesasMe1: TMenuItem;
+    ResumoGeralMe1: TMenuItem;
+    N14: TMenuItem;
+    FilhoMe1: TMenuItem;
+    DespesasPagas1: TMenuItem;
+    RelatrioUnidoTotal1: TMenuItem;
+    N15: TMenuItem;
+    ReceitasXDespesasGeral1: TMenuItem;
+    ResumoFinalGeral1: TMenuItem;
     procedure DataemDiassemana1Click(Sender: TObject);
     procedure Lembrete1Click(Sender: TObject);
     procedure ipoDespesa1Click(Sender: TObject);
@@ -76,6 +95,14 @@ type
     procedure ItensComprados1Click(Sender: TObject);
     procedure Configurao1Click(Sender: TObject);
     procedure RelatorioUnidoC1Click(Sender: TObject);
+    procedure CadDespesaMe1Click(Sender: TObject);
+    procedure RelGeralMe1Click(Sender: TObject);
+    procedure RelatrioUnidoMe1Click(Sender: TObject);
+    procedure CadReceitaMe1Click(Sender: TObject);
+    procedure ransfe1Click(Sender: TObject);
+    procedure FormaPagamentoMe1Click(Sender: TObject);
+    procedure ReceitasXDespesasMe1Click(Sender: TObject);
+    procedure ResumoGeralMe1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -93,7 +120,10 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   untRelUnidosContasPagarContasPagas, untAgendaTelefone, untCotacaoCompra,
   untCadTipoReceita, unt_cad_receitas, untTransferenciaFinanceira,
   untContasReceber, untEmprestimosPagar, untCadFormaPgto, untListDespRec,
-  untResumoFinal, unt_obs, unt_data_dias_semana;
+  untResumoFinal, unt_obs, unt_data_dias_semana, unt_cad_despesas_mae,
+  unt_rel_data_tipo_mae, untRelUnidosContasPagarContasPagas_mae,
+  unt_cad_receitas_mae, untTransferenciaFinanceira_mae,
+  untCadFormaPgto_mae, untListDespRec_mae, untResumoFinal_mae;
 
 
 {$R *.dfm}
@@ -235,6 +265,54 @@ procedure Tfrm_menu.RelatorioUnidoC1Click(Sender: TObject);
 begin
   Application.CreateForm(TfrmRelUnidosContasPagarContasPagas, frmRelUnidosContasPagarContasPagas);
   frmRelUnidosContasPagarContasPagas.show;
+end;
+
+procedure Tfrm_menu.CadDespesaMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(Tfrm_cad_despesas_mae, frm_cad_despesas_mae);
+  frm_cad_despesas_mae.show;
+end;
+
+procedure Tfrm_menu.RelGeralMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(Tfrm_rel_data_tipo_mae, frm_rel_data_tipo_mae);
+  frm_rel_data_tipo_mae.show;
+end;
+
+procedure Tfrm_menu.RelatrioUnidoMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmRelUnidosContasPagarContasPagas_mae, frmRelUnidosContasPagarContasPagas_mae);
+  frmRelUnidosContasPagarContasPagas_mae.show;
+end;
+
+procedure Tfrm_menu.CadReceitaMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(Tfrm_cad_receitas_mae, frm_cad_receitas_mae);
+  frm_cad_receitas_mae.show;
+end;
+
+procedure Tfrm_menu.ransfe1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmTransferenciaFinanceira_mae, frmTransferenciaFinanceira_mae);
+  frmTransferenciaFinanceira_mae.show;
+end;
+
+procedure Tfrm_menu.FormaPagamentoMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmCadFormaPgto_mae, frmCadFormaPgto_mae);
+  frmCadFormaPgto_mae.show;
+end;
+
+procedure Tfrm_menu.ReceitasXDespesasMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmListDespRec_mae, frmListDespRec_mae);
+  frmListDespRec_mae.show;
+end;
+
+procedure Tfrm_menu.ResumoGeralMe1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmResumoFinal_mae, frmResumoFinal_mae);
+  frmResumoFinal_mae.show;
 end;
 
 end.

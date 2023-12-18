@@ -6,14 +6,10 @@ uses
   unt_cad_despesas in 'unt_cad_despesas.pas' {frm_cad_despesas},
   unt_modulo in 'unt_modulo.pas' {dm: TDataModule},
   unt_rel_data_tipo in 'unt_rel_data_tipo.pas' {frm_rel_data_tipo},
- // untrel_data_tipo in 'untrel_data_tipo.pas' {frmrel_data_tipo},
   unt_data_dias_semana in 'unt_data_dias_semana.pas' {frm_data_dias_semana},
   unt_contas_pagar in 'unt_contas_pagar.pas' {frm_contas_pagar},
   unt_obs in 'unt_obs.pas' {frm_obs},
   untConfirmarBaixaContasPagar in 'untConfirmarBaixaContasPagar.pas' {frmConfirmarBaixaContasPagar},
-//  untRelMediaDesp in 'untRelMediaDesp.pas' {frmRelMediaDesp},
-//  untRelMediaDesp2 in 'untRelMediaDesp2.pas' {frmRelMediaDesp2},
-//  untGraficoDespesa in 'untGraficoDespesa.pas' {frmGraficoDespesa},
   unt_cad_receitas in 'unt_cad_receitas.pas' {frm_cad_receitas},
   untRelRecDesp in 'untRelRecDesp.pas' {frmRelRecDesp},
   untListDespRec in 'untListDespRec.pas' {frmListDespRec},
@@ -55,9 +51,17 @@ uses
   untProdutosComprados in 'untProdutosComprados.pas' {frmProdutosComprados},
   untConfiguracaoCotacao in 'untConfiguracaoCotacao.pas' {frmConfiguracaoCotacao},
   untRelCotacaoFornecedorGrupoProd in 'untRelCotacaoFornecedorGrupoProd.pas' {frmRelCotacaoFornecedorGrupoProd},
-//  UNTcONVERSAO in 'UNTcONVERSAO.pas' {frmconversor},
   untBaixaDeUmaVez in 'untBaixaDeUmaVez.pas' {frmBaixaDeUmaVez},
-  untRelUnidosContasPagarContasPagas in 'untRelUnidosContasPagarContasPagas.pas' {frmRelUnidosContasPagarContasPagas};
+  untRelUnidosContasPagarContasPagas in 'untRelUnidosContasPagarContasPagas.pas' {frmRelUnidosContasPagarContasPagas},
+  unt_cad_despesas_mae in 'unt_cad_despesas_mae.pas' {frm_cad_despesas_mae},
+  unt_rel_data_tipo_mae in 'unt_rel_data_tipo_mae.pas' {frm_rel_data_tipo_mae},
+  untRelUnidosContasPagarContasPagas_mae in 'untRelUnidosContasPagarContasPagas_mae.pas' {frmRelUnidosContasPagarContasPagas_mae},
+  unt_cad_receitas_mae in 'unt_cad_receitas_mae.pas' {frm_cad_receitas_mae},
+  untTransferenciaFinanceira_mae in 'untTransferenciaFinanceira_mae.pas' {frmTransferenciaFinanceira_mae},
+  untCadFormaPgto_mae in 'untCadFormaPgto_mae.pas' {frmCadFormaPgto_mae},
+  untListDespRec_mae in 'untListDespRec_mae.pas' {frmListDespRec_mae},
+  untResumoFinal_mae in 'untResumoFinal_mae.pas' {frmResumofinal_mae},
+  untRelRecDesp_mae in 'untRelRecDesp_mae.pas' {frmRelRecDesp_mae};
 
 {$R *.res}
 
@@ -65,7 +69,16 @@ begin
   Application.Initialize;
   Application.CreateForm(Tfrm_menu, frm_menu);
   Application.CreateForm(Tdm, dm);
-//  Application.CreateForm(TfrmConfirmarBaixaContasPagar, frmConfirmarBaixaContasPagar);
+  Application.CreateForm(Tfrm_cad_despesas_mae, frm_cad_despesas_mae);
+  Application.CreateForm(Tfrm_rel_data_tipo_mae, frm_rel_data_tipo_mae);
+  Application.CreateForm(TfrmRelUnidosContasPagarContasPagas_mae, frmRelUnidosContasPagarContasPagas_mae);
+  Application.CreateForm(Tfrm_cad_receitas_mae, frm_cad_receitas_mae);
+  Application.CreateForm(TfrmTransferenciaFinanceira_mae, frmTransferenciaFinanceira_mae);
+  Application.CreateForm(TfrmCadFormaPgto_mae, frmCadFormaPgto_mae);
+  Application.CreateForm(TfrmListDespRec_mae, frmListDespRec_mae);
+  Application.CreateForm(TfrmResumofinal_mae, frmResumofinal_mae);
+  Application.CreateForm(TfrmRelRecDesp_mae, frmRelRecDesp_mae);
+  //  Application.CreateForm(TfrmConfirmarBaixaContasPagar, frmConfirmarBaixaContasPagar);
 //  Application.CreateForm(TfrmRelMediaDesp, frmRelMediaDesp);
 //  Application.CreateForm(TfrmRelMediaDesp2, frmRelMediaDesp2);
 //  Application.CreateForm(TfrmGraficoDespesa, frmGraficoDespesa);

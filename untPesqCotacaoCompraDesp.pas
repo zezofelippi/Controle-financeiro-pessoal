@@ -64,7 +64,8 @@ var
 
 implementation
 
-uses unt_modulo, unt_cad_despesas, untItensCotacaoContasPagar;
+uses unt_modulo, unt_cad_despesas, untItensCotacaoContasPagar,
+  unt_cad_despesas_mae;
 
 {$R *.dfm}
 
@@ -239,6 +240,41 @@ begin
     frm_cad_despesas.qry_Pesquisa.Open;
 
     frm_cad_despesas.txt_total.Value := frm_cad_despesas.qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
+
+    CLOSE;
+
+  end;
+
+  if pesquisar = 'Cad_Despesa_mae' then
+  begin
+    frm_cad_despesas_mae.txtCotacao.Text := qryFornecedor.fieldbyname('COT_CODIGO').AsString;
+    frm_cad_despesas_mae.txt_cod_fornecedor.Text := qryFornecedor.fieldbyname('FOR_CODIGO').AsString;
+    frm_cad_despesas_mae.txtFornecedor.Text := qryFornecedor.fieldbyname('AT_NOME').AsString;
+
+    frm_cad_despesas_mae.qryCotacao.Close;
+    frm_cad_despesas_mae.qryCotacao.SQL.Clear;
+    frm_cad_despesas_mae.qryCotacao.SQL.Add('SELECT P.PRO_CODIGO,  P.pro_descricao, I.cot_unidade, I.cot_qtd, I.cot_valor,   '+
+                                        ' SUM(I.cot_qtd * I.cot_valor) AS VALOR_TOTAL                                    '+
+                                        ' FROM produto P, itens_cotacao_compra I, AGENDA_TELEFONE F                      '+
+                                        ' WHERE I.pro_codigo = P.pro_codigo AND F.AT_codigo = I.for_codigo_atual         '+
+                                        ' AND I.COT_CODIGO =:COT_CODIGO AND I.FOR_CODIGO_ATUAL=:FOR_CODIGO               '+
+                                        ' GROUP BY P.PRO_CODIGO, P.pro_descricao, I.cot_unidade, I.cot_qtd, I.cot_valor  '+
+                                        ' ORDER BY P.pro_DESCRICAO                                                       ');
+    frm_cad_despesas_mae.qryCotacao.ParamByName('COT_CODIGO').AsString := qryFornecedor.fieldbyname('COT_CODIGO').AsString;
+    frm_cad_despesas_mae.qryCotacao.ParamByName('FOR_CODIGO').AsString := qryFornecedor.fieldbyname('FOR_CODIGO').AsString;
+    frm_cad_despesas_mae.qryCotacao.Open;
+
+    frm_cad_despesas_mae.qry_Pesquisa.close;
+    frm_cad_despesas_mae.qry_Pesquisa.SQL.Clear;
+    frm_cad_despesas_mae.qry_Pesquisa.SQL.Add('SELECT SUM(I.cot_qtd * I.cot_valor) AS VALOR_TOTAL                         '+
+                                          ' FROM produto P, itens_cotacao_compra I, AGENDA_TELEFONE F                 '+
+                                          ' WHERE I.pro_codigo = P.pro_codigo AND F.AT_codigo = I.for_codigo_atual    '+
+                                          ' AND I.COT_CODIGO =:COT_CODIGO AND I.FOR_CODIGO_ATUAL=:FOR_CODIGO          ');
+    frm_cad_despesas_mae.qry_Pesquisa.ParamByName('COT_CODIGO').AsString := qryFornecedor.fieldbyname('COT_CODIGO').AsString;
+    frm_cad_despesas_mae.qry_Pesquisa.ParamByName('FOR_CODIGO').AsString := qryFornecedor.fieldbyname('FOR_CODIGO').AsString;
+    frm_cad_despesas_mae.qry_Pesquisa.Open;
+
+    frm_cad_despesas_mae.txt_total.Value := frm_cad_despesas.qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
 
     CLOSE;
 

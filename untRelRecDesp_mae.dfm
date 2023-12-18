@@ -1,9 +1,9 @@
-object frmRelRecDesp: TfrmRelRecDesp
+object frmRelRecDesp_mae: TfrmRelRecDesp_mae
   Left = 415
   Top = 162
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Relatorio de Receitas & Despesas'
+  Caption = 'Relatorio de Receitas & Despesas M'#227'e'
   ClientHeight = 524
   ClientWidth = 821
   Color = clBtnFace
@@ -228,7 +228,7 @@ object frmRelRecDesp: TfrmRelRecDesp
     end
   end
   object frRelatorio: TRLReport
-    Left = 56
+    Left = 176
     Top = 249
     Width = 794
     Height = 1123
@@ -588,7 +588,7 @@ object frmRelRecDesp: TfrmRelRecDesp
       
         'SELECT EXTRACT(YEAR FROM DATA) AS ANO, EXTRACT(MONTH FROM DATA) ' +
         'AS MES'
-      '              FROM CAD_DESPESA'
+      '              FROM CAD_DESPESA_mae'
       '              WHERE  DATA BETWEEN :DATA1 AND :DATA2'
       
         '              group by EXTRACT(YEAR FROM DATA), EXTRACT(MONTH FR' +
@@ -599,7 +599,7 @@ object frmRelRecDesp: TfrmRelRecDesp
       
         'SELECT EXTRACT(YEAR FROM DATA) AS ANO, EXTRACT(MONTH FROM DATA) ' +
         'AS MES'
-      '              FROM cad_receitas'
+      '              FROM cad_receitas_mae'
       '              WHERE  DATA BETWEEN :DATA1 AND :DATA2'
       
         '              group by EXTRACT(YEAR FROM DATA), EXTRACT(MONTH FR' +
