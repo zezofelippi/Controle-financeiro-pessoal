@@ -61,7 +61,9 @@ uses
   untCadFormaPgto_mae in 'untCadFormaPgto_mae.pas' {frmCadFormaPgto_mae},
   untListDespRec_mae in 'untListDespRec_mae.pas' {frmListDespRec_mae},
   untResumoFinal_mae in 'untResumoFinal_mae.pas' {frmResumofinal_mae},
-  untRelRecDesp_mae in 'untRelRecDesp_mae.pas' {frmRelRecDesp_mae};
+  untRelRecDesp_mae in 'untRelRecDesp_mae.pas' {frmRelRecDesp_mae},
+  untContasReceber_mae in 'untContasReceber_mae.pas' {frmContasReceber_mae},
+  untReceberEmprestimo_mae in 'untReceberEmprestimo_mae.pas' {frmReceberEmprestimo_mae};
 
 {$R *.res}
 
@@ -78,6 +80,8 @@ begin
   Application.CreateForm(TfrmListDespRec_mae, frmListDespRec_mae);
   Application.CreateForm(TfrmResumofinal_mae, frmResumofinal_mae);
   Application.CreateForm(TfrmRelRecDesp_mae, frmRelRecDesp_mae);
+  Application.CreateForm(TfrmContasReceber_mae, frmContasReceber_mae);
+  Application.CreateForm(TfrmReceberEmprestimo_mae, frmReceberEmprestimo_mae);
   //  Application.CreateForm(TfrmConfirmarBaixaContasPagar, frmConfirmarBaixaContasPagar);
 //  Application.CreateForm(TfrmRelMediaDesp, frmRelMediaDesp);
 //  Application.CreateForm(TfrmRelMediaDesp2, frmRelMediaDesp2);
