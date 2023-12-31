@@ -220,6 +220,16 @@ object frm_menu: Tfrm_menu
       object N3: TMenuItem
         Caption = '-'
       end
+      object EmprestimosaReceber1: TMenuItem
+        Caption = 'Empr'#233'stimos a Receber'
+        OnClick = EmprestimosaReceber1Click
+      end
+      object EmprstimosaPagar1: TMenuItem
+        Caption = 'Empr'#233'stimos a Pagar'
+      end
+      object N16: TMenuItem
+        Caption = '-'
+      end
       object FormaPagamentoMe1: TMenuItem
         Caption = 'Forma Pagamento M'#227'e'
         OnClick = FormaPagamentoMe1Click
