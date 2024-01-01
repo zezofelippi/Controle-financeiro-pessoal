@@ -203,7 +203,7 @@ begin
     showmessage('Saldo insuficiente');
     txt_Valor.SetFocus;
     exit;
-  end;
+  end; 
   ////////FIM VERIFICA SE SALDO E SUFICIENTE/////
 
   if (txt_codigo.Text <> '') and (qryEmprestimo.FieldByName('VALOR_RECEBIDO').AsFLOAT > 0) then
@@ -341,7 +341,7 @@ begin
   qryEmprestimo.SQL.Clear;
   qryEmprestimo.SQL.Add('SELECT ER.*, TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO  '+
              'FROM EMPRESTIMOS_A_RECEBER_MAE ER                                                    '+
-             'INNER JOIN tipo_pagamento TP ON ER.tp_codigo = TP.tp_codigo                      '+
+             'INNER JOIN tipo_pagamento_mae TP ON ER.tp_codigo = TP.tp_codigo                      '+
              'WHERE 1=1 ' + dta + opcao + obs + tipo_pagamento                                  +
              'ORDER BY CODIGO                                                                  ');
   qryEmprestimo.Open;
@@ -351,7 +351,7 @@ begin
   qryTotal.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL_EMPRESTIMO,                      '+
                    ' SUM(VALOR_RECEBIDO) AS TOTAL_RECEBIDO,                                '+
                    ' SUM(SALDO_A_RECEBER) AS TOTAL_A_RECEBER FROM EMPRESTIMOS_A_RECEBER_MAE ER '+
-                   ' INNER JOIN tipo_pagamento TP ON ER.tp_codigo = TP.tp_codigo           '+
+                   ' INNER JOIN tipo_pagamento_mae TP ON ER.tp_codigo = TP.tp_codigo           '+
                    ' WHERE CODIGO = CODIGO ' + dta + opcao + obs + tipo_pagamento           );
   qryTotal.Open;
 
@@ -370,7 +370,7 @@ begin
   qryFormaPgto.Close;
   qryFormaPgto.SQL.Clear;
   qryFormaPgto.SQL.Add('SELECT TP_CODIGO, TP_DESCRICAO, TP_DEFAULT, TP_CODIGO ||'' - ''|| TP_DESCRICAO AS DESCRICAO '+
-                       ' FROM TIPO_PAGAMENTO ORDER BY TP_CODIGO                                                     ');
+                       ' FROM tipo_pagamento_mae ORDER BY TP_CODIGO                                                     ');
   qryFormaPgto.Open;
   qryFormaPgto.FetchAll;
 
@@ -429,7 +429,7 @@ begin
   frmReceberEmprestimo_mae.qryRecebido.Close;
   frmReceberEmprestimo_mae.qryRecebido.SQL.Clear;
   frmReceberEmprestimo_mae.qryRecebido.SQL.Add('SELECT ER.*, TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE ER '+
-                                               ' INNER JOIN TIPO_PAGAMENTO TP ON ER.TP_CODIGO = TP.TP_CODIGO                                             '+
+                                               ' INNER JOIN tipo_pagamento_mae TP ON ER.TP_CODIGO = TP.TP_CODIGO                                             '+
                                                ' WHERE CODIGO=:CODIGO ORDER BY PG_CODIGO                                                                 ');
   frmReceberEmprestimo_mae.qryRecebido.ParamByName('CODIGO').AsString := frmReceberEmprestimo_mae.txt_codigo.Text;
   frmReceberEmprestimo_mae.qryRecebido.Open;
@@ -529,7 +529,7 @@ begin
   qryEmprestimo.SQL.Add('SELECT ER.CODIGO, ER.DATA, ER.VALOR_EMPRESTIMO, ER.VALOR_RECEBIDO, ER.SALDO_A_RECEBER, ER.OBS, TP.TP_CODIGO, '+
                         ' TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO                                                     '+
                         'FROM EMPRESTIMOS_A_RECEBER_MAE ER                                                                            '+
-                        'INNER JOIN tipo_pagamento TP ON ER.tp_codigo = TP.tp_codigo                                                  '+
+                        'INNER JOIN tipo_pagamento_mae TP ON ER.tp_codigo = TP.tp_codigo                                                  '+
                         'WHERE 1=1 ' + dta + opcao + obs + tipo_pagamento                                                              +
                         'ORDER BY ' + campo                                                                                            );
   qryEmprestimo.Open;

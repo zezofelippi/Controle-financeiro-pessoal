@@ -160,7 +160,7 @@ begin
   qryRecebido.Close;
   qryRecebido.SQL.Clear;
   qryRecebido.SQL.Add('SELECT ER.*, TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE ER '+
-                      ' INNER JOIN TIPO_PAGAMENTO TP ON ER.TP_CODIGO = TP.TP_CODIGO                                             '+
+                      ' INNER JOIN tipo_pagamento_mae TP ON ER.TP_CODIGO = TP.TP_CODIGO                                             '+
                       ' WHERE CODIGO=:CODIGO ORDER BY PG_CODIGO                                                                 ');
   qryRecebido.ParamByName('CODIGO').AsString := txt_codigo.Text;
   qryRecebido.Open;
@@ -214,7 +214,7 @@ begin
   frmContasReceber_mae.qryEmprestimo.SQL.Clear;
   frmContasReceber_mae.qryEmprestimo.SQL.Add('SELECT ER.*, TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO '+
            'FROM EMPRESTIMOS_A_RECEBER_MAE ER                                                                  '+
-           'INNER JOIN tipo_pagamento TP ON ER.tp_codigo = TP.tp_codigo                                        '+
+           'INNER JOIN tipo_pagamento_mae TP ON ER.tp_codigo = TP.tp_codigo                                        '+
            'WHERE 1=1 ' + dta + opcao                                                                           +
            'ORDER BY CODIGO                                                                                    ');
   frmContasReceber_mae.qryEmprestimo.Open;
@@ -316,7 +316,7 @@ begin
   qryFormaPgto.Close;
   qryFormaPgto.SQL.Clear;
   qryFormaPgto.SQL.Add('SELECT TP_CODIGO, TP_DESCRICAO, TP_DEFAULT, TP_CODIGO ||'' - ''|| TP_DESCRICAO AS DESCRICAO '+
-                       ' FROM TIPO_PAGAMENTO ORDER BY TP_CODIGO                                                     ');
+                       ' FROM tipo_pagamento_mae ORDER BY TP_CODIGO                                                     ');
   qryFormaPgto.Open;
   qryFormaPgto.FetchAll;
 end;
@@ -368,7 +368,7 @@ begin
   qryRecebido.SQL.Add('SELECT ER.PG_CODIGO, ER.PG_DATA, ER.PG_VALOR, ER.PG_OBS, ER.CODIGO, TP.TP_CODIGO, ER.CODIGO,  '+
                       ' TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO                                      '+
                       ' FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE ER                                                      '+
-                      ' INNER JOIN TIPO_PAGAMENTO TP ON ER.TP_CODIGO = TP.TP_CODIGO                                  '+
+                      ' INNER JOIN tipo_pagamento_mae TP ON ER.TP_CODIGO = TP.TP_CODIGO                                  '+
                       ' WHERE 1=1 ' + dta + obs + tipo_pagamento                                                      +
                       ' ORDER BY PG_CODIGO');
   qryRecebido.Open;
@@ -376,7 +376,7 @@ begin
   qryTotal.Close;
   qryTotal.SQL.Clear;
   qryTotal.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE ER '+
-                   'INNER JOIN TIPO_PAGAMENTO TP ON ER.TP_CODIGO = TP.TP_CODIGO       '+
+                   'INNER JOIN tipo_pagamento_mae TP ON ER.TP_CODIGO = TP.TP_CODIGO       '+
                    'WHERE 1=1 ' + dta + obs + tipo_pagamento                           );
   qryTotal.Open;
 
@@ -421,7 +421,7 @@ begin
   qryRecebido.SQL.Add('SELECT ER.PG_CODIGO, ER.PG_DATA, ER.PG_VALOR, ER.PG_OBS, ER.CODIGO, TP.TP_CODIGO, '+
                       ' TP.tp_codigo || '' - '' || TP.tp_descricao AS DESCRICAO                          '+
                       ' FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE ER                                          '+
-                      ' INNER JOIN TIPO_PAGAMENTO TP ON ER.TP_CODIGO = TP.TP_CODIGO                      '+
+                      ' INNER JOIN tipo_pagamento_mae TP ON ER.TP_CODIGO = TP.TP_CODIGO                  '+
                       ' WHERE 1=1 ' + dta + obs + tipo_pagamento                                          +
                       ' ORDER BY ' + campo                                                                );
   qryRecebido.Open;

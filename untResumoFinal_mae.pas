@@ -198,10 +198,10 @@ begin
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     //////////EMP. A RECEBER////////////////////
-   { qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND DATA < :DATA1 AND DATA > :DATA2  ');
+    'FROM EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA < :DATA1 AND DATA > :DATA2  ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
@@ -213,23 +213,23 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA < :DATA1 AND PG_DATA > :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA < :DATA1 AND PG_DATA > :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total + qryPesqAux.fieldbyname('TOTAL').asfloat; }
+    total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A RECEBER/////////////////
 
 
     //////////EMP. A PAGAR////////////////////
-    {qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND DATA < :DATA1 AND DATA > :DATA2 ');
+    'FROM EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA < :DATA1 AND DATA > :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
@@ -241,14 +241,14 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA < :DATA1 AND PG_DATA > :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA < :DATA1 AND PG_DATA > :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total - qryPesqAux.fieldbyname('TOTAL').asfloat; }
+    total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A PAGAR/////////////////
 
@@ -334,10 +334,10 @@ begin
     ///////////FIM TRANSF. FINANC.///////////////////
 
     //////////EMP. A RECEBER////////////////////
-    {qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2  ');
+    'FROM EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2  ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -349,7 +349,7 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -360,15 +360,15 @@ begin
 
     cdsGrid.Edit;
     cdsGrid.fieldbyname('EMP. A RECEBER').asString := FORMATFLOAT('###,##0.00', total);
-    cdsGrid.Post;       }
+    cdsGrid.Post;
     ///////////FIM EMP. A RECEBER/////////////////
 
 
     //////////EMP. A PAGAR////////////////////
-    {qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -380,7 +380,7 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -391,7 +391,7 @@ begin
 
     cdsGrid.Edit;
     cdsGrid.fieldbyname('EMP. A PAGAR').asString := FORMATFLOAT('###,##0.00', total);
-    cdsGrid.Post;  }
+    cdsGrid.Post;
     ///////////FIM EMP. A PAGAR/////////////////
 
     //////////FATURAMENTO////////////////////
@@ -439,10 +439,10 @@ begin
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     //////////EMP. A RECEBER////////////////////
-   { qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2  ');
+    'FROM EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2  ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -454,23 +454,23 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_RECEBER WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total + qryPesqAux.fieldbyname('TOTAL').asfloat; }
+    total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A RECEBER/////////////////
 
 
     //////////EMP. A PAGAR////////////////////
-    {qryPesqAux.close;
+    qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL    '+
-    'FROM EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -482,14 +482,14 @@ begin
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-    'FROM PAGTO_EMPRESTIMOS_A_PAGAR WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
+    'FROM PAGTO_EMPRESTIMOS_A_PAGAR_MAE WHERE TP_CODIGO=:TP_CODIGO AND PG_DATA BETWEEN :DATA1 AND :DATA2 ');
     qryPesqAux.ParamByName('TP_CODIGO').AsString := qryPesquisa.fieldbyname('TP_CODIGO').asstring;
     qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
     qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total - qryPesqAux.fieldbyname('TOTAL').asfloat; }
+    total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A PAGAR/////////////////
 
@@ -535,17 +535,17 @@ begin
   cdsGrid.fieldbyname('FORMA PGTO').asString := 'X';
   cdsGrid.Post;
 
-  {cdsGrid.APPEND;
+  cdsGrid.APPEND;
   cdsGrid.fieldbyname('FORMA PGTO').asString := 'EMP. A RECEBER';
-  cdsGrid.Post; }
+  cdsGrid.Post;
 
   total := 0;
 
   ////////TOTAL ANTERIOR EMP. A RECEBER//////////
- { qryPesqAux.close;
+  qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL    '+
-  'FROM EMPRESTIMOS_A_RECEBER WHERE DATA < :DATA1 AND DATA > :DATA2  ');
+  'FROM EMPRESTIMOS_A_RECEBER_MAE WHERE DATA < :DATA1 AND DATA > :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
   qryPesqAux.Open;
@@ -556,7 +556,7 @@ begin
   qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-  'FROM PAGTO_EMPRESTIMOS_A_RECEBER WHERE PG_DATA < :DATA1 AND PG_DATA > :DATA2  ');
+  'FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE WHERE PG_DATA < :DATA1 AND PG_DATA > :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
   qryPesqAux.Open;
@@ -570,16 +570,16 @@ begin
 
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL ANTERIOR').asString := FORMATFLOAT('###,##0.00', total);
-  cdsGrid.Post; }
+  cdsGrid.Post;
 
   /////////FIM TOTAL ANTERIOR EMP. A RECEBER/////////////
 
   total := 0 ;
   //////// EMP. A RECEBER//////////
- { qryPesqAux.close;
+  qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(VALOR_EMPRESTIMO) AS TOTAL    '+
-  'FROM EMPRESTIMOS_A_RECEBER WHERE DATA BETWEEN :DATA1 AND :DATA2  ');
+  'FROM EMPRESTIMOS_A_RECEBER_MAE WHERE DATA BETWEEN :DATA1 AND :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
   qryPesqAux.Open;
@@ -590,7 +590,7 @@ begin
   qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-  'FROM PAGTO_EMPRESTIMOS_A_RECEBER WHERE PG_DATA BETWEEN :DATA1 AND :DATA2  ');
+  'FROM PAGTO_EMPRESTIMOS_A_RECEBER_MAE WHERE PG_DATA BETWEEN :DATA1 AND :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
   qryPesqAux.Open;
@@ -606,22 +606,22 @@ begin
 
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00',total );
-  cdsGrid.Post;  }
+  cdsGrid.Post;
 
   ///////// FIM EMP. A RECEBER/////////////
 
- { cdsGrid.APPEND;
+  cdsGrid.APPEND;
   cdsGrid.fieldbyname('FORMA PGTO').asString := 'EMP. A PAGAR';
-  cdsGrid.Post;}
+  cdsGrid.Post;
 
   total := 0;
   total_anterior:= 0;
 
   ////////TOTAL ANTERIOR EMP. A PAGAR//////////
- { qryPesqAux.close;
+  qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL    '+
-  'FROM EMPRESTIMOS_A_PAGAR WHERE DATA < :DATA1 AND DATA > :DATA2  ');
+  'FROM EMPRESTIMOS_A_PAGAR_MAE WHERE DATA < :DATA1 AND DATA > :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
   qryPesqAux.Open;
@@ -632,7 +632,7 @@ begin
   qryPesqAux.close;
   qryPesqAux.SQL.Clear;
   qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
-  'FROM PAGTO_EMPRESTIMOS_A_PAGAR WHERE PG_DATA < :DATA1 AND PG_DATA > :DATA2  ');
+  'FROM PAGTO_EMPRESTIMOS_A_PAGAR_MAE WHERE PG_DATA < :DATA1 AND PG_DATA > :DATA2  ');
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_setembro.Date;
   qryPesqAux.Open;
@@ -646,15 +646,15 @@ begin
 
   total_anterior := total;
 
-  fat_total_anterior := fat_total_anterior - total;    }
+  fat_total_anterior := fat_total_anterior - total;
 
   /////////FIM TOTAL ANTERIOR EMP. A PAGAR/////////////
 
   //////// EMP. A PAGAR//////////
 
-  {qryPesqAux.Close;
+  qryPesqAux.Close;
   qryPesqAux.SQL.Clear;
-  qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL FROM EMPRESTIMOS_A_PAGAR '+
+  qryPesqAux.SQL.Add('SELECT SUM(VALOR_A_PAGAR) AS TOTAL FROM EMPRESTIMOS_A_PAGAR_MAE '+
            ' WHERE DATA BETWEEN :DATA1 AND :DATA2' );
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -664,7 +664,7 @@ begin
 
   qryPesqAux.Close;
   qryPesqAux.SQL.Clear;
-  qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL FROM PAGTO_EMPRESTIMOS_A_PAGAR '+
+  qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL FROM PAGTO_EMPRESTIMOS_A_PAGAR_MAE '+
            ' WHERE PG_DATA BETWEEN :DATA1 AND :DATA2' );
   qryPesqAux.ParamByName('DATA1').AsDateTime := txt_data_i.Date;
   qryPesqAux.ParamByName('DATA2').AsDateTime := txt_data_f.Date;
@@ -680,7 +680,7 @@ begin
 
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00', total);
-  cdsGrid.Post; }
+  cdsGrid.Post;
 
   ///////// EMP. A PAGAR/////////////
 

@@ -107,6 +107,7 @@ type
     procedure ReceitasXDespesasMe1Click(Sender: TObject);
     procedure ResumoGeralMe1Click(Sender: TObject);
     procedure EmprestimosaReceber1Click(Sender: TObject);
+    procedure EmprstimosaPagar1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -128,7 +129,7 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   unt_rel_data_tipo_mae, untRelUnidosContasPagarContasPagas_mae,
   unt_cad_receitas_mae, untTransferenciaFinanceira_mae,
   untCadFormaPgto_mae, untListDespRec_mae, untResumoFinal_mae,
-  untContasReceber_mae;
+  untContasReceber_mae, untEmprestimosPagar_mae;
 
 
 {$R *.dfm}
@@ -324,6 +325,12 @@ procedure Tfrm_menu.EmprestimosaReceber1Click(Sender: TObject);
 begin
   Application.CreateForm(TfrmContasReceber_mae, frmContasReceber_mae);
   frmContasReceber_mae.show;
+end;
+
+procedure Tfrm_menu.EmprstimosaPagar1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmEmprestimosPagar_mae, frmEmprestimosPagar_mae);
+  frmEmprestimosPagar_mae.show;
 end;
 
 end.

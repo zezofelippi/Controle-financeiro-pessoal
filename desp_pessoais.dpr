@@ -63,7 +63,8 @@ uses
   untResumoFinal_mae in 'untResumoFinal_mae.pas' {frmResumofinal_mae},
   untRelRecDesp_mae in 'untRelRecDesp_mae.pas' {frmRelRecDesp_mae},
   untContasReceber_mae in 'untContasReceber_mae.pas' {frmContasReceber_mae},
-  untReceberEmprestimo_mae in 'untReceberEmprestimo_mae.pas' {frmReceberEmprestimo_mae};
+  untReceberEmprestimo_mae in 'untReceberEmprestimo_mae.pas' {frmReceberEmprestimo_mae},
+  untEmprestimosPagar_mae in 'untEmprestimosPagar_mae.pas' {frmEmprestimosPagar_mae};
 
 {$R *.res}
 
@@ -82,6 +83,7 @@ begin
   Application.CreateForm(TfrmRelRecDesp_mae, frmRelRecDesp_mae);
   Application.CreateForm(TfrmContasReceber_mae, frmContasReceber_mae);
   Application.CreateForm(TfrmReceberEmprestimo_mae, frmReceberEmprestimo_mae);
+  Application.CreateForm(TfrmEmprestimosPagar_mae, frmEmprestimosPagar_mae);
   //  Application.CreateForm(TfrmConfirmarBaixaContasPagar, frmConfirmarBaixaContasPagar);
 //  Application.CreateForm(TfrmRelMediaDesp, frmRelMediaDesp);
 //  Application.CreateForm(TfrmRelMediaDesp2, frmRelMediaDesp2);
