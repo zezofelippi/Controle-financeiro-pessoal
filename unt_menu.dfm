@@ -226,6 +226,7 @@ object frm_menu: Tfrm_menu
       end
       object EmprstimosaPagar1: TMenuItem
         Caption = 'Empr'#233'stimos a Pagar'
+        OnClick = EmprstimosaPagar1Click
       end
       object N16: TMenuItem
         Caption = '-'
