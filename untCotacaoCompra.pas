@@ -371,7 +371,7 @@ var
 
   //Variáveis referentes a 4ºaba (excel)
   pro_codigo_meu, pro_codigo_fornecedor, pro_unidade_meu, id_carregar_excel_cotacao_global: string;
-  valor_unit_fornec, valor_total_fornec, qtde_fornec : real;
+  valor_unit_fornec, valor_total_fornec, qtde_fornec, desconto_global : real;
 
 implementation
 
@@ -3333,8 +3333,9 @@ end;
 
 procedure Tfrm_cotacao_compra.Button3Click(Sender: TObject);
 var
-  cod_produto_local, id_carregar_excel_cotacao, cod_cotacao_local, fornecedor_local: string;
+  cod_produto_local, id_carregar_excel_cotacao, cod_cotacao_local, fornecedor_local, un_descricao_local: string;
   ite_ordem_insercao: integer;
+  valorReferenteLocal: REAL;
 begin
   if cboFornecedorExcel.Text = '' then
   begin
@@ -3411,23 +3412,42 @@ begin
         qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
         qryPesquisa.Open;
 
+        un_descricao_local := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+
+        qryPesquisa.Close;
+        qryPesquisa.SQL.Clear;
+        qryPesquisa.SQL.Add('SELECT PESO_PRODUTO, PESO_REFERENTE        '+
+                            'FROM  PRODUTO WHERE PRO_CODIGO=:PRO_CODIGO ');
+        qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+        qryPesquisa.Open;
+
         if (not IBTransLocal.InTransaction) then
           IBTransLocal.StartTransaction;
 
         qryTransLocalCompra.Close;
         qryTransLocalCompra.SQL.Clear;
         qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                       '+
-                                    '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )         '+
+                                    '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO, COT_OBS )         '+
                                     'VALUES                                                                                                                 '+
-                                    '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO ) ');
+                                    '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO, :COT_OBS ) ');
         qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
         qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-        qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+        qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := un_descricao_local;
         qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
         qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
         qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
         qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
         qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+        if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+          qryTransLocalCompra.ParamByName('COT_OBS').AsString := 'OFERTA';
+
+        IF qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat > 0 then
+        begin
+          valorReferenteLocal:= (qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat * qryPesquisa.FieldByName('PESO_REFERENTE').AsFloat)/ qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+          qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valorReferenteLocal;
+          qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+        end;
+
         qryTransLocalCompra.ExecSQL;
         IBTransLocal.Commit;
 
@@ -3449,13 +3469,15 @@ begin
           qryTransLocalCompraFornec.Close;
           qryTransLocalCompraFornec.SQL.Clear;
           qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
-                                            ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                            ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR, COT_OBS)     '+
                                             ' VALUES                                              '+
-                                            ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+                                            ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR, :COT_OBS) ');
           qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
           qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
           qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
           qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+          if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+            qryTransLocalCompraFornec.ParamByName('COT_OBS').AsString := 'OFERTA';
           qryTransLocalCompraFornec.ExecSQL;
 
           IBTransLocal.Commit;
@@ -3681,6 +3703,7 @@ begin
   qtde_fornec:= qryCarregarExcel.fieldbyname('QTDE').ASFloat;
   pro_codigo_fornecedor:= qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').AsString;
   id_carregar_excel_cotacao_global:= qryCarregarExcel.fieldbyname('ID').AsString;
+  desconto_global:= qryCarregarExcel.FieldByName('DESCONTO').AsFloat;
 
 end;
 
@@ -3695,12 +3718,16 @@ begin
     valor_total_fornec:= qryCarregarExcel.fieldbyname('VALOR_TOTAL').ASFloat;
     pro_codigo_fornecedor:= qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').AsString;
     qtde_fornec:= qryCarregarExcel.fieldbyname('QTDE').ASFloat;
+    desconto_global:= qryCarregarExcel.FieldByName('DESCONTO').AsFloat;
+
   end;
 end;
 
 procedure Tfrm_cotacao_compra.Button5Click(Sender: TObject);
 var
   cod_cotacao_local, fornecedor_local: string;
+  valorReferenteLocal: real;
+  ordemInsercaoLocal: integer;
 begin
   if cboFornecedorExcel.Text = '' then
   begin
@@ -3766,6 +3793,8 @@ begin
   qryPesquisa.Open;
   qryPesquisa.Last;
 
+  ordemInsercaoLocal:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').asInteger;
+
   if (not IBTransLocal.InTransaction) then
     IBTransLocal.StartTransaction;
 
@@ -3781,33 +3810,52 @@ begin
     qryTransLocalFornecMeu.ParamByName('AT_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
     qryTransLocalFornecMeu.ExecSQL;
 
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT PESO_PRODUTO, PESO_REFERENTE        '+
+                        'FROM  PRODUTO WHERE PRO_CODIGO=:PRO_CODIGO ');
+    qryPesquisa.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
+    qryPesquisa.Open;
+
     qryTransLocalCompra.Close;
     qryTransLocalCompra.SQL.Clear;
     qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                      '+
-                                '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )        '+
+                                '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO, COT_OBS )        '+
                                 'VALUES                                                                                                                '+
-                                '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO )');
+                                '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO, :COT_OBS )');
     qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
     qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
     qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := pro_unidade_meu;
     qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qtde_fornec;
-    qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger :=
-      qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').AsInteger +1;
+    qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ordemInsercaoLocal +1;
     qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
     qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
     qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
+    if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+          qryTransLocalCompra.ParamByName('COT_OBS').AsString := 'OFERTA';
+
+    IF qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat > 0 then
+    begin
+        valorReferenteLocal:= (qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat * qryPesquisa.FieldByName('PESO_REFERENTE').AsFloat)/ qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+        qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valorReferenteLocal;
+        qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+    end;
+
+
     qryTransLocalCompra.ExecSQL;
 
     qryTransLocalCompraFornec.Close;
     qryTransLocalCompraFornec.SQL.Clear;
     qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
-                                      ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                      ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR, COT_OBS)     '+
                                       ' VALUES                                              '+
-                                      ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+                                      ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR, :COT_OBS) ');
     qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
     qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := pro_codigo_meu;
     qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
     qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := valor_unit_fornec;
+    if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+          qryTransLocalCompraFornec.ParamByName('COT_OBS').AsString := 'OFERTA';
     qryTransLocalCompraFornec.ExecSQL;
 
     qryPesqAux.Close;
@@ -3896,8 +3944,9 @@ end;
 procedure Tfrm_cotacao_compra.InserirItemIndividualmente1Click(
   Sender: TObject);
 var
-  cod_produto_local, id_carregar_excel_cotacao, cod_cotacao_local, fornecedor_local: string;
+  cod_produto_local, id_carregar_excel_cotacao, cod_cotacao_local, fornecedor_local, un_descricao_local: string;
   ite_ordem_insercao: integer;
+  valorReferenteLocal: real;
 begin
   if cboFornecedorExcel.Text = '' then
   begin
@@ -3971,23 +4020,42 @@ begin
       qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
       qryPesquisa.Open;
 
+      un_descricao_local := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+
+      qryPesquisa.Close;
+      qryPesquisa.SQL.Clear;
+      qryPesquisa.SQL.Add('SELECT PESO_PRODUTO, PESO_REFERENTE        '+
+                          'FROM  PRODUTO WHERE PRO_CODIGO=:PRO_CODIGO ');
+      qryPesquisa.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
+      qryPesquisa.Open;
+
       if (not IBTransLocal.InTransaction) then
         IBTransLocal.StartTransaction;
 
       qryTransLocalCompra.Close;
       qryTransLocalCompra.SQL.Clear;
       qryTransLocalCompra.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA                                                                                       '+
-                                  '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO )         '+
+                                  '(COT_CODIGO, PRO_CODIGO, COT_UNIDADE, COT_QTD, ITE_ORDEM_INSERCAO, FOR_CODIGO_ATUAL, COT_VALOR, FOR_INSERIDO, COT_OBS )         '+
                                   'VALUES                                                                                                                 '+
-                                  '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO)  ');
+                                  '(:COT_CODIGO, :PRO_CODIGO, :COT_UNIDADE, :COT_QTD, :ITE_ORDEM_INSERCAO, :FOR_CODIGO_ATUAL, :COT_VALOR, :FOR_INSERIDO, :COT_OBS)  ');
       qryTransLocalCompra.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
       qryTransLocalCompra.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
-      qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := qryPesquisa.fieldbyname('UN_DESCRICAO').asstring;
+      qryTransLocalCompra.ParamByName('COT_UNIDADE').AsString := un_descricao_local;
       qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryCarregarExcel.fieldbyname('QTDE').asfloat;
       qryTransLocalCompra.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ite_ordem_insercao +1;
       qryTransLocalCompra.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedorExcel.KeyValue;
       qryTransLocalCompra.ParamByName('FOR_INSERIDO').AsString := 'S';
       qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+      if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+          qryTransLocalCompra.ParamByName('COT_OBS').AsString := 'OFERTA';
+
+      IF qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat > 0 then
+      begin
+          valorReferenteLocal:= (qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat * qryPesquisa.FieldByName('PESO_REFERENTE').AsFloat)/ qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+          qryTransLocalCompra.ParamByName('COT_VALOR').AsFloat := valorReferenteLocal;
+          qryTransLocalCompra.ParamByName('COT_QTD').AsFloat := qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+      end;
+
       qryTransLocalCompra.ExecSQL;
 
       IBTransLocal.Commit;
@@ -4010,13 +4078,15 @@ begin
         qryTransLocalCompraFornec.Close;
         qryTransLocalCompraFornec.SQL.Clear;
         qryTransLocalCompraFornec.SQL.Add('INSERT INTO ITENS_COTACAO_COMPRA_FORNEC              '+
-                                          ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR)     '+
+                                          ' (COT_CODIGO, PRO_CODIGO, FOR_CODIGO, COT_VALOR, COT_OBS)     '+
                                           ' VALUES                                              '+
-                                          ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR) ');
+                                          ' (:COT_CODIGO, :PRO_CODIGO, :FOR_CODIGO, :COT_VALOR, :COT_OBS) ');
         qryTransLocalCompraFornec.ParamByName('COT_CODIGO').AsString := lbl_Cod_Cotacao.Caption;
         qryTransLocalCompraFornec.ParamByName('PRO_CODIGO').AsString := cod_produto_local;
         qryTransLocalCompraFornec.ParamByName('FOR_CODIGO').AsInteger:= cboFornecedorExcel.KeyValue;
         qryTransLocalCompraFornec.ParamByName('COT_VALOR').AsFloat := qryCarregarExcel.fieldbyname('VALOR_UNIT').asfloat;
+        if qryCarregarExcel.FieldByName('DESCONTO').AsFloat > 0 then
+          qryTransLocalCompraFornec.ParamByName('COT_OBS').AsString := 'OFERTA';
         qryTransLocalCompraFornec.ExecSQL;
         IBTransLocal.Commit;
       end;
