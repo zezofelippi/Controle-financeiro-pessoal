@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DBCtrls, StdCtrls, Buttons, Grids, DBGrids, DB, IBCustomDataSet,
-  IBQuery, IBDatabase, Menus;
+  IBQuery, IBDatabase, Menus, Mask, ToolEdit, CurrEdit;
 
 type
   TfrmProduto = class(TForm)
@@ -55,6 +55,14 @@ type
     qryProdutoUN_CODIGO: TIntegerField;
     btnPesquisar: TButton;
     qryProdutoGRP_CODIGO: TIntegerField;
+    gpbRegraTres: TGroupBox;
+    Label8: TLabel;
+    txtPesoProduto: TRxCalcEdit;
+    Label9: TLabel;
+    txtPesoReferente: TRxCalcEdit;
+    che_regra_tres: TCheckBox;
+    qryProdutoPESO_PRODUTO: TFloatField;
+    qryProdutoPESO_REFERENTE: TFloatField;
     procedure txt_descricaoEnter(Sender: TObject);
     procedure txt_descricaoExit(Sender: TObject);
     procedure txt_descricaoKeyPress(Sender: TObject; var Key: Char);
@@ -90,6 +98,11 @@ type
     procedure txt_grupo_pesqKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure txt_grupo_pesqClick(Sender: TObject);
+    procedure che_regra_tresClick(Sender: TObject);
+    procedure txtPesoProdutoEnter(Sender: TObject);
+    procedure txtPesoProdutoExit(Sender: TObject);
+    procedure txtPesoReferenteEnter(Sender: TObject);
+    procedure txtPesoReferenteExit(Sender: TObject);
   private
     { Private declarations }
   public
@@ -114,6 +127,8 @@ begin
   txt_descricao.Clear;
   txt_unidade.KeyValue := null;
   txt_grupo.KeyValue := null;
+  txtPesoProduto.clear;
+  txtPesoReferente.clear;
 end;
 
 procedure TfrmProduto.txt_descricaoEnter(Sender: TObject);
@@ -200,8 +215,8 @@ begin
       IBTransLocal.StartTransaction;
     qry_trans_local.Close;
     qry_trans_local.SQL.Clear;
-    qry_trans_local.SQL.Add('INSERT INTO PRODUTO (PRO_DESCRICAO, UN_CODIGO, GRP_CODIGO)'+
-                            'VALUES (:PRO_DESCRICAO, :UN_CODIGO, :GRP_CODIGO)          ');
+    qry_trans_local.SQL.Add('INSERT INTO PRODUTO (PRO_DESCRICAO, UN_CODIGO, GRP_CODIGO, PESO_PRODUTO, PESO_REFERENTE)'+
+                            'VALUES (:PRO_DESCRICAO, :UN_CODIGO, :GRP_CODIGO, :PESO_PRODUTO, :PESO_REFERENTE)        ');
   end;
 
   if alterar = 'S' then
@@ -210,14 +225,38 @@ begin
       IBTransLocal.StartTransaction;
     qry_trans_local.Close;
     qry_trans_local.SQL.Clear;
-    qry_trans_local.SQL.Add('UPDATE PRODUTO SET PRO_DESCRICAO=:PRO_DESCRICAO, '+
-                            ' UN_CODIGO=:UN_CODIGO, GRP_CODIGO=:GRP_CODIGO    '+
-                            'WHERE PRO_CODIGO = ' + txt_cod_produto.Text       );
+    qry_trans_local.SQL.Add('UPDATE PRODUTO SET PRO_DESCRICAO=:PRO_DESCRICAO,            '+
+                            ' UN_CODIGO=:UN_CODIGO, GRP_CODIGO=:GRP_CODIGO,              '+
+                            ' PESO_PRODUTO=:PESO_PRODUTO, PESO_REFERENTE=:PESO_REFERENTE '+
+                            'WHERE PRO_CODIGO = ' + txt_cod_produto.Text                  );
   end;
 
   qry_trans_local.ParamByName('PRO_DESCRICAO').AsString  := txt_descricao.Text;
   qry_trans_local.ParamByName('UN_CODIGO').AsString  := txt_unidade.keyvalue;
   qry_trans_local.ParamByName('GRP_CODIGO').AsString  := txt_grupo.keyvalue;
+
+  if che_regra_tres.Checked = true then
+  begin
+    if txtPesoProduto.Text = '' then
+    begin
+      mensagem:= 'Informe o peso do produto!';
+      Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING);
+      txtPesoProduto.SetFocus;
+      exit;
+    end;
+
+    if txtPesoReferente.Text = '' then
+    begin
+      mensagem:= 'Informe o peso referente!';
+      Application.MessageBox(Pchar(mensagem), 'Informação!', MB_OK+MB_ICONWARNING);
+      txtPesoReferente.SetFocus;
+      exit;
+    end;
+
+    qry_trans_local.ParamByName('PESO_PRODUTO').AsFloat  := txtPesoProduto.Value;
+    qry_trans_local.ParamByName('PESO_REFERENTE').AsFloat  := txtPesoReferente.Value;
+
+  end;
 
   qry_trans_local.ExecSQL;
   IBTransLocal.Commit;
@@ -228,10 +267,10 @@ begin
 
   qryProduto.Close;
   qryProduto.SQL.Clear;
-  qryProduto.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, UN.un_descricao, G.grp_descricao, G.GRP_CODIGO, UN.UN_CODIGO  '+
-                     'FROM  PRODUTO P, UNIDADE UN, GRUPO G                                                                '+
-                     'WHERE P.un_codigo = UN.un_codigo AND                                                                '+
-                     'P.grp_codigo = G.grp_codigo ORDER BY P.PRO_CODIGO                                                   ');
+  qryProduto.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, UN.un_descricao, G.grp_descricao, G.GRP_CODIGO, UN.UN_CODIGO, P.PESO_PRODUTO, P.PESO_REFERENTE  '+
+                     'FROM  PRODUTO P, UNIDADE UN, GRUPO G                                                                                                  '+
+                     'WHERE P.un_codigo = UN.un_codigo AND                                                                                                  '+
+                     'P.grp_codigo = G.grp_codigo ORDER BY P.PRO_CODIGO                                                                                     ');
   qryProduto.Open;
 
   if (pesquisa = 'pesq_cotacao_excel') then
@@ -278,6 +317,9 @@ begin
   else
     txt_descricao.SetFocus;
 
+  che_regra_tres.Checked:= false;
+  gpbRegraTres.Enabled:= false;
+
 end;
 
 procedure TfrmProduto.Alterar1Click(Sender: TObject);
@@ -287,6 +329,8 @@ begin
   txt_descricao.Text := qryProduto.fieldbyname('PRO_DESCRICAO').AsString;
   txt_unidade.KeyValue := qryProduto.fieldbyname('UN_CODIGO').AsString;
   txt_grupo.KeyValue := qryProduto.fieldbyname('GRP_CODIGO').AsString;
+  txtPesoProduto.Value := qryProduto.fieldbyname('PESO_PRODUTO').AsFloat;
+  txtPesoReferente.Value := qryProduto.fieldbyname('PESO_REFERENTE').AsFloat;
 
   alterar := 'S';
 
@@ -478,10 +522,10 @@ begin
 
   qryProduto.Close;
   qryProduto.SQL.Clear;
-  qryProduto.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, UN.un_descricao, G.grp_descricao, G.GRP_CODIGO, UN.UN_CODIGO '+
-                     'FROM  PRODUTO P, UNIDADE UN, GRUPO G                                                               '+
-                     'WHERE P.un_codigo = UN.un_codigo AND                                                               '+
-                     'P.grp_codigo = G.grp_codigo  ' + grupo + descricao + codigo + ' ORDER BY P.PRO_DESCRICAO           ');
+  qryProduto.SQL.Add('SELECT P.pro_codigo, P.pro_descricao, UN.un_descricao, G.grp_descricao, G.GRP_CODIGO, UN.UN_CODIGO, PESO_PRODUTO, PESO_REFERENTE '+
+                     'FROM  PRODUTO P, UNIDADE UN, GRUPO G                                                                                             '+
+                     'WHERE P.un_codigo = UN.un_codigo AND                                                                                             '+
+                     'P.grp_codigo = G.grp_codigo  ' + grupo + descricao + codigo + ' ORDER BY P.PRO_DESCRICAO                                         ');
   qryProduto.Open;
 
 end;
@@ -505,6 +549,34 @@ end;
 procedure TfrmProduto.txt_grupo_pesqClick(Sender: TObject);
 begin
   btnPesquisar.Click;
+end;
+
+procedure TfrmProduto.che_regra_tresClick(Sender: TObject);
+begin
+  if che_regra_tres.Checked = true then
+    gpbRegraTres.enabled:= true
+  else
+    gpbRegraTres.enabled:= false;  
+end;
+
+procedure TfrmProduto.txtPesoProdutoEnter(Sender: TObject);
+begin
+  txtPesoProduto.Color:= $00F5EEDE;
+end;
+
+procedure TfrmProduto.txtPesoProdutoExit(Sender: TObject);
+begin
+  txtPesoProduto.Color:= clWindow;
+end;
+
+procedure TfrmProduto.txtPesoReferenteEnter(Sender: TObject);
+begin
+  txtPesoReferente.Color:= $00F5EEDE;
+end;
+
+procedure TfrmProduto.txtPesoReferenteExit(Sender: TObject);
+begin
+  txtPesoREferente.Color:= clwindow;
 end;
 
 end.

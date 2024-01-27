@@ -1,10 +1,10 @@
 object frmProduto: TfrmProduto
-  Left = 295
-  Top = 150
+  Left = 400
+  Top = 244
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Produto'
-  ClientHeight = 511
+  ClientHeight = 606
   ClientWidth = 927
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,9 +19,9 @@ object frmProduto: TfrmProduto
   TextHeight = 13
   object DBGrid1: TDBGrid
     Left = 0
-    Top = 170
+    Top = 244
     Width = 927
-    Height = 341
+    Height = 362
     Align = alClient
     Color = 15794175
     DataSource = dsProduto
@@ -98,7 +98,7 @@ object frmProduto: TfrmProduto
     Left = 0
     Top = 0
     Width = 927
-    Height = 80
+    Height = 154
     Align = alTop
     TabOrder = 1
     object Label1: TLabel
@@ -184,10 +184,79 @@ object frmProduto: TfrmProduto
       OnExit = txt_grupoExit
       OnKeyPress = txt_grupoKeyPress
     end
+    object gpbRegraTres: TGroupBox
+      Left = 6
+      Top = 72
+      Width = 259
+      Height = 67
+      Caption = 'Regra de 3'
+      TabOrder = 5
+      object Label8: TLabel
+        Left = 8
+        Top = 18
+        Width = 79
+        Height = 13
+        Caption = 'Peso do Produto'
+      end
+      object Label9: TLabel
+        Left = 152
+        Top = 18
+        Width = 74
+        Height = 13
+        Caption = 'Peso Referente'
+      end
+      object txtPesoProduto: TRxCalcEdit
+        Left = 8
+        Top = 34
+        Width = 93
+        Height = 24
+        AutoSize = False
+        DecimalPlaces = 3
+        DisplayFormat = '###,##0.000'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        NumGlyphs = 2
+        ParentFont = False
+        TabOrder = 0
+        OnEnter = txtPesoProdutoEnter
+        OnExit = txtPesoProdutoExit
+      end
+      object txtPesoReferente: TRxCalcEdit
+        Left = 152
+        Top = 34
+        Width = 93
+        Height = 24
+        AutoSize = False
+        DecimalPlaces = 3
+        DisplayFormat = '###,##0.000'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        NumGlyphs = 2
+        ParentFont = False
+        TabOrder = 1
+        OnEnter = txtPesoReferenteEnter
+        OnExit = txtPesoReferenteExit
+      end
+    end
+    object che_regra_tres: TCheckBox
+      Left = 280
+      Top = 88
+      Width = 97
+      Height = 17
+      Caption = 'Regra de 3'
+      TabOrder = 6
+      OnClick = che_regra_tresClick
+    end
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 80
+    Top = 154
     Width = 927
     Height = 90
     Align = alTop
@@ -353,7 +422,8 @@ object frmProduto: TfrmProduto
     SQL.Strings = (
       
         'SELECT P.pro_codigo, P.pro_descricao, UN.un_descricao, G.grp_des' +
-        'cricao, UN.UN_CODIGO, G.GRP_CODIGO'
+        'cricao, UN.UN_CODIGO, G.GRP_CODIGO, P.PESO_PRODUTO, P.PESO_REFER' +
+        'ENTE'
       'FROM  PRODUTO P, UNIDADE UN, GRUPO G'
       'WHERE P.un_codigo = UN.un_codigo AND'
       '      P.grp_codigo = G.grp_codigo')
@@ -392,6 +462,14 @@ object frmProduto: TfrmProduto
       Origin = 'GRUPO.GRP_CODIGO'
       Required = True
     end
+    object qryProdutoPESO_PRODUTO: TFloatField
+      FieldName = 'PESO_PRODUTO'
+      Origin = 'PRODUTO.PESO_PRODUTO'
+    end
+    object qryProdutoPESO_REFERENTE: TFloatField
+      FieldName = 'PESO_REFERENTE'
+      Origin = 'PRODUTO.PESO_REFERENTE'
+    end
   end
   object dsProduto: TDataSource
     DataSet = qryProduto
@@ -417,8 +495,8 @@ object frmProduto: TfrmProduto
     CachedUpdates = False
     SQL.Strings = (
       'select * from grupo order by grp_descricao')
-    Left = 184
-    Top = 96
+    Left = 160
+    Top = 176
     object qryGrupoPesqGRP_CODIGO: TIntegerField
       FieldName = 'GRP_CODIGO'
       Origin = 'GRUPO.GRP_CODIGO'
@@ -433,7 +511,7 @@ object frmProduto: TfrmProduto
   end
   object dsGrupoPesq: TDataSource
     DataSet = qryGrupoPesq
-    Left = 152
-    Top = 96
+    Left = 128
+    Top = 176
   end
 end
