@@ -28,7 +28,7 @@ object frm_cotacao_compra: Tfrm_cotacao_compra
     Top = 0
     Width = 1231
     Height = 644
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alLeft
     TabOrder = 0
     object TabSheet1: TTabSheet

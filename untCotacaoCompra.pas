@@ -1114,7 +1114,8 @@ end;
 procedure Tfrm_cotacao_compra.btnInserirClick(Sender: TObject);
 var
   cod_cotacao, forCodigoUltimo, dataCompraUlt, fornecedorComboConvertido : string;
-  prodPrecoUlt :real;  
+  prodPrecoUlt, valorReferenteLocal :real;
+  ITE_ORDEM_INSERCAO: integer;
 begin
   if txt_produto.Text = '' then
   begin
@@ -1233,6 +1234,15 @@ begin
     qryPesquisa.Open;
     qryPesquisa.Last;
 
+    ITE_ORDEM_INSERCAO:= qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').AsInteger;
+
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT PESO_PRODUTO, PESO_REFERENTE        '+
+                        'FROM  PRODUTO WHERE PRO_CODIGO=:PRO_CODIGO ');
+    qryPesquisa.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
+    qryPesquisa.Open;
+
     if (not IBTransLocal.InTransaction) then
        IBTransLocal.StartTransaction;
 
@@ -1251,8 +1261,7 @@ begin
     qryTransLocal.ParamByName('COT_VALOR_ANT').AsFloat := prodPrecoUlt;
     qryTransLocal.ParamByName('FOR_CODIGO_ANT').AsString := forCodigoUltimo;
     qryTransLocal.ParamByName('COT_DATA_COMPRA_ULT').AsString := dataCompraUlt;
-    qryTransLocal.ParamByName('ITE_ORDEM_INSERCAO').AsInteger :=
-    qryPesquisa.fieldbyname('ITE_ORDEM_INSERCAO').AsInteger +1;
+    qryTransLocal.ParamByName('ITE_ORDEM_INSERCAO').AsInteger := ITE_ORDEM_INSERCAO +1;
     if cboFornecedor.Text <> '' then
     begin
       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsInteger := cboFornecedor.KeyValue;
@@ -1260,6 +1269,15 @@ begin
     end;
     if txt_Valor.Visible = True then
       qryTransLocal.ParamByName('COT_VALOR').AsFloat := txt_Valor.Value;
+
+    IF qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat > 0 then
+    begin
+      valorReferenteLocal:= (txt_Valor.Value * qryPesquisa.FieldByName('PESO_REFERENTE').AsFloat)/ qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+      qryTransLocal.ParamByName('COT_VALOR').AsFloat := valorReferenteLocal;
+      qryTransLocal.ParamByName('COT_QTD').AsFloat := qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+    end;
+
+
     qryTransLocal.ExecSQL;
 
     IBTransLocal.Commit;
@@ -1324,6 +1342,14 @@ begin
 
     ///FIM
 
+
+    qryPesquisa.Close;
+    qryPesquisa.SQL.Clear;
+    qryPesquisa.SQL.Add('SELECT PESO_PRODUTO, PESO_REFERENTE        '+
+                        'FROM  PRODUTO WHERE PRO_CODIGO=:PRO_CODIGO ');
+    qryPesquisa.ParamByName('PRO_CODIGO').AsString := txt_cod_produto.Text;
+    qryPesquisa.Open;
+
     if (not IBTransLocal.InTransaction) then
       IBTransLocal.StartTransaction;
 
@@ -1343,6 +1369,13 @@ begin
     begin
       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').AsString := cboFornecedor.KeyValue;
       qryTransLocal.ParamByName('FOR_INSERIDO').AsString := 'S';
+    end;
+
+    IF qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat > 0 then
+    begin
+      valorReferenteLocal:= (txt_Valor.Value * qryPesquisa.FieldByName('PESO_REFERENTE').AsFloat)/ qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
+      qryTransLocal.ParamByName('COT_VALOR').AsFloat := valorReferenteLocal;
+      qryTransLocal.ParamByName('COT_QTD').AsFloat := qryPesquisa.FieldByName('PESO_PRODUTO').AsFloat;
     end;
 
     qryTransLocal.ExecSQL;
