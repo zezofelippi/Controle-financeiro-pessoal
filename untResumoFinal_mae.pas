@@ -112,7 +112,7 @@ procedure TfrmResumofinal_mae.btnProcessarClick(Sender: TObject);
 var
   mensagem, data1, data2, dta :string;
   din, che, trans, dep, desp, total,  rec_din, rec_che, rec_dep, emp_rec, total_anterior : real;
-  fat_total_anterior, fat_faturamento : real;
+  fat_total_anterior, fat_faturamento, total_anterior_liquido, total_atual_liquido, total_anterior_pagar_receber, total_atual_pagar_receber : real;
 begin
 
   if (txt_data_i.Text ='  /  /    ') and (txt_data_f.Text = '  /  /    ') then
@@ -163,6 +163,10 @@ begin
 
   fat_total_anterior := 0;
   fat_faturamento := 0;
+  total_anterior_liquido:=0;
+  total_atual_liquido:=0;
+  total_anterior_pagar_receber:=0;
+  total_atual_pagar_receber:=0;
 
   WHILE NOT qryPesquisa.Eof do
   begin
@@ -186,6 +190,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_anterior_liquido:= total_anterior_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR) AS TOTAL    '+
@@ -196,6 +202,8 @@ begin
     qryPesqAux.Open;
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_anterior_liquido:= total_anterior_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     //////////EMP. A RECEBER////////////////////
     qryPesqAux.close;
@@ -210,6 +218,8 @@ begin
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_anterior_liquido:= total_anterior_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
@@ -221,6 +231,8 @@ begin
     qryPesqAux.First;
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_anterior_liquido:= total_anterior_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A RECEBER/////////////////
 
@@ -238,6 +250,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_anterior_liquido:= total_anterior_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
@@ -249,6 +263,8 @@ begin
     qryPesqAux.First;
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_anterior_liquido:= total_anterior_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;  
 
     ///////////FIM EMP. A PAGAR/////////////////
 
@@ -266,6 +282,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_anterior_liquido:= total_anterior_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
      //////////DESPESAS////////////////
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
@@ -277,7 +295,9 @@ begin
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total - qryPesqAux.fieldbyname('total').AsFloat ;
+    total := total - qryPesqAux.fieldbyname('total').AsFloat;
+
+    total_anterior_liquido:= total_anterior_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     total_anterior := total;
 
@@ -357,6 +377,7 @@ begin
     qryPesqAux.First;
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
+    total_atual_pagar_receber := total;
 
     cdsGrid.Edit;
     cdsGrid.fieldbyname('EMP. A RECEBER').asString := FORMATFLOAT('###,##0.00', total);
@@ -388,6 +409,8 @@ begin
     qryPesqAux.First;
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_atual_pagar_receber := total_atual_pagar_receber - total;
 
     cdsGrid.Edit;
     cdsGrid.fieldbyname('EMP. A PAGAR').asString := FORMATFLOAT('###,##0.00', total);
@@ -427,6 +450,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_atual_liquido := total_atual_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(VALOR) AS TOTAL    '+
@@ -437,6 +462,8 @@ begin
     qryPesqAux.Open;
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_atual_liquido := total_atual_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     //////////EMP. A RECEBER////////////////////
     qryPesqAux.close;
@@ -451,6 +478,8 @@ begin
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_atual_liquido := total_atual_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
@@ -462,6 +491,8 @@ begin
     qryPesqAux.First;
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_atual_liquido := total_atual_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A RECEBER/////////////////
 
@@ -479,6 +510,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_atual_liquido := total_atual_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
     qryPesqAux.SQL.Add('SELECT SUM(PG_VALOR) AS TOTAL    '+
@@ -490,6 +523,8 @@ begin
     qryPesqAux.First;
 
     total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_atual_liquido := total_atual_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
     ///////////FIM EMP. A PAGAR/////////////////
 
@@ -506,6 +541,8 @@ begin
 
     total := total + qryPesqAux.fieldbyname('TOTAL').asfloat;
 
+    total_atual_liquido := total_atual_liquido + qryPesqAux.fieldbyname('TOTAL').asfloat;
+
      //////////DESPESAS////////////////
     qryPesqAux.close;
     qryPesqAux.SQL.Clear;
@@ -517,7 +554,11 @@ begin
     qryPesqAux.Open;
     qryPesqAux.First;
 
-    total := total - qryPesqAux.fieldbyname('total').AsFloat ;
+    total := total - qryPesqAux.fieldbyname('total').AsFloat;
+
+    total_atual_liquido := total_atual_liquido - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+    total_atual_liquido := total_atual_liquido + total_anterior;
 
     total := total + total_anterior;
 
@@ -532,7 +573,15 @@ begin
   ////////////FIM CAD. TIPO DE PAGAMENTO/////////////////
 
   cdsGrid.APPEND;
-  cdsGrid.fieldbyname('FORMA PGTO').asString := 'X';
+  cdsGrid.fieldbyname('FORMA PGTO').asString := 'TOTAL';
+  cdsGrid.Post;
+
+  cdsGrid.Edit;
+  cdsGrid.fieldbyname('TOTAL ANTERIOR').asString := FORMATFLOAT('###,##0.00', total_anterior_liquido);
+  cdsGrid.Post;
+
+  cdsGrid.Edit;
+  cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00', total_atual_liquido);
   cdsGrid.Post;
 
   cdsGrid.APPEND;
@@ -565,6 +614,8 @@ begin
   total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
 
   total_anterior := total;
+
+  total_anterior_pagar_receber := total;
 
   fat_total_anterior := fat_total_anterior + total;
 
@@ -604,6 +655,8 @@ begin
 
   total := total + total_anterior;
 
+  total_atual_pagar_receber := total;
+
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00',total );
   cdsGrid.Post;
@@ -639,6 +692,8 @@ begin
   qryPesqAux.First;
 
   total := total - qryPesqAux.fieldbyname('TOTAL').asfloat;
+
+  total_anterior_pagar_receber := total_anterior_pagar_receber + (total *(-1));
 
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL ANTERIOR').asString := FORMATFLOAT('###,##0.00', total *(-1));
@@ -678,11 +733,25 @@ begin
 
   total := total - total_anterior;
 
+  total_atual_pagar_receber := total_atual_pagar_receber + total;
+
   cdsGrid.Edit;
   cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00', total);
   cdsGrid.Post;
 
-  ///////// EMP. A PAGAR/////////////
+  ///////// FIM EMP. A PAGAR/////////////
+
+  cdsGrid.APPEND;
+  cdsGrid.fieldbyname('FORMA PGTO').asString := 'TOTAL';
+  cdsGrid.Post;
+
+  cdsGrid.Edit;
+  cdsGrid.fieldbyname('TOTAL ANTERIOR').asString := FORMATFLOAT('###,##0.00', total_anterior_pagar_receber);
+  cdsGrid.Post;
+
+  cdsGrid.Edit;
+  cdsGrid.fieldbyname('TOTAL   ATUAL').asString := FORMATFLOAT('###,##0.00', total_atual_pagar_receber);
+  cdsGrid.Post;
 
   cdsGrid.APPEND;
   cdsGrid.fieldbyname('FORMA PGTO').asString := 'DESPESAS';
@@ -780,13 +849,19 @@ begin
     else
       DBGrid1.Canvas.Brush.Color:= clwindow;
 
+    if cdsGrid.FieldByName('FORMA PGTO').AsString = 'TOTAL' then
+    begin
+      DBGrid1.Canvas.Brush.Color:= clblack;
+      DBGrid1.Canvas.Font.Color := clwindow;
+    end;
+
     if cdsGrid.FieldByName('FORMA PGTO').AsString = 'X' then
       DBGrid1.Canvas.Brush.Color:= clblack;
 
     if cdsGrid.FieldByName('FORMA PGTO').AsString = 'FATURAMENTO' then
       DBGrid1.Canvas.Brush.Color:= claqua;
 
-    TDbGrid(Sender).Canvas.font.Color:= clBlack;
+    //TDbGrid(Sender).Canvas.font.Color:= clBlack;
     if gdSelected in State then
       with (Sender as TDBGrid).Canvas do
       begin
