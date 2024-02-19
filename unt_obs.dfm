@@ -3,7 +3,7 @@ object frm_obs: Tfrm_obs
   Top = 215
   BorderStyle = bsDialog
   Caption = 'OBS'
-  ClientHeight = 365
+  ClientHeight = 445
   ClientWidth = 911
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,8 +25,8 @@ object frm_obs: Tfrm_obs
     Caption = 'OBS'
   end
   object btn_gravar: TButton
-    Left = 608
-    Top = 40
+    Left = 688
+    Top = 12
     Width = 75
     Height = 25
     Caption = 'Gravar'
@@ -34,8 +34,8 @@ object frm_obs: Tfrm_obs
     OnClick = btn_gravarClick
   end
   object DBGrid1: TDBGrid
-    Left = 0
-    Top = 72
+    Left = 2
+    Top = 145
     Width = 905
     Height = 289
     DataSource = ds_mostra_dados
@@ -86,20 +86,68 @@ object frm_obs: Tfrm_obs
     OnEnter = txt_obsEnter
     OnExit = txt_obsExit
   end
+  object GroupBox1: TGroupBox
+    Left = 7
+    Top = 43
+    Width = 677
+    Height = 99
+    Caption = 'Pesquisar Registro'
+    TabOrder = 3
+    object Label5: TLabel
+      Left = 13
+      Top = 18
+      Width = 22
+      Height = 13
+      Caption = 'OBS'
+    end
+    object txt_obs_pesquisa: TEdit
+      Left = 12
+      Top = 35
+      Width = 413
+      Height = 21
+      CharCase = ecUpperCase
+      TabOrder = 0
+    end
+    object rdb_inicio: TRadioButton
+      Left = 52
+      Top = 63
+      Width = 57
+      Height = 17
+      Caption = 'Inicio'
+      TabOrder = 1
+    end
+    object rdb_posicao: TRadioButton
+      Left = 111
+      Top = 62
+      Width = 113
+      Height = 17
+      Caption = 'Qualquer posicao'
+      TabOrder = 2
+    end
+    object Button1: TButton
+      Left = 444
+      Top = 26
+      Width = 137
+      Height = 25
+      Caption = 'Pesquisar'
+      TabOrder = 3
+      OnClick = Button1Click
+    end
+  end
   object qry_lembretes: TIBQuery
     Database = dm.BD
     Transaction = IBTRANSLOCAL
     BufferChunks = 1000
     CachedUpdates = False
     Left = 272
-    Top = 48
+    Top = 8
   end
   object IBTRANSLOCAL: TIBTransaction
     Active = False
     DefaultDatabase = dm.BD
     AutoStopAction = saNone
     Left = 344
-    Top = 48
+    Top = 8
   end
   object qry_mostra_dados: TIBQuery
     Database = dm.BD
@@ -108,8 +156,8 @@ object frm_obs: Tfrm_obs
     CachedUpdates = False
     SQL.Strings = (
       'SELECT * FROM LEMBRETES ORDER BY CODIGO')
-    Left = 408
-    Top = 136
+    Left = 432
+    Top = 224
     object qry_mostra_dadosCODIGO: TIntegerField
       FieldName = 'CODIGO'
       Origin = 'LEMBRETES.CODIGO'
@@ -124,14 +172,13 @@ object frm_obs: Tfrm_obs
   object ds_mostra_dados: TDataSource
     DataSet = qry_mostra_dados
     Left = 376
-    Top = 136
+    Top = 216
   end
   object QRY_MAX_CODIGO: TIBQuery
     Database = dm.BD
     Transaction = dm.IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False
-    Left = 448
-    Top = 48
+    Left = 456
   end
 end
