@@ -252,20 +252,9 @@ object frm_menu: Tfrm_menu
     end
     object FilhoMe1: TMenuItem
       Caption = 'Filho/M'#227'e'
-      object DespesasPagas1: TMenuItem
-        Caption = 'Despesas Pagas Total'
-      end
       object RelatrioUnidoTotal1: TMenuItem
         Caption = 'Relat'#243'rio Unido Total'
-      end
-      object N15: TMenuItem
-        Caption = '-'
-      end
-      object ReceitasXDespesasGeral1: TMenuItem
-        Caption = 'Receitas X Despesas Geral'
-      end
-      object ResumoFinalGeral1: TMenuItem
-        Caption = 'Resumo Final Geral'
+        OnClick = RelatrioUnidoTotal1Click
       end
     end
   end

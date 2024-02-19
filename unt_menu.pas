@@ -67,11 +67,7 @@ type
     ResumoGeralMe1: TMenuItem;
     N14: TMenuItem;
     FilhoMe1: TMenuItem;
-    DespesasPagas1: TMenuItem;
     RelatrioUnidoTotal1: TMenuItem;
-    N15: TMenuItem;
-    ReceitasXDespesasGeral1: TMenuItem;
-    ResumoFinalGeral1: TMenuItem;
     EmprestimosaReceber1: TMenuItem;
     EmprstimosaPagar1: TMenuItem;
     N16: TMenuItem;
@@ -108,6 +104,7 @@ type
     procedure ResumoGeralMe1Click(Sender: TObject);
     procedure EmprestimosaReceber1Click(Sender: TObject);
     procedure EmprstimosaPagar1Click(Sender: TObject);
+    procedure RelatrioUnidoTotal1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -129,7 +126,8 @@ uses unt_cad_despesas, untCadTipoDespesa, unt_contas_pagar,
   unt_rel_data_tipo_mae, untRelUnidosContasPagarContasPagas_mae,
   unt_cad_receitas_mae, untTransferenciaFinanceira_mae,
   untCadFormaPgto_mae, untListDespRec_mae, untResumoFinal_mae,
-  untContasReceber_mae, untEmprestimosPagar_mae;
+  untContasReceber_mae, untEmprestimosPagar_mae,
+  untRelUnidosContasPagarContasPagasTotal;
 
 
 {$R *.dfm}
@@ -331,6 +329,12 @@ procedure Tfrm_menu.EmprstimosaPagar1Click(Sender: TObject);
 begin
   Application.CreateForm(TfrmEmprestimosPagar_mae, frmEmprestimosPagar_mae);
   frmEmprestimosPagar_mae.show;
+end;
+
+procedure Tfrm_menu.RelatrioUnidoTotal1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmRelUnidosContasPagarContasPagasTotal, frmRelUnidosContasPagarContasPagasTotal);
+  frmRelUnidosContasPagarContasPagasTotal.show;
 end;
 
 end.
