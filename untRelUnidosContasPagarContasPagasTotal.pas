@@ -419,6 +419,9 @@ begin
     exit;
   end;
 
+
+
+
   qry_pesquisa.Close;
   qry_pesquisa.SQL.Clear;
   qry_pesquisa.SQL.Add('SELECT C.data_despesa AS DATAPGTO,  ');
@@ -439,7 +442,8 @@ begin
      qry_pesquisa.SQL.Add(' AND UPPER(C.DESCRICAO) LIKE UPPER('+ #39 + '%' + txt_despesa_outros.Text + '%' + #39 + ')' );
 
   qry_pesquisa.SQL.Add('union                                                                                  ');
-
+  
+  //Despesas filho
   qry_pesquisa.SQL.Add('SELECT DATA_CARTAO AS DATAPGTO,                                                        ');
   qry_pesquisa.SQL.Add('C.codigo, C.despesa_outros as descricao, C.valor,                                      ');
   qry_pesquisa.SQL.Add('T.tip_codigo ||'' - ''|| T.tip_descricao AS DESPESA,                                   ');
@@ -476,8 +480,63 @@ begin
   if (txt_despesa_outros.Text <> '') and (rdb_posicao.Checked = TRUE) then
      qry_pesquisa.SQL.Add(' AND UPPER(C.despesa_outros) LIKE UPPER('+ #39 + '%' + txt_despesa_outros.Text + '%' + #39 + ')' );
 
-  qry_pesquisa.SQL.Add(' order by ' + campo);
-  
+     qry_pesquisa.parambyname('data1').AsString:= txt_data_i.Text;
+     qry_pesquisa.parambyname('data2').AsString:= txt_data_f.Text;
+      if cboDespesa.Text <> '' then
+        qry_pesquisa.ParamByName('tip_codigo').AsString:= cboDespesa.KeyValue;
+      if cboDespesaSub.Text <> '' then
+        qry_pesquisa.ParamByName('tds_codigo').AsString:= cboDespesaSub.KeyValue;
+   //FIM Despesas filho
+
+  qry_pesquisa.SQL.Add('union                                                                                  ');
+
+   //Despesas mãe
+  qry_pesquisa.SQL.Add('SELECT DATA_CARTAO AS DATAPGTO,                                                        ');
+  qry_pesquisa.SQL.Add('C.codigo, C.despesa_outros as descricao, C.valor,                                      ');
+  qry_pesquisa.SQL.Add('T.tip_codigo ||'' - ''|| T.tip_descricao AS DESPESA,                                   ');
+  qry_pesquisa.SQL.Add('TDS.TDS_codigo ||'' - ''|| TDS.TDS_descricao AS DESPESA_SUB, C.COT_CODIGO,             ');
+  qry_pesquisa.SQL.Add('C.AT_CODIGO                                                                            ');
+  qry_pesquisa.SQL.Add('FROM CAD_DESPESA_MAE C, TIPO_DESPESA T, TIPO_DESPESA_SUB TDS                           ');
+  qry_pesquisa.SQL.Add('WHERE T.tip_codigo=C.tip_codigo AND TDS.TDS_CODIGO = C.TDS_CODIGO                      ');
+  qry_pesquisa.SQL.Add('and data_cartao is not null and data_cartao between :data1 and :data2                  ');
+  if cboDespesa.Text <> '' then
+    qry_pesquisa.SQL.Add('and c.tip_codigo=:tip_codigo                                                         ');
+  if cboDespesaSub.Text <> '' then
+    qry_pesquisa.SQL.Add('and c.tds_codigo=:tds_codigo                                                         ');
+  if (txt_despesa_outros.Text <> '') and (rdb_inicio.Checked = TRUE) then
+     qry_pesquisa.SQL.Add(' AND UPPER(C.despesa_outros) LIKE UPPER('+ #39 + txt_despesa_outros.Text + '%' + #39 + ')' );
+  if (txt_despesa_outros.Text <> '') and (rdb_posicao.Checked = TRUE) then
+     qry_pesquisa.SQL.Add(' AND UPPER(C.despesa_outros) LIKE UPPER('+ #39 + '%' + txt_despesa_outros.Text + '%' + #39 + ')' );
+
+  qry_pesquisa.SQL.Add('union                                                                                  ');
+
+  qry_pesquisa.SQL.Add('SELECT DATA AS DATAPGTO,                                                               ');
+  qry_pesquisa.SQL.Add('C.codigo, C.despesa_outros as descricao, C.valor,                                      ');
+  qry_pesquisa.SQL.Add('T.tip_codigo ||'' - ''|| T.tip_descricao AS DESPESA,                                   ');
+  qry_pesquisa.SQL.Add('TDS.TDS_codigo ||'' - ''|| TDS.TDS_descricao AS DESPESA_SUB, C.COT_CODIGO,             ');
+  qry_pesquisa.SQL.Add('C.AT_CODIGO                                                                            ');
+  qry_pesquisa.SQL.Add('FROM CAD_DESPESA_MAE C, TIPO_DESPESA T, TIPO_DESPESA_SUB TDS                           ');
+  qry_pesquisa.SQL.Add('WHERE T.tip_codigo=C.tip_codigo AND TDS.TDS_CODIGO = C.TDS_CODIGO                      ');
+  qry_pesquisa.SQL.Add('and data_cartao is null and data between :data1 and :data2                             ');
+  if cboDespesa.Text <> '' then
+    qry_pesquisa.SQL.Add('and c.tip_codigo=:tip_codigo                                                         ');
+  if cboDespesaSub.Text <> '' then
+    qry_pesquisa.SQL.Add('and c.tds_codigo=:tds_codigo                                                         ');
+  if (txt_despesa_outros.Text <> '') and (rdb_inicio.Checked = TRUE) then
+     qry_pesquisa.SQL.Add(' AND UPPER(C.despesa_outros) LIKE UPPER('+ #39 + txt_despesa_outros.Text + '%' + #39 + ')' );
+  if (txt_despesa_outros.Text <> '') and (rdb_posicao.Checked = TRUE) then
+     qry_pesquisa.SQL.Add(' AND UPPER(C.despesa_outros) LIKE UPPER('+ #39 + '%' + txt_despesa_outros.Text + '%' + #39 + ')' );
+
+     qry_pesquisa.parambyname('data1').AsString:= txt_data_i.Text;
+     qry_pesquisa.parambyname('data2').AsString:= txt_data_f.Text;
+      if cboDespesa.Text <> '' then
+        qry_pesquisa.ParamByName('tip_codigo').AsString:= cboDespesa.KeyValue;
+      if cboDespesaSub.Text <> '' then
+        qry_pesquisa.ParamByName('tds_codigo').AsString:= cboDespesaSub.KeyValue;
+    //FIM Despesas mãe
+
+     qry_pesquisa.SQL.Add(' order by ' + campo);
+
      qry_pesquisa.parambyname('data1').AsString:= txt_data_i.Text;
      qry_pesquisa.parambyname('data2').AsString:= txt_data_f.Text;
       if cboDespesa.Text <> '' then
@@ -485,8 +544,8 @@ begin
       if cboDespesaSub.Text <> '' then
         qry_pesquisa.ParamByName('tds_codigo').AsString:= cboDespesaSub.KeyValue;
 
-  qry_pesquisa.Open;
-  qry_pesquisa.FetchAll; 
+     qry_pesquisa.Open;
+     qry_pesquisa.FetchAll; 
   
 end;
 
