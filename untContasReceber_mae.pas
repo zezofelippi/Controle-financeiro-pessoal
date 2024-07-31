@@ -196,7 +196,7 @@ begin
   end;
 
   ////////VERIFICA SE SALDO E SUFICIENTE/////
-  txt_valor_saldo.value := VerificaSaldo(cboFormaPgto.KeyValue, valor);
+  txt_valor_saldo.value := VerificaSaldoMae(cboFormaPgto.KeyValue, valor);
 
   if txt_valor_Saldo.Value < txt_valor.Value then
   begin
