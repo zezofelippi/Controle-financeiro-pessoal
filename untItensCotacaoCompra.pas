@@ -187,6 +187,8 @@ begin
 
     txt_total.Value := qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
 
+
+
   end;
 
   if pesquisar = 'Cad_Despesa_mae' then
@@ -305,18 +307,19 @@ begin
     qry_Pesquisa.ParamByName('FOR_CODIGO').AsString := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('AT_CODIGO').AsString;
     qry_Pesquisa.Open;
 
-    txt_total.Value := qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
+    txt_total.Value := qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;  
 
-    qry_Pesquisa.close;
-    qry_Pesquisa.SQL.Clear;
-    qry_Pesquisa.SQL.Add('SELECT COT_OBS FROM cotacao_compra '+
-                         ' WHERE COT_CODIGO =:COT_CODIGO     ');
-    qry_Pesquisa.ParamByName('COT_CODIGO').AsString := txtCotacao.Text;
-    qry_Pesquisa.Open;
-
-    txt_obs.Text := qry_Pesquisa.fieldbyname('COT_OBS').AsString;
 
   end;
+
+   qry_Pesquisa.close;
+   qry_Pesquisa.SQL.Clear;
+   qry_Pesquisa.SQL.Add('SELECT COT_OBS FROM cotacao_compra '+
+                         ' WHERE COT_CODIGO =:COT_CODIGO     ');
+   qry_Pesquisa.ParamByName('COT_CODIGO').AsString := txtCotacao.Text;
+   qry_Pesquisa.Open;
+
+   txt_obs.Text := qry_Pesquisa.fieldbyname('COT_OBS').AsString;
 
 
 end;
