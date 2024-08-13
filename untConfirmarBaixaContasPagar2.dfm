@@ -4,7 +4,7 @@ object frmConfirmarBaixaContasPagar2: TfrmConfirmarBaixaContasPagar2
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Confirmar baixa de contas a pagar'
-  ClientHeight = 136
+  ClientHeight = 199
   ClientWidth = 414
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -84,28 +84,18 @@ object frmConfirmarBaixaContasPagar2: TfrmConfirmarBaixaContasPagar2
     TabOrder = 3
     OnKeyPress = txt_dataKeyPress
   end
-  object cboFormaPgto: TDBLookupComboBox
-    Left = 8
-    Top = 73
-    Width = 305
-    Height = 21
-    KeyField = 'TP_CODIGO'
-    ListField = 'DESCRICAO'
-    ListSource = dsFormaPgto
-    TabOrder = 4
-  end
   object txt_valor_saldo: TCurrencyEdit
     Left = 320
     Top = 73
     Width = 77
     Height = 21
     AutoSize = False
-    TabOrder = 5
+    TabOrder = 4
     Visible = False
   end
   object rdgContaAtrasada: TRadioGroup
     Left = 8
-    Top = 96
+    Top = 145
     Width = 233
     Height = 33
     Caption = 'Conta Atrasada ?'
@@ -113,7 +103,55 @@ object frmConfirmarBaixaContasPagar2: TfrmConfirmarBaixaContasPagar2
     Items.Strings = (
       'Sim'
       'N'#227'o')
+    TabOrder = 5
+  end
+  object gpbFormaPagamentoMae: TGroupBox
+    Left = 2
+    Top = 51
+    Width = 321
+    Height = 44
+    Caption = 'Pagamento M'#227'e'
     TabOrder = 6
+    object cboFormaPgtoMae: TDBLookupComboBox
+      Left = 7
+      Top = 19
+      Width = 306
+      Height = 21
+      KeyField = 'TP_CODIGO'
+      ListField = 'DESCRICAO'
+      ListSource = dsFormaPgtoMae
+      TabOrder = 0
+    end
+  end
+  object rdgMaeFilho: TRadioGroup
+    Left = 8
+    Top = 108
+    Width = 265
+    Height = 33
+    Columns = 2
+    Items.Strings = (
+      'Filho'
+      'M'#227'e')
+    TabOrder = 7
+    OnClick = rdgMaeFilhoClick
+  end
+  object gpbFormaPagamentoFilho: TGroupBox
+    Left = 4
+    Top = 52
+    Width = 320
+    Height = 51
+    Caption = 'Pagamento Filho'
+    TabOrder = 8
+    object cboFormaPgto: TDBLookupComboBox
+      Left = 7
+      Top = 18
+      Width = 305
+      Height = 21
+      KeyField = 'TP_CODIGO'
+      ListField = 'DESCRICAO'
+      ListSource = dsFormaPgto
+      TabOrder = 0
+    end
   end
   object qry_pesquisa: TIBQuery
     Database = dm.BD
@@ -173,6 +211,44 @@ object frmConfirmarBaixaContasPagar2: TfrmConfirmarBaixaContasPagar2
       Size = 1
     end
     object qryFormaPgtoDESCRICAO: TIBStringField
+      FieldName = 'DESCRICAO'
+      Size = 78
+    end
+  end
+  object dsFormaPgtoMae: TDataSource
+    DataSet = qryFormaPgtoMae
+    Left = 152
+    Top = 113
+  end
+  object qryFormaPgtoMae: TIBQuery
+    Database = dm.BD
+    Transaction = dm.IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    SQL.Strings = (
+      
+        'SELECT TP_CODIGO, TP_DESCRICAO, TP_DEFAULT, TP_CODIGO ||'#39' - '#39'|| ' +
+        'TP_DESCRICAO AS DESCRICAO '
+      '                      FROM TIPO_PAGAMENTO_mae ORDER BY TP_CODIGO')
+    Left = 192
+    Top = 113
+    object IntegerField1: TIntegerField
+      FieldName = 'TP_CODIGO'
+      Origin = 'TIPO_PAGAMENTO.TP_CODIGO'
+      Required = True
+    end
+    object IBStringField1: TIBStringField
+      FieldName = 'TP_DESCRICAO'
+      Origin = 'TIPO_PAGAMENTO.TP_DESCRICAO'
+      Size = 64
+    end
+    object IBStringField2: TIBStringField
+      FieldName = 'TP_DEFAULT'
+      Origin = 'TIPO_PAGAMENTO.TP_DEFAULT'
+      FixedChar = True
+      Size = 1
+    end
+    object IBStringField3: TIBStringField
       FieldName = 'DESCRICAO'
       Size = 78
     end

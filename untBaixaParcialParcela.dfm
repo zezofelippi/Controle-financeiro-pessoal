@@ -112,7 +112,7 @@ object frmBaixaParcialParcela: TfrmBaixaParcialParcela
   end
   object gpbFormaPagamentoFilho: TGroupBox
     Left = 8
-    Top = 55
+    Top = 71
     Width = 320
     Height = 47
     Caption = 'Forma Pagamento Filho'

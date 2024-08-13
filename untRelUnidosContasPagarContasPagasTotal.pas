@@ -604,7 +604,7 @@ procedure TfrmRelUnidosContasPagarContasPagasTotal.ItensCotao1Click(
   Sender: TObject);
 begin
   Application.CreateForm(TfrmItensCotacaoCompra, frmItensCotacaoCompra);
-  frmItensCotacaoCompra.pesquisar := 'Cad_Despesa Contas_Pagar';
+  frmItensCotacaoCompra.pesquisar := 'ContasPagasPagarContasMaeFilho';
   frmItensCotacaoCompra.ShowModal;
 end;
 

@@ -468,6 +468,7 @@ end;
 procedure TfrmContasPagarParcelas.Despesacomitensdacotaodecompra1Click(
   Sender: TObject);
 begin
+  frmContasPagarParcelas.qryContasPagarParcela.fieldbyname('COT_CODIGO').AsString;
   Application.CreateForm(TfrmItensCotacaoCompra, frmItensCotacaoCompra);
   frmItensCotacaoCompra.pesquisar := 'Contas_Pagar';
   frmItensCotacaoCompra.ShowModal;

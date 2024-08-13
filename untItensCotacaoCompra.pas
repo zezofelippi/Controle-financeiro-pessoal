@@ -44,7 +44,8 @@ implementation
 
 uses unt_modulo, unt_rel_data_tipo, untContasPagarParcelas,
   untRelUnidosContasPagarContasPagas,
-  untRelUnidosContasPagarContasPagas_mae, unt_rel_data_tipo_mae;
+  untRelUnidosContasPagarContasPagas_mae, unt_rel_data_tipo_mae,
+  untRelUnidosContasPagarContasPagasTotal;
 
 {$R *.dfm}
 
@@ -265,6 +266,55 @@ begin
     qry_Pesquisa.Open;
 
     txt_total.Value := qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
+
+  end;
+
+  if pesquisar = 'ContasPagasPagarContasMaeFilho' then
+  begin
+    txtCotacao.Text := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('COT_CODIGO').AsString;
+    txt_cod_fornecedor.Text := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('AT_CODIGO').AsString;
+
+    qry_pesquisa.Close;
+    qry_pesquisa.SQL.Clear;
+    qry_pesquisa.SQL.Add('SELECT AT_NOME FROM AGENDA_TELEFONE WHERE AT_CODIGO=:AT_CODIGO');
+    qry_pesquisa.ParamByName('AT_CODIGO').AsString := txt_cod_fornecedor.Text;
+    qry_pesquisa.Open;
+
+    txtFornecedor.Text := qry_pesquisa.fieldbyname('AT_NOME').AsString;
+
+    qryCotacao.Close;
+    qryCotacao.SQL.Clear;
+    qryCotacao.SQL.Add('SELECT P.PRO_CODIGO,  P.pro_descricao, I.cot_unidade, I.cot_qtd, I.cot_valor,   '+
+                       ' SUM(I.cot_qtd * I.cot_valor) AS VALOR_TOTAL                                    '+
+                       ' FROM produto P, itens_cotacao_compra I, AGENDA_TELEFONE F                      '+
+                       ' WHERE I.pro_codigo = P.pro_codigo AND F.AT_codigo = I.for_codigo_atual         '+
+                       ' AND I.COT_CODIGO =:COT_CODIGO AND I.FOR_CODIGO_ATUAL=:FOR_CODIGO               '+
+                       ' GROUP BY P.PRO_CODIGO, P.pro_descricao, I.cot_unidade, I.cot_qtd, I.cot_valor  '+
+                       ' ORDER BY P.pro_DESCRICAO                                                       ');
+    qryCotacao.ParamByName('COT_CODIGO').AsString := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('COT_CODIGO').AsString;
+    qryCotacao.ParamByName('FOR_CODIGO').AsString := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('AT_CODIGO').AsString;
+    qryCotacao.Open; 
+       
+    qry_Pesquisa.close;
+    qry_Pesquisa.SQL.Clear;
+    qry_Pesquisa.SQL.Add('SELECT SUM(I.cot_qtd * I.cot_valor) AS VALOR_TOTAL                         '+
+                         ' FROM produto P, itens_cotacao_compra I, AGENDA_TELEFONE F                 '+
+                         ' WHERE I.pro_codigo = P.pro_codigo AND F.AT_codigo = I.for_codigo_atual    '+
+                         ' AND I.COT_CODIGO =:COT_CODIGO AND I.FOR_CODIGO_ATUAL=:FOR_CODIGO          ');
+    qry_Pesquisa.ParamByName('COT_CODIGO').AsString := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('COT_CODIGO').AsString;
+    qry_Pesquisa.ParamByName('FOR_CODIGO').AsString := frmRelUnidosContasPagarContasPagasTotal.qry_pesquisa.fieldbyname('AT_CODIGO').AsString;
+    qry_Pesquisa.Open;
+
+    txt_total.Value := qry_Pesquisa.fieldbyname('VALOR_TOTAL').asfloat;
+
+    qry_Pesquisa.close;
+    qry_Pesquisa.SQL.Clear;
+    qry_Pesquisa.SQL.Add('SELECT COT_OBS FROM cotacao_compra '+
+                         ' WHERE COT_CODIGO =:COT_CODIGO     ');
+    qry_Pesquisa.ParamByName('COT_CODIGO').AsString := txtCotacao.Text;
+    qry_Pesquisa.Open;
+
+    txt_obs.Text := qry_Pesquisa.fieldbyname('COT_OBS').AsString;
 
   end;
 

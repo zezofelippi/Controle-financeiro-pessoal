@@ -1,6 +1,6 @@
 object frmConfirmarBaixaContasPagar: TfrmConfirmarBaixaContasPagar
-  Left = 414
-  Top = 238
+  Left = 552
+  Top = 303
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Confirmar baixa de contas a pagar'

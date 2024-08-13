@@ -428,7 +428,7 @@ begin
 
   cdsMostraDados.Close;
   cdsMostraDados.FetchParams;
-  cdsMostraDados.Open;
+  cdsMostraDados.close;
 
   qry_soma.Close;
   qry_soma.SQL.Clear;
