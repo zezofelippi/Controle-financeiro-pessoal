@@ -159,7 +159,7 @@ begin
   end;
 
   ////////VERIFICA SE SALDO E SUFICIENTE/////
-  txt_valor_saldo.value := VerificaSaldo(cbo_de.KeyValue, valor);
+  txt_valor_saldo.value := VerificaSaldoMae(cbo_de.KeyValue, valor);
 
   if txt_valor_Saldo.Value < txt_valor.Value then
   begin
