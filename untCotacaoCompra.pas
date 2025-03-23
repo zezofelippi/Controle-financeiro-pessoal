@@ -246,6 +246,7 @@ type
     edtTotalExcel: TCurrencyEdit;
     Prximomaisbarato1: TMenuItem;
     qryCarregarExcelDESCONTO: TIBBCDField;
+    rdgTipoNota: TRadioGroup;
     procedure atualiza_grid;
     procedure rdg_organizarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -3098,8 +3099,8 @@ var
 
   ArquivoCSV: TextFile;
   Contador, I, iContador : Integer;
-  Linha: String;
-  teste : string;
+  Linha, valor_total: String;
+  teste, descricao_produto, cont_descricao_produto, codigo_produto, qtde, valor_unit, cont_qtde, valor_unit_formatado : string;
 
   // Lê Linha e Monta os valores
   function MontaValor: String;
@@ -3225,121 +3226,297 @@ begin
     exit;
   end;
 
+  if rdgTipoNota.ItemIndex = -1 then
+  begin
+    showmessage('Selecione SAT ou NFC-e'); 
+    exit;
+  end;
+
   OpenDialog1.DefaultExt := '.csv*';
   OpenDialog1.FileName := '*.csv*';
+
   If OpenDialog1.Execute then
     edtCaminhoExcel.text := OpenDialog1.FileName;
 
   // Carregando o arquivo ...
   AssignFile(ArquivoCSV, edtCaminhoExcel.text);
 
-  try
-    Reset(ArquivoCSV);
-    Readln(ArquivoCSV, Linha);
-    Contador := 1;
-
-    while not Eoln(ArquivoCSV) do
-    begin
-      if Contador >= 2 then
-        teste := MontaValor;
-      Readln(ArquivoCSV, Linha);
-      Contador := Contador + 1;
-    end;
-    teste := MontaValor;
-
-  finally
-    CloseFile(ArquivoCSV);
-  end;
-
-  qryCarregarExcel.close;
-  qryCarregarExcel.SQL.Clear;
-  qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
-  qryCarregarExcel.Open;
-  qryCarregarExcel.First;
-
-  qryPesquisa.Close;
-  qryPesquisa.SQL.Clear;
-  qryPesquisa.SQL.Add('SELECT SUM(VALOR_TOTAL) AS TOTAL FROM carregar_excel_cotacao');
-  qryPesquisa.Open;
-  edtTotalExcel.Value := qryPesquisa.fieldbyname('TOTAL').AsFloat;
-
-  ///VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
-  if (not IBTransLocal.InTransaction) then
-    IBTransLocal.StartTransaction;
-
-  while not qryCarregarExcel.eof do
+  if rdgTipoNota.ItemIndex = 0 then //SAT
   begin
-    qryPesquisa.Close;
-    qryPesquisa.SQL.Clear;
-    qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR                    '+
-                        ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO ');
-    qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
-    qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
-    qryPesquisa.Open;
 
-    if not qryPesquisa.IsEmpty then
-    begin
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-                            ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL                                                  ');
-      qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-      qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-      qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
-      qryTransLocal.ExecSQL;
+    try
+      Reset(ArquivoCSV);
+      Readln(ArquivoCSV, Linha);
+      Contador := 1;
 
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
-                            ' AND FOR_CODIGO=:FOR_CODIGO                                                                     ');
-      qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
-      qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
-      qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
-      qryTransLocal.ExecSQL;
+      while not Eoln(ArquivoCSV) do
+      begin
+        if Contador >= 2 then
+          teste := MontaValor;
+        Readln(ArquivoCSV, Linha);
+        Contador := Contador + 1;
+      end;
+      teste := MontaValor;
 
+    finally
+      CloseFile(ArquivoCSV);
+    end;
+  end; // FIM SAT
+
+  if rdgTipoNota.ItemIndex = 1 then //NFC-e
+  begin
+
+   try
+      Reset(ArquivoCSV);
+      Readln(ArquivoCSV, Linha);
+      Contador := 1;
+
+      if (not IBTransLocal.InTransaction) then
+        IBTransLocal.StartTransaction;
+
+      while not Eoln(ArquivoCSV) do
+      begin
+
+        if contador = 4 then
+        begin
+          Contador :=1;
+
+         qryTransLocal.Close;
+         qryTransLocal.SQL.Clear;
+         qryTransLocal.SQL.Add('INSERT INTO CARREGAR_EXCEL_COTACAO                                                     '+
+                               '(PRODUTO_DESCRICAO, VALOR_UNIT, QTDE, VALOR_TOTAL, COD_PRODUTO_EXCEL, DESCONTO )       '+
+                               'VALUES                                                                                 '+
+                               '(:PRODUTO_DESCRICAO, :VALOR_UNIT, :QTDE, :VALOR_TOTAL, :COD_PRODUTO_EXCEL, :DESCONTO ) ');
+
+         valor_unit_formatado :=  StringReplace(valor_unit_formatado, ',', '.', [rfReplaceAll]);
+         valor_total :=  StringReplace(valor_total, ',', '.', [rfReplaceAll]);
+         qtde :=  StringReplace(qtde, ',', '.', [rfReplaceAll]);
+
+         codigo_produto := Trim(codigo_produto);
+
+         qryTransLocal.ParamByName('PRODUTO_DESCRICAO').AsString := descricao_produto;
+         qryTransLocal.ParamByName('COD_PRODUTO_EXCEL').AsString := codigo_produto;
+         qryTransLocal.ParamByName('QTDE').AsString := qtde;
+         qryTransLocal.ParamByName('VALOR_UNIT').AsString := valor_unit_formatado;
+         qryTransLocal.ParamByName('DESCONTO').AsString := '0';
+         qryTransLocal.ParamByName('VALOR_TOTAL').AsString := valor_total;
+
+         qryTransLocal.ExecSQL;
+
+        end;
+
+        if Contador = 1 then
+        begin
+          i:=1;
+          cont_descricao_produto:= 'S';
+          descricao_produto:='';
+          codigo_produto:='';
+          while i <= length(Linha) do
+          begin
+            if (Copy(Linha, i, 1) <> '(') and (cont_descricao_produto = 'S') then
+            begin
+              descricao_produto:= descricao_produto + Copy(Linha, i, 1);
+            end
+            else if Copy(Linha, i, 1) <> ')' then
+            begin
+              cont_descricao_produto:= 'N';
+              codigo_produto:=codigo_produto + Copy(Linha, i, 1);
+              if codigo_produto = '(CÃ³digo:' then
+              begin
+                codigo_produto:='';
+              end;
+            end;
+
+            inc(i);
+          end; //fim do while i <= length(Linha) do
+
+        end
+        else if Contador = 2 then
+        begin
+          i:=1;
+          cont_qtde:= 'S';
+          qtde:='';
+          valor_unit:='';
+          while i <= length(Linha) do
+          begin
+            if (Copy(Linha, i, 1) <> ' ') and (cont_qtde='S') then
+            begin
+              qtde:=qtde + Copy(Linha, i, 1);
+              if qtde = 'Qtde.:' then
+              begin
+                qtde:='';
+              end;
+            end
+            else
+            begin
+              //if Copy(Linha, i, 1) <> ' ' then
+              //begin
+                cont_qtde:='N';
+                valor_unit:=valor_unit + Copy(Linha, i, 1);
+                if valor_unit = ' UN: UN Vl. Unit.:' then
+                begin
+                  valor_unit:='';
+                end;
+             // end
+
+            end;
+            inc(i);
+          end;
+
+        end
+        else if Contador = 3 then
+        begin
+
+          //retira letras e espaços na variavel valor_unit
+          valor_unit_formatado:='';
+          for i := 1 to Length(valor_unit) do
+          begin
+            if valor_unit[i] in ['0'..'9', ','] then
+              valor_unit_formatado := valor_unit_formatado + valor_unit[i];
+          end;
+          //FIM retira letras e espaços na variavel valor_unit
+
+          valor_total:=Linha;
+
+        end;
+
+        //ValorMontado :=  StringReplace(ValorMontado, '"', '', [rfReplaceAll]);
+
+        Readln(ArquivoCSV, Linha);
+        Contador := Contador + 1;
+      end;
+     // teste := MontaValor;
+
+   finally
+
+     //retira letras e espaços na variavel valor_unit
+     valor_unit_formatado:='';
+     for i := 1 to Length(valor_unit) do
+     begin
+       if valor_unit[i] in ['0'..'9', ','] then
+         valor_unit_formatado := valor_unit_formatado + valor_unit[i];
+     end;
+     //FIM retira letras e espaços na variavel valor_unit
+
+     valor_total:=Linha;
+
+     qryTransLocal.Close;
+     qryTransLocal.SQL.Clear;
+     qryTransLocal.SQL.Add('INSERT INTO CARREGAR_EXCEL_COTACAO                                                     '+
+                           '(PRODUTO_DESCRICAO, VALOR_UNIT, QTDE, VALOR_TOTAL, COD_PRODUTO_EXCEL, DESCONTO )       '+
+                           'VALUES                                                                                 '+
+                           '(:PRODUTO_DESCRICAO, :VALOR_UNIT, :QTDE, :VALOR_TOTAL, :COD_PRODUTO_EXCEL, :DESCONTO ) ');
+
+     valor_unit_formatado :=  StringReplace(valor_unit_formatado, ',', '.', [rfReplaceAll]);
+     valor_total :=  StringReplace(valor_total, ',', '.', [rfReplaceAll]);
+     qtde :=  StringReplace(qtde, ',', '.', [rfReplaceAll]);
+
+     codigo_produto := Trim(codigo_produto);
+
+     qryTransLocal.ParamByName('PRODUTO_DESCRICAO').AsString := descricao_produto;
+     qryTransLocal.ParamByName('COD_PRODUTO_EXCEL').AsString := codigo_produto;
+     qryTransLocal.ParamByName('QTDE').AsString := qtde;
+     qryTransLocal.ParamByName('VALOR_UNIT').AsString := valor_unit_formatado;
+     qryTransLocal.ParamByName('DESCONTO').AsString := '0';
+     qryTransLocal.ParamByName('VALOR_TOTAL').AsString := valor_total;
+
+     qryTransLocal.ExecSQL;
+
+     IBTransLocal.Commit;
+     CloseFile(ArquivoCSV);
+   end;
+
+  end; // NFC-e
+
+   qryCarregarExcel.close;
+   qryCarregarExcel.SQL.Clear;
+   qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
+   qryCarregarExcel.Open;
+   qryCarregarExcel.First;
+
+   qryPesquisa.Close;
+   qryPesquisa.SQL.Clear;
+   qryPesquisa.SQL.Add('SELECT SUM(VALOR_TOTAL) AS TOTAL FROM carregar_excel_cotacao');
+   qryPesquisa.Open;
+   edtTotalExcel.Value := qryPesquisa.fieldbyname('TOTAL').AsFloat;
+
+   ///VERIFICA SE TEM PRODUTO LANCADO NA COTACAO COM O MESMO FORNECEDOR
+   if (not IBTransLocal.InTransaction) then
+     IBTransLocal.StartTransaction;
+
+   while not qryCarregarExcel.eof do
+   begin
+     qryPesquisa.Close;
+     qryPesquisa.SQL.Clear;
+     qryPesquisa.SQL.Add('SELECT PRO_CODIGO FROM COD_PRODUTO_MEU_FORNECEDOR                    '+
+                         ' WHERE PRO_CODIGO_FORNEC=:PRO_CODIGO_FORNEC AND AT_CODIGO=:AT_CODIGO ');
+     qryPesquisa.ParamByName('PRO_CODIGO_FORNEC').AsString := qryCarregarExcel.fieldbyname('COD_PRODUTO_EXCEL').asstring;
+     qryPesquisa.ParamByName('AT_CODIGO').AsString  := cboFornecedorExcel.KeyValue;
+     qryPesquisa.Open;
+
+     if not qryPesquisa.IsEmpty then
+     begin
+       qryTransLocal.Close;
+       qryTransLocal.SQL.Clear;
+       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                             ' AND FOR_CODIGO_ATUAL=:FOR_CODIGO_ATUAL                                                  ');
+       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+       qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
+       qryTransLocal.ParamByName('FOR_CODIGO_ATUAL').asstring := cboFornecedorExcel.KeyValue;
+       qryTransLocal.ExecSQL;
+
+       qryTransLocal.Close;
+       qryTransLocal.SQL.Clear;
+       qryTransLocal.SQL.Add('DELETE FROM ITENS_COTACAO_COMPRA_FORNEC WHERE COT_CODIGO=:COT_CODIGO AND PRO_CODIGO=:PRO_CODIGO '+
+                             ' AND FOR_CODIGO=:FOR_CODIGO                                                                     ');
+       qryTransLocal.ParamByName('COT_CODIGO').asstring := lbl_cod_cotacao.Caption;
+       qryTransLocal.ParamByName('PRO_CODIGO').asstring := qryPesquisa.fieldbyname('PRO_CODIGO').AsString;
+       qryTransLocal.ParamByName('FOR_CODIGO').asstring := cboFornecedorExcel.KeyValue;
+       qryTransLocal.ExecSQL;
+
+      end;
+
+      qryCarregarExcel.Next;
+
+   end;
+
+   IBTransLocal.Commit;
+
+   //Verifica os descontos de cada item
+   qryCarregarExcel.close;
+   qryCarregarExcel.SQL.Clear;
+   qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
+   qryCarregarExcel.Open;
+   qryCarregarExcel.First;
+
+   if (not IBTransLocal.InTransaction) then
+     IBTransLocal.StartTransaction;
+
+   while not qryCarregarExcel.eof do
+   begin
+     if qryCarregarExcel.fieldbyname('DESCONTO').AsFloat <> 0 then
+     begin
+       desconto := formatfloat('##0.00', qryCarregarExcel.fieldbyname('VALOR_TOTAL').AsFloat / qryCarregarExcel.fieldbyname('QTDE').AsFloat);
+       desconto :=  StringReplace(desconto, ',', '.', [rfReplaceAll]);
+
+       qryTransLocal.Close;
+       qryTransLocal.SQL.Clear;
+       qryTransLocal.SQL.Add('UPDATE CARREGAR_EXCEL_COTACAO SET VALOR_UNIT=:VALOR_UNIT WHERE ID=:ID ');
+       qryTransLocal.ParamByName('VALOR_UNIT').asstring := desconto;
+       qryTransLocal.ParamByName('ID').asstring := qryCarregarExcel.fieldbyname('ID').AsString;
+       qryTransLocal.ExecSQL;
      end;
 
      qryCarregarExcel.Next;
+   end;
 
-  end;
+   IBTransLocal.Commit;
 
-  IBTransLocal.Commit;
-
-  //Verifica os descontos de cada item
-  qryCarregarExcel.close;
-  qryCarregarExcel.SQL.Clear;
-  qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
-  qryCarregarExcel.Open;
-  qryCarregarExcel.First;
-
-  if (not IBTransLocal.InTransaction) then
-    IBTransLocal.StartTransaction;
-
-  while not qryCarregarExcel.eof do
-  begin
-    if qryCarregarExcel.fieldbyname('DESCONTO').AsFloat <> 0 then
-    begin
-      desconto := formatfloat('##0.00', qryCarregarExcel.fieldbyname('VALOR_TOTAL').AsFloat / qryCarregarExcel.fieldbyname('QTDE').AsFloat);
-      desconto :=  StringReplace(desconto, ',', '.', [rfReplaceAll]);
-
-      qryTransLocal.Close;
-      qryTransLocal.SQL.Clear;
-      qryTransLocal.SQL.Add('UPDATE CARREGAR_EXCEL_COTACAO SET VALOR_UNIT=:VALOR_UNIT WHERE ID=:ID ');
-      qryTransLocal.ParamByName('VALOR_UNIT').asstring := desconto;
-      qryTransLocal.ParamByName('ID').asstring := qryCarregarExcel.fieldbyname('ID').AsString;
-      qryTransLocal.ExecSQL;
-    end;
-
-    qryCarregarExcel.Next;
-  end;
-
-  IBTransLocal.Commit;
-
-  qryCarregarExcel.close;
-  qryCarregarExcel.SQL.Clear;
-  qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
-  qryCarregarExcel.Open;
-  qryCarregarExcel.First;
+   qryCarregarExcel.close;
+   qryCarregarExcel.SQL.Clear;
+   qryCarregarExcel.SQL.Add('select * from carregar_excel_cotacao order by produto_descricao');
+   qryCarregarExcel.Open;
+   qryCarregarExcel.First;
 
 end;
 

@@ -28,7 +28,7 @@ object frm_cotacao_compra: Tfrm_cotacao_compra
     Top = 0
     Width = 1231
     Height = 644
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alLeft
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -1525,9 +1525,9 @@ object frm_cotacao_compra: Tfrm_cotacao_compra
         end
         object DBGrid5: TDBGrid
           Left = 406
-          Top = 74
+          Top = 115
           Width = 774
-          Height = 473
+          Height = 427
           Color = 15794175
           DataSource = dsCarregarExcel
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect]
@@ -1682,6 +1682,17 @@ object frm_cotacao_compra: Tfrm_cotacao_compra
           ParentFont = False
           ReadOnly = True
           TabOrder = 14
+        end
+        object rdgTipoNota: TRadioGroup
+          Left = 416
+          Top = 77
+          Width = 385
+          Height = 37
+          Columns = 2
+          Items.Strings = (
+            'SAT'
+            'NFC-e')
+          TabOrder = 15
         end
       end
       object edtTotalExcel: TCurrencyEdit
